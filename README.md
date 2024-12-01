@@ -37,7 +37,7 @@ MariaDBのRedesの接続情報を設定します。
 `.env`ファイルの`DATABASE_URL`と`SESSION_REDIS_URL`に接続可能な値を設定します。
 
 ```
-DATABASE_URL=mysql://testuser:testuser@localhost:3306/calendar-db
+DATABASE_URL=mysql://testuser:testuser@localhost:3306/ufcal-db
 SESSION_REDIS_URL=redis://localhost:6379/
 ```
 
