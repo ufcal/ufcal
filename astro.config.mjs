@@ -3,6 +3,7 @@ import react from '@astrojs/react'
 import tailwind from '@astrojs/tailwind'
 import icon from 'astro-icon'
 import { defineConfig } from 'astro/config'
+import holidayIntegration from './src/integrations/holiday'
 
 export default defineConfig({
   integrations: [
@@ -15,7 +16,9 @@ export default defineConfig({
       include: {
         mdi: ['*']
       }
-    })
+    }),
+    // 祝日データファイルを生成(ビルド時のみ)
+    holidayIntegration()
   ],
   output: 'server',
   adapter: node({

@@ -28,7 +28,8 @@ Astroフレームワークベースのカレンダーシステムです。
 
 ```
 pnpm install
-npx prisma generate
+pnpm dlx prisma generate
+#npx prisma generate
 ```
 
 ## 接続情報の設定
@@ -46,7 +47,8 @@ SESSION_REDIS_URL=redis://localhost:6379/
 Prismaの初期化とDBの作成を行います。
 
 ```
-npx prisma migrate dev --name init
+pnpm dlx prisma migrate dev --name init
+#npx prisma migrate dev --name init
 ```
 
 ## 起動
