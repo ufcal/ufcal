@@ -36,7 +36,6 @@ export default [
         'warn',
         { code: 100, ignoreUrls: true, ignoreStrings: true, ignoreTemplateLiterals: true }
       ],
-      complexity: ['warn', { max: 10 }],
 
       // パフォーマンス最適化
       'no-await-in-loop': 'warn'
