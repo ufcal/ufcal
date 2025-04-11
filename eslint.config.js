@@ -31,12 +31,6 @@ export default [
       'no-unsafe-finally': 'error',
       'no-unsafe-negation': 'error',
 
-      // コード品質の向上
-      'max-len': [
-        'warn',
-        { code: 100, ignoreUrls: true, ignoreStrings: true, ignoreTemplateLiterals: true }
-      ],
-
       // パフォーマンス最適化
       'no-await-in-loop': 'warn'
     }
