@@ -5,8 +5,7 @@ import colors from 'tailwindcss/colors'
 export default {
   content: [
     './src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}',
-    './node_modules/flowbite/**/*.js',
-    './node_modules/react-tailwindcss-datepicker/dist/index.esm.{js,ts}'
+    './node_modules/flowbite/**/*.js'
   ],
   theme: {
     extend: {

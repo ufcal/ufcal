@@ -1,4 +1,5 @@
 import Alert from '@/components/Alert'
+import DateRangePicker from '@/components/DateRangePicker'
 import ColorDropdown from '@/components/event/ColorDropdown'
 import { AdminEventFetch } from '@/fetch/admin'
 import { modalEventId, notifyEventUpdate, showEventModal } from '@/store/event'
@@ -6,7 +7,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useStore } from '@nanostores/react'
 import { useEffect, useState } from 'react'
 import { Controller, useForm, type FieldErrors } from 'react-hook-form'
-import Datepicker from 'react-tailwindcss-datepicker'
 import { z } from 'zod'
 
 // フィールドのスキーマを定義
@@ -14,24 +14,36 @@ const schema = z
   .object({
     title: z.string().trim().min(1, { message: 'イベント名は必須です' }), // 前後スペースを削除してチェック
     eventDate: z.object({
-      startDate: z.date({
-        invalid_type_error: '日付は必須です'
-      }),
-      endDate: z.date()
+      startDate: z
+        .date({
+          invalid_type_error: '日付の形式が正しくありません'
+        })
+        .nullable(), // nullを許可
+      endDate: z
+        .date({
+          invalid_type_error: '日付の形式が正しくありません'
+        })
+        .nullable() // nullを許可
     }),
     isTimeSettingEnabled: z.boolean(),
     eventTimeStart: z
       .string()
       .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, { message: '開始時間はhh:mm形式で入力してください' })
-      .optional()
       .or(z.literal('')),
     eventTimeEnd: z
       .string()
       .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, { message: '終了時間はhh:mm形式で入力してください' })
-      .optional()
       .or(z.literal('')),
     category: z.number({ message: 'カテゴリーは必須です' }),
-    description: z.string().trim()
+    description: z.string().trim().optional()
+  })
+  .refine((data) => data.eventDate.startDate !== null, {
+    message: '開始日は必須です',
+    path: ['eventDate', 'startDate']
+  })
+  .refine((data) => data.eventDate.endDate !== null, {
+    message: '終了日は必須です',
+    path: ['eventDate', 'endDate']
   })
   .refine(
     (data) => {
@@ -73,11 +85,16 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
 
     // 初期値を設定
     defaultValues: {
-      /*eventDate: {
-        startDate: new Date('2024-09-21'), // 初期値を設定
-        endDate: new Date('2024-09-21')
-      },*/
-      category: 0 // カテゴリーデフォルト値
+      title: '',
+      eventDate: {
+        startDate: null, // 初期値を設定
+        endDate: null
+      },
+      isTimeSettingEnabled: false, // 時間設定を初期状態では無効に
+      eventTimeStart: '', // 時間設定が無効な場合の初期値
+      eventTimeEnd: '', // 時間設定が無効な場合の初期値
+      category: 0, // カテゴリーデフォルト値
+      description: ''
     }
   })
 
@@ -156,8 +173,8 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
     setError('')
 
     if (isTimeSettingEnabled) {
-      start = `${values.eventDate.startDate.toLocaleString('sv-SE').split(' ')[0]}T${values.eventTimeStart}`
-      end = `${values.eventDate.endDate.toLocaleString('sv-SE').split(' ')[0]}T${values.eventTimeEnd}`
+      start = `${values.eventDate.startDate?.toLocaleString('sv-SE').split(' ')[0]}T${values.eventTimeStart}`
+      end = `${values.eventDate.endDate?.toLocaleString('sv-SE').split(' ')[0]}T${values.eventTimeEnd}`
     } else {
       // *** 終日イベントの場合は終了日を翌日に設定 ***
       const endDate = new Date(values.eventDate.endDate)
@@ -313,18 +330,12 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                     name="eventDate"
                     control={control}
                     render={({ field: { onChange, value } }) => (
-                      <Datepicker
-                        inputId="date"
-                        value={value}
-                        asSingle={false}
-                        useRange={false}
-                        onChange={onChange}
-                        displayFormat={'YYYY/MM/DD'}
-                        i18n="ja"
-                        inputClassName="w-full rounded-lg p-2.5 border border-gray-300 bg-gray-50 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                        primaryColor={'indigo'}
-                        required
-                        readOnly
+                      <DateRangePicker
+                        startDate={value.startDate}
+                        endDate={value.endDate}
+                        onChange={(start, end) => onChange({ startDate: start, endDate: end })}
+                        isRangeMode={true}
+                        placeholder="日付を選択"
                       />
                     )}
                   />
