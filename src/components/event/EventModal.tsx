@@ -177,9 +177,9 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
       end = `${values.eventDate.endDate?.toLocaleString('sv-SE').split(' ')[0]}T${values.eventTimeEnd}`
     } else {
       // *** 終日イベントの場合は終了日を翌日に設定 ***
-      const endDate = new Date(values.eventDate.endDate)
+      const endDate = new Date(values.eventDate.endDate!)
       endDate.setDate(endDate.getDate() + 1) // 翌日に設定
-      start = values.eventDate.startDate.toLocaleString('sv-SE').split(' ')[0]
+      start = values.eventDate.startDate!.toLocaleString('sv-SE').split(' ')[0]
       end = endDate.toLocaleString('sv-SE').split(' ')[0] // 翌日の日付を設定
     }
 
@@ -192,7 +192,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
           start: start!,
           end: end!,
           category: values.category,
-          description: values.description
+          description: values.description ?? ''
         })
       } else {
         // イベントの更新の場合
@@ -202,7 +202,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
           start: start!,
           end: end!,
           category: values.category,
-          description: values.description
+          description: values.description ?? ''
         })
       }
       if (response.ok) {
