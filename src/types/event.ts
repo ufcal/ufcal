@@ -8,7 +8,7 @@ export interface EventResponse {
 }
 
 export interface EventDetailResponse extends EventResponse {
-  description?: string
+  description: string
 }
 
 export interface EventAdminResponse {
@@ -18,6 +18,7 @@ export interface EventAdminResponse {
   end: string
   allDay: boolean
   categoryId: number
+  description: string
 }
 
 export interface EventAdminRequest {

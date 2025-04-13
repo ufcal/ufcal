@@ -144,6 +144,7 @@ export const GET: APIRoute = async ({ params }) => {
         .replace(' ', 'T')
     }
     mappedEvent.categoryId = event.categoryId
+    mappedEvent.description = event.description ?? ''
 
     return new Response(JSON.stringify(mappedEvent), {
       status: 200,
