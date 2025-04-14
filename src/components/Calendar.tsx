@@ -120,7 +120,7 @@ export default function Calendar() {
           center: 'title'
         }}
         initialView="dayGridMonth"
-        dayMaxEvents={5} // 日付枠内に表示できるイベント数を制限
+        dayMaxEvents={true} // 日付枠内に表示できるイベント数を制限
         events={events} // APIから取得したイベントを使用
         dayCellContent={renderDayCellContent}
         eventDisplay={'block'} // イベントをブロック要素として表示
@@ -136,8 +136,8 @@ export default function Calendar() {
         }}
         businessHours={true} // 土日をグレーアウト
         fixedWeekCount={false} // 週数を固定しない⇒月の週数が変わる
-        //height={'90vh'} // カレンダーの高さを制限
-        contentHeight={'auto'} // カレンダーのコンテンツの高さを自動調整
+        height={'90vh'} // カレンダーの高さを制限
+        //contentHeight={'auto'} // カレンダーのコンテンツの高さを自動調整
       />
       <EventInfoModal
         isOpen={isModalOpen}
