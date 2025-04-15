@@ -72,7 +72,7 @@ td.fc-day-sun .fc-daygrid-day-number {
 
 /* 「他n件」表示の改善 */
 .fc-more-link {
-  @apply bg-primary-500 text-white font-normal !px-2 !pt-2 !pb-1 rounded-md !ml-1 !mt-1 block w-fit text-center;
+  @apply bg-primary-500 text-white font-normal !px-2 !pt-2 !pb-1 !rounded-md !ml-1 !mt-1 block w-fit text-center;
   transition: background-color 0.2s, color 0.2s;
 }
 .fc-more-link:hover {

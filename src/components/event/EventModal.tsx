@@ -270,9 +270,9 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
   if (!isModalVisible) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50">
       {/* モーダルダイアログ */}
-      <div className="relative mb-10 mt-10 w-full max-w-2xl rounded-lg bg-white shadow">
+      <div className="relative mt-10 mb-10 w-full max-w-2xl rounded-lg bg-white shadow">
         <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
           {/* モーダルヘッダ部 */}
           <div className="flex items-start justify-between rounded-t border-b p-5">
@@ -313,7 +313,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                     type="text"
                     id="title"
                     {...register('title')}
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 shadow-sm"
                     required
                   />
                   {errors.title && (
@@ -353,7 +353,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                       className="peer sr-only"
                       onChange={handleCheckboxChange}
                     />
-                    <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-300 rtl:peer-checked:after:-translate-x-full"></div>
+                    <div className="peer peer-checked:bg-primary-600 peer-focus:ring-primary-300 relative h-6 w-11 rounded-full bg-gray-200 peer-focus:ring-2 peer-focus:outline-none after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white rtl:peer-checked:after:-translate-x-full"></div>
                     <span className="ms-3 font-medium text-gray-900">時間設定(オプション)</span>
                   </label>
                 </div>
@@ -382,7 +382,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                         <input
                           type="time"
                           id="start-time"
-                          className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 leading-none text-gray-900 focus:border-primary-500 focus:ring-primary-500"
+                          className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 leading-none text-gray-900"
                           {...register('eventTimeStart')}
                           required
                         />
@@ -416,7 +416,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                         <input
                           type="time"
                           id="end-time"
-                          className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 leading-none text-gray-900 focus:border-primary-500 focus:ring-primary-500"
+                          className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 leading-none text-gray-900"
                           {...register('eventTimeEnd')}
                           required
                         />
@@ -458,7 +458,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                     id="description"
                     {...register('description')}
                     rows={4}
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-primary-500 focus:ring-primary-500"
+                    className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900"
                   ></textarea>
                 </div>
               </div>
@@ -470,7 +470,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
               {!completed && (
                 <button
                   type="submit"
-                  className="rounded-lg bg-primary-700 px-5 py-2.5 text-center font-medium text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-300"
+                  className="bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 rounded-lg px-5 py-2.5 text-center font-medium text-white focus:ring-4"
                   disabled={isSubmitting}
                 >
                   {eventId ? '更新する' : '追加する'}
@@ -479,7 +479,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
               {completed && (
                 <button
                   type="button"
-                  className="rounded-lg border border-gray-200 bg-white px-5 py-2.5 font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200"
+                  className="hover:text-primary-700 rounded-lg border border-gray-200 bg-white px-5 py-2.5 font-medium text-gray-900 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-200 focus:outline-none"
                   onClick={handleCancel}
                 >
                   閉じる
