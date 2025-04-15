@@ -127,7 +127,7 @@ export default function Calendar() {
         eventClick={handleEventClick}
         datesSet={getCalendarInfo} // カレンダーが切り替わるときに呼び出される
         locale={jaLocale} // 日本語化
-        displayEventTime={false} // イベントの時間を非表示
+        //displayEventTime={false} // イベントの時間を非表示
         eventTimeFormat={{
           // 時刻フォーマット'14:30'
           hour: '2-digit',
