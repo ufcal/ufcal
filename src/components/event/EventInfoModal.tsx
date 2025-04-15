@@ -128,7 +128,11 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
 
                     if (formattedStartDate === formattedEndDate) {
                       // 開始日と終了日が同じ場合
-                      return `${formattedStartDate} ${formattedStartTime}〜${formattedEndTime}`
+                      if (formattedStartTime === formattedEndTime) {
+                        return `${formattedStartDate} ${formattedStartTime}`
+                      } else {
+                        return `${formattedStartDate} ${formattedStartTime}〜${formattedEndTime}`
+                      }
                     } else {
                       const startYear = startDate.getFullYear()
                       const endYear = endDate.getFullYear()
