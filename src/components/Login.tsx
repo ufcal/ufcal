@@ -28,7 +28,7 @@ export default function Login() {
   }
 
   return (
-    <div className="w-full space-y-8 rounded-lg bg-white p-6 shadow ring-1 ring-black ring-opacity-5 sm:p-8">
+    <div className="w-full space-y-8 rounded-lg bg-white p-6 shadow ring-1 ring-black/5 sm:p-8">
       <h2 className="text-2xl font-bold text-gray-900">ログイン</h2>
       {error && <Alert message={error} type="error" />}
       <form className="mt-8 space-y-6" onSubmit={login}>
@@ -42,7 +42,7 @@ export default function Login() {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-primary-500 focus:ring-primary-500"
+            className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900"
             required
           />
         </div>
@@ -56,7 +56,7 @@ export default function Login() {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-primary-500 focus:ring-primary-500"
+            className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900"
             required
           />
         </div>
@@ -68,14 +68,14 @@ export default function Login() {
               id="rememberMe"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              className="text-primary-600 focus:ring-primary-500 h-4 w-4 rounded border-gray-300"
             />
             <span className="ml-2 text-gray-900">ログイン状態を保持する</span>
           </label>
         </div>
         <button
           type="submit"
-          className="rounded-lg bg-primary-700 px-5 py-2.5 text-center font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
+          className="bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 rounded-lg px-5 py-2.5 text-center font-medium text-white focus:ring-4 focus:outline-none"
         >
           ログイン
         </button>
