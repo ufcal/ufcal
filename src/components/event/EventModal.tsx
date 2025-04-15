@@ -275,7 +275,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
       <div className="relative mt-10 mb-10 w-full max-w-2xl rounded-lg bg-white shadow">
         <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
           {/* モーダルヘッダ部 */}
-          <div className="flex items-start justify-between rounded-t border-b p-5">
+          <div className="flex items-start justify-between rounded-t border-b border-gray-200 p-5">
             <h3 className="text-xl font-semibold">
               {eventId ? 'イベントを編集' : 'イベントを作成'}
             </h3>
