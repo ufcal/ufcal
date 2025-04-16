@@ -12,18 +12,14 @@ import { z } from 'zod'
 // フィールドのスキーマを定義
 const schema = z
   .object({
-    title: z.string().trim().min(1, { message: 'イベント名は必須です' }), // 前後スペースを削除してチェック
+    title: z.string().trim().min(1, { message: 'イベント名は必須です' }),
     eventDate: z.object({
-      startDate: z
-        .date({
-          invalid_type_error: '日付の形式が正しくありません'
-        })
-        .nullable(), // nullを許可
-      endDate: z
-        .date({
-          invalid_type_error: '日付の形式が正しくありません'
-        })
-        .nullable() // nullを許可
+      startDate: z.date({
+        invalid_type_error: '開始日の形式が正しくありません'
+      }),
+      endDate: z.date({
+        invalid_type_error: '終了日の形式が正しくありません'
+      })
     }),
     isTimeSettingEnabled: z.boolean(),
     eventTimeStart: z
@@ -37,24 +33,25 @@ const schema = z
     category: z.number({ message: 'カテゴリーは必須です' }),
     description: z.string().trim().optional()
   })
-  .refine((data) => data.eventDate.startDate !== null, {
-    message: '開始日は必須です',
-    path: ['eventDate', 'startDate']
-  })
-  .refine((data) => data.eventDate.endDate !== null, {
-    message: '終了日は必須です',
-    path: ['eventDate', 'endDate']
-  })
   .refine(
     (data) => {
       if (data.isTimeSettingEnabled) {
-        return data.eventTimeStart && data.eventTimeEnd
+        // 開始時刻は必須
+        if (!data.eventTimeStart) return false
+
+        // 開始日と終了日が同じ場合、終了時刻は任意
+        if (data.eventDate.startDate?.getTime() === data.eventDate.endDate?.getTime()) {
+          return true
+        }
+
+        // 日付が異なる場合は終了時刻も必須
+        return Boolean(data.eventTimeEnd)
       }
       return true
     },
     {
-      message: '時刻は必須です',
-      path: ['eventTimeStart', 'eventTimeEnd']
+      message: '開始時刻は必須です',
+      path: ['eventTimeStart']
     }
   )
 
@@ -138,7 +135,8 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
             if (eventData.start.includes('T')) {
               eventTimeStart = _convertTimeToHHMM(eventData.start.split('T')[1])
             }
-            if (eventData.end.includes('T')) {
+            // 開始日時と終了日時が同じ場合は終了時間を設定しない
+            if (startDate.getTime() !== endDate.getTime() && eventData.end.includes('T')) {
               eventTimeEnd = _convertTimeToHHMM(eventData.end.split('T')[1])
             }
           }
@@ -174,13 +172,16 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
 
     if (isTimeSettingEnabled) {
       start = `${values.eventDate.startDate?.toLocaleString('sv-SE').split(' ')[0]}T${values.eventTimeStart}`
-      end = `${values.eventDate.endDate?.toLocaleString('sv-SE').split(' ')[0]}T${values.eventTimeEnd}`
+
+      // 終了時刻が設定されている場合はそれを使用、ない場合は開始時刻を使用
+      const endTime = values.eventTimeEnd || values.eventTimeStart
+      end = `${values.eventDate.endDate?.toLocaleString('sv-SE').split(' ')[0]}T${endTime}`
     } else {
-      // *** 終日イベントの場合は終了日を翌日に設定 ***
-      const endDate = new Date(values.eventDate.endDate!)
-      endDate.setDate(endDate.getDate() + 1) // 翌日に設定
-      start = values.eventDate.startDate!.toLocaleString('sv-SE').split(' ')[0]
-      end = endDate.toLocaleString('sv-SE').split(' ')[0] // 翌日の日付を設定
+      // 終日イベントの場合の処理（既存のまま）
+      const endDate = new Date(values.eventDate.endDate)
+      endDate.setDate(endDate.getDate() + 1)
+      start = values.eventDate.startDate.toLocaleString('sv-SE').split(' ')[0]
+      end = endDate.toLocaleString('sv-SE').split(' ')[0]
     }
 
     try {
@@ -418,7 +419,6 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                           id="end-time"
                           className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 leading-none text-gray-900"
                           {...register('eventTimeEnd')}
-                          required
                         />
                       </div>
                       {errors.eventTimeEnd && (
