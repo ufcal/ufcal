@@ -35,7 +35,7 @@ const schema = z
       .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, { message: '終了時間はhh:mm形式で入力してください' })
       .or(z.literal('')),
     category: z.number({ message: 'カテゴリーは必須です' }),
-    description: z.string().trim().optional(),
+    description: z.string().trim().optional().or(z.literal('')),
     url: z
       .string()
       .trim()
@@ -44,6 +44,7 @@ const schema = z
         message: 'URLはhttp://またはhttps://で始まる必要があります'
       })
       .optional()
+      .or(z.literal(''))
   })
   .refine(
     (data) => {
