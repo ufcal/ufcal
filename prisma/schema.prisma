@@ -21,16 +21,16 @@ model User {
 }
 
 model Event {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   title       String
   description String?
   url         String?
   start       DateTime
   end         DateTime
-  isAllDay    Boolean   @default(false)
-  categoryId  Int       @default(0)
+  isAllDay    Boolean  @default(false)
+  categoryId  Int      @default(0)
   creatorId   Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime? @updatedAt
-  creator     User      @relation(fields: [creatorId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  creator     User     @relation(fields: [creatorId], references: [id])
 }

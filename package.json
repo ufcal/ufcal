@@ -68,6 +68,6 @@
     "typescript-eslint": "^8.31.0"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "pnpm dlx tsx prisma/seed.ts"
   }
 }
