@@ -7,7 +7,8 @@ interface AddEventData {
   end: Date
   isAllDay: boolean
   categoryId: number
-  description?: string
+  description: string | null
+  url: string | null
   creatorId: number
 }
 interface UpdateEventData {
@@ -16,7 +17,8 @@ interface UpdateEventData {
   end: Date
   isAllDay: boolean
   categoryId: number
-  description?: string
+  description: string | null
+  url: string | null
 }
 
 interface PublicEvent {
@@ -125,6 +127,7 @@ class EventDB extends BaseDB {
           isAllDay: data.isAllDay,
           categoryId: data.categoryId,
           description: data.description,
+          url: data.url,
           creator: {
             connect: {
               id: data.creatorId

@@ -22,7 +22,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // - end: イベントの終了日時 (string, フォーマット「YYYY-MM-DDThh:mm」)
     // - allDay: 終日イベントかどうかを示すフラグ (boolean)
     const body = await request.json()
-    const { title, start, end, allDay, category, description } = body as EventAdminRequest
+    const { title, start, end, allDay, category, description, url } = body as EventAdminRequest
     let errMessage = ''
     let startDate, endDate
 
@@ -72,6 +72,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       isAllDay: allDay,
       categoryId: category,
       description: description,
+      url: url,
       creatorId: locals.user.id
     })
 

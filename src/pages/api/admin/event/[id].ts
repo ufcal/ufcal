@@ -42,7 +42,7 @@ export const PUT: APIRoute = async ({ params, request }) => {
     let errMessage = ''
     let startDate, endDate
     const body = await request.json()
-    const { title, start, end, allDay, category, description } = body as EventAdminRequest
+    const { title, start, end, allDay, category, description, url } = body as EventAdminRequest
     const { id } = params
 
     // JSTからUTCに変換してDateオブジェクトを生成
@@ -89,7 +89,8 @@ export const PUT: APIRoute = async ({ params, request }) => {
       end: endDate,
       isAllDay: allDay,
       categoryId: category,
-      description: description
+      description: description,
+      url: url
     })
 
     return new Response(JSON.stringify(event), {
@@ -146,6 +147,7 @@ export const GET: APIRoute = async ({ params }) => {
     }
     mappedEvent.categoryId = event.categoryId
     mappedEvent.description = event.description ?? ''
+    mappedEvent.url = event.url ?? ''
 
     return new Response(JSON.stringify(mappedEvent), {
       status: 200,

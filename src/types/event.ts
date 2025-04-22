@@ -1,3 +1,4 @@
+// カレンダーに表示するイベント(省略形)
 export interface EventResponse {
   id: number
   title: string
@@ -7,10 +8,13 @@ export interface EventResponse {
   color: string
 }
 
+// カレンダーの詳細画面に表示するイベント
 export interface EventDetailResponse extends EventResponse {
   description: string
+  url: string
 }
 
+// 管理画面に表示するイベント
 export interface EventAdminResponse {
   id: number
   title: string
@@ -19,8 +23,10 @@ export interface EventAdminResponse {
   allDay: boolean
   categoryId: number
   description: string
+  url: string
 }
 
+// 管理画面から登録するイベント
 export interface EventAdminRequest {
   title: string
   allDay: boolean
@@ -28,4 +34,5 @@ export interface EventAdminRequest {
   end: string
   category: number
   description: string
+  url: string
 }

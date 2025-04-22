@@ -14,12 +14,16 @@ const schema = z
   .object({
     title: z.string().trim().min(1, { message: 'イベント名は必須です' }),
     eventDate: z.object({
-      startDate: z.date({
-        invalid_type_error: '開始日の形式が正しくありません'
-      }),
-      endDate: z.date({
-        invalid_type_error: '終了日の形式が正しくありません'
-      })
+      startDate: z
+        .date({
+          invalid_type_error: '開始日の形式が正しくありません'
+        })
+        .nullable(),
+      endDate: z
+        .date({
+          invalid_type_error: '終了日の形式が正しくありません'
+        })
+        .nullable()
     }),
     isTimeSettingEnabled: z.boolean(),
     eventTimeStart: z
@@ -31,7 +35,15 @@ const schema = z
       .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, { message: '終了時間はhh:mm形式で入力してください' })
       .or(z.literal('')),
     category: z.number({ message: 'カテゴリーは必須です' }),
-    description: z.string().trim().optional()
+    description: z.string().trim().optional(),
+    url: z
+      .string()
+      .trim()
+      .url({ message: 'URLが不正です' })
+      .refine((val) => !val || val.startsWith('http://') || val.startsWith('https://'), {
+        message: 'URLはhttp://またはhttps://で始まる必要があります'
+      })
+      .optional()
   })
   .refine(
     (data) => {
@@ -91,7 +103,8 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
       eventTimeStart: '', // 時間設定が無効な場合の初期値
       eventTimeEnd: '', // 時間設定が無効な場合の初期値
       category: 0, // カテゴリーデフォルト値
-      description: ''
+      description: '',
+      url: ''
     }
   })
 
@@ -152,7 +165,8 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
             isTimeSettingEnabled: !eventData.allDay, // 終日イベントかどうか
             eventTimeStart: eventTimeStart,
             eventTimeEnd: eventTimeEnd,
-            category: eventData.categoryId
+            category: eventData.categoryId,
+            url: eventData.url
           })
         } catch (e) {
           console.error(e)
@@ -171,16 +185,16 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
     setError('')
 
     if (isTimeSettingEnabled) {
-      start = `${values.eventDate.startDate?.toLocaleString('sv-SE').split(' ')[0]}T${values.eventTimeStart}`
+      start = `${values.eventDate.startDate!.toLocaleString('sv-SE').split(' ')[0]}T${values.eventTimeStart}`
 
       // 終了時刻が設定されている場合はそれを使用、ない場合は開始時刻を使用
       const endTime = values.eventTimeEnd || values.eventTimeStart
-      end = `${values.eventDate.endDate?.toLocaleString('sv-SE').split(' ')[0]}T${endTime}`
+      end = `${values.eventDate.endDate!.toLocaleString('sv-SE').split(' ')[0]}T${endTime}`
     } else {
       // 終日イベントの場合の処理（既存のまま）
-      const endDate = new Date(values.eventDate.endDate)
+      const endDate = new Date(values.eventDate.endDate!)
       endDate.setDate(endDate.getDate() + 1)
-      start = values.eventDate.startDate.toLocaleString('sv-SE').split(' ')[0]
+      start = values.eventDate.startDate!.toLocaleString('sv-SE').split(' ')[0]
       end = endDate.toLocaleString('sv-SE').split(' ')[0]
     }
 
@@ -193,7 +207,8 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
           start: start!,
           end: end!,
           category: values.category,
-          description: values.description ?? ''
+          description: values.description ?? '',
+          url: values.url ?? ''
         })
       } else {
         // イベントの更新の場合
@@ -203,7 +218,8 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
           start: start!,
           end: end!,
           category: values.category,
-          description: values.description ?? ''
+          description: values.description ?? '',
+          url: values.url ?? ''
         })
       }
       if (response.ok) {
@@ -452,7 +468,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                 </div>
                 <div className="col-span-4">
                   <label htmlFor="description" className="mb-1 block font-medium text-gray-900">
-                    概要
+                    イベント内容
                   </label>
                   <textarea
                     id="description"
@@ -460,6 +476,22 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                     rows={4}
                     className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900"
                   ></textarea>
+                </div>
+                <div className="col-span-4">
+                  <label htmlFor="url" className="mb-1 block font-medium text-gray-900">
+                    詳細ページURL(オプション)
+                  </label>
+                  <input
+                    id="url"
+                    {...register('url')}
+                    placeholder="https://example.com"
+                    className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 shadow-sm"
+                  />
+                  {errors.url && (
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-500">
+                      <span className="font-medium">{errors.url.message}</span>
+                    </p>
+                  )}
                 </div>
               </div>
             </fieldset>
