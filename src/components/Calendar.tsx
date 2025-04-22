@@ -19,7 +19,7 @@ const fetcher = (url: string): Promise<any> => fetch(url).then((res) => res.json
 
 export default function Calendar() {
   const $userStore = useStore(userStore)
-  const calendarRef = useRef()
+  const calendarRef = useRef<FullCalendar>(null)
   const $isEventUpdated = useStore(isEventUpdated) // イベント情報の更新を監視
 
   // カレンダーの日付範囲を初期化
