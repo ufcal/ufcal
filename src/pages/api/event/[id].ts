@@ -40,6 +40,7 @@ export const GET: APIRoute = async ({ params }) => {
     }
     //mappedEvent.categoryId = event.categoryId
     mappedEvent.description = event.description ?? ''
+    mappedEvent.url = event.url ?? ''
 
     return new Response(JSON.stringify(mappedEvent), {
       status: 200,

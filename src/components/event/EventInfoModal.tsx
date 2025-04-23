@@ -3,6 +3,14 @@ import { AdminEventFetch } from '@/fetch/admin'
 import { modalEventId, notifyEventUpdate, showEventModal } from '@/store/event'
 import React, { useEffect, useState } from 'react'
 
+interface Comment {
+  id: string
+  author: string
+  content: string
+  createdAt: string
+  avatar?: string
+}
+
 interface EventInfoModalProps {
   isOpen: boolean
   event: any
@@ -10,12 +18,98 @@ interface EventInfoModalProps {
   userAuth: any
 }
 
+// 開催日時の文字列を生成する関数
+const formatEventDateTime = (event: { start: string; end: string; allDay: boolean }) => {
+  if (event.allDay) {
+    const startDate = new Date(event.start)
+    const adjustedEnd = new Date(event.end)
+    adjustedEnd.setDate(adjustedEnd.getDate() - 1)
+
+    const formattedStart = new Intl.DateTimeFormat('ja-JP', {
+      dateStyle: 'long'
+    }).format(startDate)
+    const formattedEnd = new Intl.DateTimeFormat('ja-JP', {
+      dateStyle: 'long'
+    }).format(adjustedEnd)
+
+    if (startDate.toDateString() === adjustedEnd.toDateString()) {
+      return formattedStart
+    } else {
+      const startYear = startDate.getFullYear()
+      const endYear = adjustedEnd.getFullYear()
+
+      if (startYear === endYear) {
+        const formattedEndDate = new Intl.DateTimeFormat('ja-JP', {
+          month: 'long',
+          day: 'numeric'
+        }).format(adjustedEnd)
+        return `${formattedStart} 〜 ${formattedEndDate}`
+      } else {
+        return `${formattedStart} 〜 ${formattedEnd}`
+      }
+    }
+  } else {
+    const startDate = new Date(event.start)
+    const endDate = new Date(event.end)
+
+    const formattedStartDate = new Intl.DateTimeFormat('ja-JP', {
+      dateStyle: 'long'
+    }).format(startDate)
+    const formattedStartTime = new Intl.DateTimeFormat('ja-JP', {
+      timeStyle: 'short'
+    }).format(startDate)
+    const formattedEndDate = new Intl.DateTimeFormat('ja-JP', {
+      dateStyle: 'long'
+    }).format(endDate)
+    const formattedEndTime = new Intl.DateTimeFormat('ja-JP', {
+      timeStyle: 'short'
+    }).format(endDate)
+
+    if (formattedStartDate === formattedEndDate) {
+      if (formattedStartTime === formattedEndTime) {
+        return `${formattedStartDate} ${formattedStartTime}`
+      } else {
+        return `${formattedStartDate} ${formattedStartTime}〜${formattedEndTime}`
+      }
+    } else {
+      const startYear = startDate.getFullYear()
+      const endYear = endDate.getFullYear()
+
+      if (startYear === endYear) {
+        const formattedEndDate = new Intl.DateTimeFormat('ja-JP', {
+          month: 'long',
+          day: 'numeric'
+        }).format(endDate)
+        return `${formattedStartDate} ${formattedStartTime} 〜 ${formattedEndDate} ${formattedEndTime}`
+      } else {
+        return `${formattedStartDate} ${formattedStartTime} 〜 ${formattedEndDate} ${formattedEndTime}`
+      }
+    }
+  }
+}
+
 const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose, userAuth }) => {
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
-  const [completed, setCompleted] = useState(false) // 登録完了フラグ
+  const [completed, setCompleted] = useState(false)
+  const [newComment, setNewComment] = useState('')
+  const [comments] = useState<Comment[]>([
+    {
+      id: '1',
+      author: '山田太郎',
+      content: 'とても興味深いイベントですね！参加が楽しみです。',
+      createdAt: '2024-03-20 10:30',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=1'
+    },
+    {
+      id: '2',
+      author: '佐藤花子',
+      content: '前回のイベントも素晴らしかったです。今回も期待しています！',
+      createdAt: '2024-03-20 11:15',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=2'
+    }
+  ])
 
-  // メッセージをリセット
   useEffect(() => {
     if (isOpen && event) {
       setSuccess('')
@@ -26,19 +120,13 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
 
   if (!isOpen || !event) return null
 
-  // 編集ボタンを押したときの処理
   const handleEditEvent = async () => {
-    // イベントIDを設定し、モーダルを表示
     modalEventId.set(event.id)
     showEventModal.set(true)
-
-    // モーダルを閉じる
     onClose()
   }
 
-  // 削除ボタンを押したときの処理
   const handleDeleteEvent = async () => {
-    // メッセージリセット
     setSuccess('')
     setError('')
 
@@ -47,11 +135,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
         const response = await AdminEventFetch.removeEvent(event.id)
         if (response.ok) {
           setSuccess('イベントを削除しました。')
-
-          // 登録完了
           setCompleted(true)
-
-          // イベントの更新を通知
           notifyEventUpdate()
         } else {
           const errorData = await response.json()
@@ -63,135 +147,198 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
     }
   }
 
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose()
+    }
+  }
+
+  const handleSubmitComment = (e: React.FormEvent) => {
+    e.preventDefault()
+    // ここでコメントの送信処理を実装
+    setNewComment('')
+  }
+
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50">
-      {/* モーダルダイアログ */}
-      <div className="relative mt-10 mb-10 w-full max-w-2xl rounded-lg bg-white shadow">
-        {/* モーダルコンテンツ部 */}
-        <div className="relative rounded-lg bg-white p-4 shadow sm:p-5">
-          {/* モーダルヘッダ部 */}
-          <div className="mb-4 flex justify-between rounded-t sm:mb-5">
-            <div className="text-lg text-gray-900 md:text-xl">
-              <h3 className="font-semibold">{event.title}</h3>
-              <p className="text-gray-500">
-                {(() => {
-                  if (event.allDay) {
-                    const startDate = new Date(event.start)
-
-                    // 終了日を1日減らす
-                    const adjustedEnd = new Date(event.end)
-                    adjustedEnd.setDate(adjustedEnd.getDate() - 1)
-
-                    const formattedStart = new Intl.DateTimeFormat('ja-JP', {
-                      dateStyle: 'long'
-                    }).format(startDate)
-                    const formattedEnd = new Intl.DateTimeFormat('ja-JP', {
-                      dateStyle: 'long'
-                    }).format(adjustedEnd)
-
-                    if (startDate.toDateString() === adjustedEnd.toDateString()) {
-                      // 開始日と終了日が同じ場合
-                      return formattedStart
-                    } else {
-                      const startYear = startDate.getFullYear()
-                      const endYear = adjustedEnd.getFullYear()
-
-                      // 開始日と終了日が異なる場合
-                      if (startYear === endYear) {
-                        // 年が同じ場合、終了日の年を省略
-                        const formattedEndDate = new Intl.DateTimeFormat('ja-JP', {
-                          month: 'long',
-                          day: 'numeric'
-                        }).format(adjustedEnd)
-                        return `${formattedStart} 〜 ${formattedEndDate}`
-                      } else {
-                        // 年が異なる場合、年も表示
-                        return `${formattedStart} 〜 ${formattedEnd}`
-                      }
-                    }
-                  } else {
-                    const startDate = new Date(event.start)
-                    const endDate = new Date(event.end)
-
-                    const formattedStartDate = new Intl.DateTimeFormat('ja-JP', {
-                      dateStyle: 'long'
-                    }).format(startDate)
-                    const formattedStartTime = new Intl.DateTimeFormat('ja-JP', {
-                      timeStyle: 'short'
-                    }).format(startDate)
-                    const formattedEndDate = new Intl.DateTimeFormat('ja-JP', {
-                      dateStyle: 'long'
-                    }).format(endDate)
-                    const formattedEndTime = new Intl.DateTimeFormat('ja-JP', {
-                      timeStyle: 'short'
-                    }).format(endDate)
-
-                    if (formattedStartDate === formattedEndDate) {
-                      // 開始日と終了日が同じ場合
-                      if (formattedStartTime === formattedEndTime) {
-                        return `${formattedStartDate} ${formattedStartTime}`
-                      } else {
-                        return `${formattedStartDate} ${formattedStartTime}〜${formattedEndTime}`
-                      }
-                    } else {
-                      const startYear = startDate.getFullYear()
-                      const endYear = endDate.getFullYear()
-
-                      // 開始日と終了日が異なる場合
-                      if (startYear === endYear) {
-                        // 年が同じ場合、終了日の年を省略
-                        const formattedEndDate = new Intl.DateTimeFormat('ja-JP', {
-                          month: 'long',
-                          day: 'numeric'
-                        }).format(endDate)
-
-                        // 開始日と終了日が異なる場合
-                        return `${formattedStartDate} ${formattedStartTime} 〜 ${formattedEndDate} ${formattedEndTime}`
-                      } else {
-                        // 年が異なる場合、年も表示
-                        return `${formattedStartDate} ${formattedStartTime} 〜 ${formattedEndDate} ${formattedEndTime}`
-                      }
-                    }
-                  }
-                })()}
-              </p>
-            </div>
-            <div>
-              <button
-                type="button"
-                className="inline-flex rounded-lg bg-transparent p-1.5 text-gray-400 hover:bg-gray-200 hover:text-gray-900"
-                onClick={onClose}
+    <div
+      onClick={handleOverlayClick}
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/60 p-4 backdrop-blur-sm"
+    >
+      <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 shadow-2xl dark:from-gray-900 dark:to-gray-800">
+        {/* ヘッダー */}
+        <div className="relative px-6 pt-6">
+          <div className="absolute top-6 right-6">
+            <button
+              onClick={onClose}
+              className="rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600 dark:bg-gray-500 dark:hover:bg-gray-600"
+            >
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                viewBox="0 0 24 24"
               >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <h2 className="mb-3 text-3xl font-bold text-gray-900 dark:text-white">{event.title}</h2>
+        </div>
+
+        {/* コンテンツ */}
+        <div className="px-6 pt-0 pb-4">
+          {success && <Alert message={success} type="success" />}
+          {error && <Alert message={error} type="error" />}
+
+          <div className="mb-6">
+            <div className="flex items-center gap-3">
+              <div className="rounded-full bg-blue-100 p-2 dark:bg-blue-900/50">
                 <svg
-                  aria-hidden="true"
-                  className="h-5 w-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-blue-600 dark:text-blue-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
                   <path
-                    fillRule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  ></path>
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
                 </svg>
-                <span className="sr-only">閉じる</span>
-              </button>
+              </div>
+              <div>
+                <div className="text-sm font-medium text-gray-500 dark:text-gray-400">開催日時</div>
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-900 dark:text-white">
+                    {formatEventDateTime(event)}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-          {/* モーダルボディ部 */}
-          <>
-            {success && <Alert message={success} type="success" />}
-            {error && <Alert message={error} type="error" />}
-            {event.description && (
-              <dl>
-                <dt className="mb-1 leading-none font-semibold">内容</dt>
-                <dd className="mb-4 text-gray-500 sm:mb-5">{event.description}</dd>
-              </dl>
-            )}
-          </>
+
+          {/* イベント内容セクション */}
+          {(event.description || event.url) && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="rounded-full bg-indigo-100 p-2 dark:bg-indigo-900/50">
+                  <svg
+                    className="h-5 w-5 text-indigo-600 dark:text-indigo-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-gray-900 dark:text-white">イベント内容</h3>
+              </div>
+
+              <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800/50">
+                {event.description && (
+                  <div className="prose prose-gray dark:prose-invert max-w-none">
+                    <div className="whitespace-pre-line text-gray-600 dark:text-gray-300">
+                      {event.description}
+                    </div>
+                  </div>
+                )}
+                {event.url && (
+                  <div className={event.description ? 'mt-4' : 'mt-0'}>
+                    <a
+                      href={event.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center rounded-lg bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+                    >
+                      <svg
+                        className="mr-2 h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                        />
+                      </svg>
+                      詳細ページで確認する
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* コメントセクション */}
+          <div className="mt-10 space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">コメント</h3>
+
+            {/* コメント一覧 */}
+            <div className="space-y-4">
+              {comments.map((comment) => (
+                <div
+                  key={comment.id}
+                  className="rounded-lg bg-white p-4 shadow-sm dark:bg-gray-800/50"
+                >
+                  <div className="flex items-start space-x-3">
+                    {comment.avatar && (
+                      <img
+                        src={comment.avatar}
+                        alt={comment.author}
+                        className="h-10 w-10 rounded-full"
+                      />
+                    )}
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-sm font-medium text-gray-900 dark:text-white">
+                          {comment.author}
+                        </h4>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                          {comment.createdAt}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">{comment.content}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* コメント入力フォーム */}
+            <form onSubmit={handleSubmitComment} className="space-y-3">
+              <div className="rounded-lg bg-white p-4 shadow-sm dark:bg-gray-800/50">
+                <textarea
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="コメントを入力..."
+                  className="w-full resize-none rounded-lg border border-gray-200 bg-transparent p-3 text-sm text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:text-white dark:placeholder-gray-400"
+                  rows={3}
+                />
+                <div className="mt-3 flex justify-end">
+                  <button
+                    type="submit"
+                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+                  >
+                    コメントを投稿
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          {/* 管理者用ボタン */}
           {userAuth && userAuth.role === 'admin' && (
-            <div className="flex items-center justify-between">
+            <div className="mt-6 flex items-center justify-between">
               <div className="flex items-center space-x-3 sm:space-x-4">
                 {!completed && (
                   <button
