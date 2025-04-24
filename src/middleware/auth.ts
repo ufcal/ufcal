@@ -47,9 +47,17 @@ export const auth = defineMiddleware(async (context, next) => {
       const result = config.PROTECTED_ROUTES.some((path) => context.url.pathname.startsWith(path))
       if (result) {
         // 管理画面と管理用APIはアクセス不可
-        return new Response(JSON.stringify({ message: 'アクセスできません' }), {
-          status: 401
-        })
+        if (context.url.pathname.startsWith('/api/')) {
+          return new Response(JSON.stringify({ message: 'アクセスできません' }), {
+            status: 401,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+        } else {
+          // 通常のページアクセスの場合はログインページにリダイレクト
+          return Response.redirect(new URL(`/login?redirect=${context.url.pathname}`, context.url))
+        }
       } else {
         return next()
       }
