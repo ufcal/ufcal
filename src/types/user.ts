@@ -1,6 +1,6 @@
 import type { User } from '@prisma/client'
 
-export type UserRole = 'admin' | 'operator' | 'user'
+export type UserRole = 'ADMIN' | 'OPERATOR' | 'USER'
 
 // クライアント側で使用するユーザ認証情報
 export interface UserAuth {

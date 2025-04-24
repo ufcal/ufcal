@@ -8,13 +8,13 @@ async function main() {
         email: 'admin@example.com',
         name: '管理者',
         password: '$2a$10$XLEGbbEKPN6WUHyV6Iv9zeT90nZTJl3uz4HPelKblOaQQgEicWijW',
-        role: 'admin'
+        role: 'ADMIN'
       },
       {
         email: 'user@example.com',
         name: '一般ユーザ',
         password: '$2a$10$XLEGbbEKPN6WUHyV6Iv9zeT90nZTJl3uz4HPelKblOaQQgEicWijW',
-        role: 'user'
+        role: 'USER'
       }
     ],
     skipDuplicates: true
