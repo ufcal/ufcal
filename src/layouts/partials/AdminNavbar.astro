@@ -6,18 +6,18 @@ const user = Astro.locals.user
 ---
 
 <nav class="fixed z-30 w-full border-b border-gray-200 bg-white">
-  <div class="container mx-auto px-3 py-3 lg:px-5 lg:pl-3">
-    <div class="flex items-center justify-between">
-      <div class="flex items-center justify-start">
+  <div class="px-3 py-3 lg:px-5 lg:pl-3">
+    <div class="flex items-center">
+      <div class="flex flex-1 items-center justify-start">
         <button
           id="toggleSidebarMobile"
           aria-expanded="true"
           aria-controls="sidebar"
-          class="cursor-pointer rounded p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:ring-2 focus:ring-gray-100 lg:hidden"
+          class="hover:bg-primary-100 hover:text-primary-600 focus:bg-primary-100 focus:ring-primary-500 cursor-pointer rounded-lg p-1 text-gray-600 focus:ring-2 lg:hidden"
         >
           <svg
             id="toggleSidebarMobileHamburger"
-            class="h-6 w-6"
+            class="h-8 w-8"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -28,7 +28,7 @@ const user = Astro.locals.user
           >
           <svg
             id="toggleSidebarMobileClose"
-            class="hidden h-6 w-6"
+            class="hidden h-8 w-8"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -38,16 +38,16 @@ const user = Astro.locals.user
               clip-rule="evenodd"></path></svg
           >
         </button>
-        <a href="/" class="ml-2 flex md:mr-24">
+        <a href="/" class="ml-0 flex items-center lg:ml-64">
           <img class="mr-3 h-auto w-10" src={config.site.logo} alt="siteロゴ" />
           <span class="self-center text-xl font-semibold whitespace-nowrap sm:text-2xl"
             >{config.site.title} 管理画面</span
           >
         </a>
       </div>
-      <div class="flex items-center">
+      <div class="mr-0 flex items-center lg:mr-64">
         <!-- Profile -->
-        <div class="ml-3 flex items-center">
+        <div class="flex items-center">
           <button
             type="button"
             class="inline-flex items-center justify-center rounded-full bg-blue-600 p-1 text-white"
