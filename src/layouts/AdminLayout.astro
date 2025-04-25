@@ -1,5 +1,5 @@
 ---
-import Navbar from '@/layouts/partials/AdminNavbar.astro'
+import AdminNavbar from '@/layouts/partials/AdminNavbar.astro'
 import Sidebar from '@/layouts/partials/AdminSidebar.astro'
 import '@/styles/global.css'
 
@@ -13,33 +13,20 @@ const { title } = Astro.props
 <!doctype html>
 <html lang="ja">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    <!--
-      <link rel="canonical" href="{{ .Permalink }}">
-     -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
   </head>
-  <body class="bg-gray-50 dark:bg-gray-800">
-    <Navbar />
-    <div class="flex overflow-hidden bg-gray-50 pt-16 dark:bg-gray-900">
+  <body>
+    <AdminNavbar />
+    <div class="flex overflow-hidden bg-gray-50 pt-16">
       <Sidebar />
-      <div
-        id="main-content"
-        class="relative h-full w-full overflow-y-auto bg-gray-50 lg:ml-64 dark:bg-gray-900"
-      >
-        <main>
-          <slot />
-        </main>
-      </div>
+      <main class="relative h-full w-full overflow-y-auto bg-gray-50 lg:ml-64">
+        <slot />
+      </main>
     </div>
     <script src="../scripts/index.js"></script>
   </body>
