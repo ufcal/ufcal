@@ -5,30 +5,30 @@ import items from '@/data/sidebar.json'
 
 <aside
   id="sidebar"
-  class="fixed top-0 left-0 z-20 flex flex-col flex-shrink-0 hidden w-64 h-full pt-16 font-normal duration-75 lg:flex transition-width"
+  class="transition-width fixed top-0 left-0 z-20 flex hidden h-full w-64 flex-shrink-0 flex-col pt-16 font-normal duration-75 lg:flex"
   aria-label="Sidebar"
 >
-  <div class="relative flex flex-col flex-1 min-h-0 pt-0 bg-white border-r border-gray-200">
-    <div class="flex flex-col flex-1 pt-5 pb-4 overflow-y-auto">
-      <div class="flex-1 px-3 space-y-1 bg-white divide-y divide-gray-200">
-        <ul class="pb-2 space-y-2">
+  <div class="relative flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white pt-0">
+    <div class="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
+      <div class="flex-1 space-y-1 divide-y divide-gray-200 bg-white px-3">
+        <ul class="space-y-2 pb-2">
           {
             items.map((item) =>
               item.subMenu ? (
                 <li>
                   <button
                     type="button"
-                    class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100"
+                    class="group flex w-full items-center rounded-lg p-2 text-base text-gray-900 transition duration-75 hover:bg-gray-100"
                     aria-controls={item.subMenuId}
                     data-collapse-toggle={item.subMenuId}
                   >
                     <Icon
                       name={item.icon}
-                      class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900"
+                      class="h-6 w-6 flex-shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
                     />
-                    <span class="flex-1 ml-3 text-left whitespace-nowrap">{item.title}</span>
+                    <span class="ml-3 flex-1 text-left whitespace-nowrap">{item.title}</span>
                     <svg
-                      class="w-6 h-6"
+                      class="h-6 w-6"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                       xmlns="http://www.w3.org/2000/svg"
@@ -40,12 +40,12 @@ import items from '@/data/sidebar.json'
                       />
                     </svg>
                   </button>
-                  <ul id={item.subMenuId} class="hidden py-2 space-y-2">
+                  <ul id={item.subMenuId} class="hidden space-y-2 py-2">
                     {item.subMenu.map((subItem) => (
                       <li>
                         <a
                           href={subItem.href}
-                          class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100"
+                          class="group flex items-center rounded-lg p-2 pl-11 text-base text-gray-900 transition duration-75 hover:bg-gray-100"
                         >
                           {subItem.title}
                         </a>
@@ -57,11 +57,11 @@ import items from '@/data/sidebar.json'
                 <li>
                   <a
                     href={item.href}
-                    class="flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group"
+                    class="group flex items-center rounded-lg p-2 text-base text-gray-900 hover:bg-gray-100"
                   >
                     <Icon
                       name={item.icon}
-                      class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900"
+                      class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900"
                     />
                     <span class="ml-3">{item.title}</span>
                   </a>
