@@ -1,0 +1,76 @@
+---
+import { Icon } from 'astro-icon/components'
+import items from '@/data/sidebar.json'
+---
+
+<aside
+  id="sidebar"
+  class="fixed top-0 left-0 z-20 flex flex-col flex-shrink-0 hidden w-64 h-full pt-16 font-normal duration-75 lg:flex transition-width"
+  aria-label="Sidebar"
+>
+  <div class="relative flex flex-col flex-1 min-h-0 pt-0 bg-white border-r border-gray-200">
+    <div class="flex flex-col flex-1 pt-5 pb-4 overflow-y-auto">
+      <div class="flex-1 px-3 space-y-1 bg-white divide-y divide-gray-200">
+        <ul class="pb-2 space-y-2">
+          {
+            items.map((item) =>
+              item.subMenu ? (
+                <li>
+                  <button
+                    type="button"
+                    class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100"
+                    aria-controls={item.subMenuId}
+                    data-collapse-toggle={item.subMenuId}
+                  >
+                    <Icon
+                      name={item.icon}
+                      class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900"
+                    />
+                    <span class="flex-1 ml-3 text-left whitespace-nowrap">{item.title}</span>
+                    <svg
+                      class="w-6 h-6"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                  <ul id={item.subMenuId} class="hidden py-2 space-y-2">
+                    {item.subMenu.map((subItem) => (
+                      <li>
+                        <a
+                          href={subItem.href}
+                          class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100"
+                        >
+                          {subItem.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ) : (
+                <li>
+                  <a
+                    href={item.href}
+                    class="flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group"
+                  >
+                    <Icon
+                      name={item.icon}
+                      class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900"
+                    />
+                    <span class="ml-3">{item.title}</span>
+                  </a>
+                </li>
+              )
+            )
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</aside>

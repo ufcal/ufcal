@@ -1,0 +1,14 @@
+[
+  {
+    "id": "dashboard",
+    "title": "ダッシュボード",
+    "icon": "mdi:view-dashboard",
+    "href": "/"
+  },
+  {
+    "id": "user",
+    "title": "ユーザ",
+    "icon": "mdi:account-multiple",
+    "href": "/user"
+  }
+]
