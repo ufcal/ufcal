@@ -9,6 +9,6 @@
     "id": "user",
     "title": "ユーザ",
     "icon": "mdi:account-multiple",
-    "href": "/user"
+    "href": "/admin/user"
   }
 ]
