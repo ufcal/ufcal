@@ -149,27 +149,19 @@ export default function UserListPanel() {
         </div>
       </div>
 
-      <div className="flex flex-col">
-        <div className="overflow-x-auto">
-          <div className="inline-block min-w-full align-middle">
-            <div className="overflow-hidden shadow">
-              <UserList
-                users={filteredUsers}
-                selectedUsers={selectedUsers}
-                setSelectedUsers={setSelectedUsers}
-                onEdit={(user) => {
-                  setSelectedUser(user)
-                  setShowEditModal(true)
-                }}
-                onDelete={(user) => {
-                  setSelectedUser(user)
-                  setShowDeleteModal(true)
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+      <UserList
+        users={filteredUsers}
+        selectedUsers={selectedUsers}
+        setSelectedUsers={setSelectedUsers}
+        onEdit={(user) => {
+          setSelectedUser(user)
+          setShowEditModal(true)
+        }}
+        onDelete={(user) => {
+          setSelectedUser(user)
+          setShowDeleteModal(true)
+        }}
+      />
 
       {showAddModal && (
         <UserAddModal
