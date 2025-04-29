@@ -1,3 +1,4 @@
+import Button from '@/components/base/Button.tsx'
 import { useState } from 'react'
 
 type User = {
@@ -134,7 +135,24 @@ export default function UserList({
                         <span>{user.status === 'active' ? 'アクティブ' : '非アクティブ'}</span>
                       </div>
                     </td>
-                    <td className="space-x-1 p-4 whitespace-nowrap">
+                    <td className="space-x-2 p-4 whitespace-nowrap">
+                      <Button
+                        type="button"
+                        onClick={() => onEdit(user)}
+                        variant="primary"
+                        icon="mdi:square-edit-outline"
+                      >
+                        編集
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={() => onDelete(user)}
+                        variant="error"
+                        icon="mdi:trash-can-outline"
+                      >
+                        削除
+                      </Button>
+                      {/*}
                       <button
                         type="button"
                         onClick={() => onEdit(user)}
@@ -174,6 +192,7 @@ export default function UserList({
                         </svg>
                         削除
                       </button>
+                      */}
                     </td>
                   </tr>
                 ))}
