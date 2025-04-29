@@ -1,12 +1,9 @@
 {
   "site": {
     "title": "カレンダーデモ",
-    "logo": "/images/logo.png"
-  },
-  "features": {
+    "logo": "/images/logo.png",
     "comments": {
-      "enabled": true,
-      "defaultDisplay": true
+      "enabled": true
     }
   }
 }

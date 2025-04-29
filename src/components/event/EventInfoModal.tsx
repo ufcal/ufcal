@@ -1,4 +1,5 @@
 import Alert from '@/components/Alert'
+import config from '@/config/config.json'
 import { AdminEventFetch } from '@/fetch/admin'
 import { modalEventId, notifyEventUpdate, showEventModal } from '@/store/event'
 import React, { useEffect, useState } from 'react'
@@ -93,6 +94,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
   const [error, setError] = useState('')
   const [completed, setCompleted] = useState(false)
   const [newComment, setNewComment] = useState('')
+  const commentsEnabled = config.site.comments.enabled
   const [comments] = useState<Comment[]>([
     {
       id: '1',
@@ -280,61 +282,65 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
           )}
 
           {/* コメントセクション */}
-          <div className="mt-10 space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">コメント</h3>
+          {commentsEnabled && (
+            <div className="mt-10 space-y-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">コメント</h3>
 
-            {/* コメント一覧 */}
-            <div className="space-y-4">
-              {comments.map((comment) => (
-                <div
-                  key={comment.id}
-                  className="rounded-lg bg-white p-4 shadow-sm dark:bg-gray-800/50"
-                >
-                  <div className="flex items-start space-x-3">
-                    {comment.avatar && (
-                      <img
-                        src={comment.avatar}
-                        alt={comment.author}
-                        className="h-10 w-10 rounded-full"
-                      />
-                    )}
-                    <div className="flex-1 space-y-1">
-                      <div className="flex items-center justify-between">
-                        <h4 className="text-sm font-medium text-gray-900 dark:text-white">
-                          {comment.author}
-                        </h4>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
-                          {comment.createdAt}
-                        </span>
+              {/* コメント一覧 */}
+              <div className="space-y-4">
+                {comments.map((comment) => (
+                  <div
+                    key={comment.id}
+                    className="rounded-lg bg-white p-4 shadow-sm dark:bg-gray-800/50"
+                  >
+                    <div className="flex items-start space-x-3">
+                      {comment.avatar && (
+                        <img
+                          src={comment.avatar}
+                          alt={comment.author}
+                          className="h-10 w-10 rounded-full"
+                        />
+                      )}
+                      <div className="flex-1 space-y-1">
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-sm font-medium text-gray-900 dark:text-white">
+                            {comment.author}
+                          </h4>
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                            {comment.createdAt}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                          {comment.content}
+                        </p>
                       </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">{comment.content}</p>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-
-            {/* コメント入力フォーム */}
-            <form onSubmit={handleSubmitComment} className="space-y-3">
-              <div className="rounded-lg bg-white p-4 shadow-sm dark:bg-gray-800/50">
-                <textarea
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="コメントを入力..."
-                  className="w-full resize-none rounded-lg border border-gray-200 bg-transparent p-3 text-sm text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:text-white dark:placeholder-gray-400"
-                  rows={3}
-                />
-                <div className="mt-3 flex justify-end">
-                  <button
-                    type="submit"
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
-                  >
-                    コメントを投稿
-                  </button>
-                </div>
+                ))}
               </div>
-            </form>
-          </div>
+
+              {/* コメント入力フォーム */}
+              <form onSubmit={handleSubmitComment} className="space-y-3">
+                <div className="rounded-lg bg-white p-4 shadow-sm dark:bg-gray-800/50">
+                  <textarea
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="コメントを入力..."
+                    className="w-full resize-none rounded-lg border border-gray-200 bg-transparent p-3 text-sm text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:text-white dark:placeholder-gray-400"
+                    rows={3}
+                  />
+                  <div className="mt-3 flex justify-end">
+                    <button
+                      type="submit"
+                      className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+                    >
+                      コメントを投稿
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          )}
 
           {/* 管理者用ボタン */}
           {userAuth && userAuth.role === 'ADMIN' && (
