@@ -5,7 +5,7 @@ const config = {
   PUBLIC_ROUTES: ['/', '/api/auth/login', '/api/auth/logout'], // アクセス制限しないURL
   // 公開型: 一部にログインが必要なページがある
   //PROTECTED_ROUTES: ['/api/admin', '/admin'], // アクセス制限するURL
-  PROTECTED_ROUTES: ['/api/admin', '/api/member', '/admin'], // アクセス制限するURL
+  PROTECTED_ROUTES: ['/admin', '/api/admin', '/api/member'], // アクセス制限するURL
 
   SESSION_COOKIE_NAME: import.meta.env.SESSION_COOKIE_NAME || '__session', // クッキー作成用シークレットコード
   SESSION_COOKIE_SECRET: import.meta.env.SESSION_COOKIE_SECRET || 'secret',
