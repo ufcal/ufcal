@@ -4,6 +4,7 @@ import { Icon } from 'astro-icon/components'
 import UserStoreInitializer from '@/components/UserStoreInitializer'
 import { convertToUserAuth } from '@/types/user'
 import config from "@/config/config.json"
+import ProfileModal from '@/components/ProfileModal'
 
 const user = Astro.locals.user
 const userAuth = user ? convertToUserAuth(user) : null  // ユーザ認証情報
@@ -81,6 +82,15 @@ const userAuth = user ? convertToUserAuth(user) : null  // ユーザ認証情報
               </div>
               <ul class="py-1" role="none">
                 <li>
+                  <button
+                    id="profile-settings"
+                    class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    role="menuitem"
+                  >
+                    プロフィール設定
+                  </button>
+                </li>
+                <li>
                   <a
                     id="logout"
                     href="#"
@@ -96,12 +106,33 @@ const userAuth = user ? convertToUserAuth(user) : null  // ユーザ認証情報
     </div>
   </div>
 </nav>
+
+{user && (
+  <ProfileModal
+    client:load
+    user={{
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar,
+      bio: user.bio
+    }}
+  />
+)}
+
 <script>
   import AuthFetch from '@/fetch/auth.ts'
+  import { showProfileModal } from '@/components/profile/ProfileModal'
 
   const buttonLogout = document.querySelector('#logout')
   buttonLogout?.addEventListener('click', async () => {
     const result = await AuthFetch.logout()
     if (result) window.location.href = '/'
+  })
+
+  // プロフィール設定モーダルの制御
+  const buttonProfileSettings = document.querySelector('#profile-settings')
+  buttonProfileSettings?.addEventListener('click', () => {
+    showProfileModal.set(true)
   })
 </script>
