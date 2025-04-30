@@ -11,7 +11,7 @@ interface ProfileModalProps {
     name: string
     email: string
     avatar?: string
-    bio?: string
+    biography?: string
   }
 }
 
@@ -19,11 +19,13 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
   const isOpen = useStore(showProfileModal)
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
+  const [tempImageUrl, setTempImageUrl] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    bio: '',
-    avatar: ''
+    biography: '',
+    avatar: '',
+    avatarFile: null as File | null
   })
 
   useEffect(() => {
@@ -33,9 +35,11 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
       setFormData({
         name: user.name,
         email: user.email,
-        bio: user.bio || '',
-        avatar: user.avatar || ''
+        biography: user.biography || '',
+        avatar: user.avatar || '',
+        avatarFile: null
       })
+      setTempImageUrl(null)
     }
   }, [isOpen, user])
 
@@ -43,6 +47,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
 
   const handleClose = () => {
     showProfileModal.set(false)
+    setTempImageUrl(null)
   }
 
   const handleOverlayClick = (e: React.MouseEvent) => {
@@ -51,11 +56,59 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
     }
   }
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // ファイルサイズの検証（2MB以下）
+    if (file.size > 2 * 1024 * 1024) {
+      setError('ファイルサイズは2MB以下にしてください')
+      return
+    }
+
+    // ファイル形式の検証
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']
+    if (!allowedTypes.includes(file.type)) {
+      setError('JPG、PNG、GIF形式のファイルのみアップロード可能です')
+      return
+    }
+
+    try {
+      // 一時的なURLを作成して保存
+      const tempUrl = URL.createObjectURL(file)
+      setTempImageUrl(tempUrl)
+
+      // フォームデータに画像ファイルを保存
+      setFormData((prev) => ({
+        ...prev,
+        avatarFile: file
+      }))
+    } catch (err) {
+      setError('画像の読み込みに失敗しました')
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      // TODO: API呼び出しの実装
-      // const response = await updateProfile(formData)
+      const submitData = new FormData()
+      submitData.append('userId', user.id)
+      submitData.append('name', formData.name)
+      submitData.append('email', formData.email)
+      submitData.append('biography', formData.biography)
+      if (formData.avatarFile) {
+        submitData.append('avatar', formData.avatarFile)
+      }
+
+      const response = await fetch('/api/admin/user/profile', {
+        method: 'POST',
+        body: submitData
+      })
+
+      if (!response.ok) {
+        throw new Error('プロフィールの更新に失敗しました')
+      }
+
       setSuccess('プロフィールを更新しました')
       setTimeout(() => {
         handleClose()
@@ -105,7 +158,11 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
             <div className="flex items-center space-x-4">
               <div className="relative">
                 <img
-                  src={formData.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'}
+                  src={
+                    tempImageUrl ||
+                    formData.avatar ||
+                    'https://api.dicebear.com/7.x/avataaars/svg?seed=default'
+                  }
                   alt="プロフィール画像"
                   className="h-20 w-20 rounded-full object-cover"
                 />
@@ -133,9 +190,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
                   id="avatar-upload"
                   className="hidden"
                   accept="image/*"
-                  onChange={(e) => {
-                    // TODO: 画像アップロード処理の実装
-                  }}
+                  onChange={handleImageUpload}
                 />
               </div>
               <div>
@@ -185,15 +240,15 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
             {/* 自己紹介 */}
             <div>
               <label
-                htmlFor="bio"
+                htmlFor="biography"
                 className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
               >
                 自己紹介
               </label>
               <textarea
-                id="bio"
-                value={formData.bio}
-                onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                id="biography"
+                value={formData.biography}
+                onChange={(e) => setFormData({ ...formData, biography: e.target.value })}
                 rows={4}
                 className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               />
