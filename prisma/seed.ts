@@ -14,7 +14,7 @@ async function main() {
         email: 'user@example.com',
         name: '一般ユーザ',
         password: '$2a$10$XLEGbbEKPN6WUHyV6Iv9zeT90nZTJl3uz4HPelKblOaQQgEicWijW',
-        role: 'USER'
+        role: 'MEMBER'
       }
     ],
     skipDuplicates: true

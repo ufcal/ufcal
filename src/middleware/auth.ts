@@ -9,6 +9,15 @@ import Redis from 'ioredis'
 const redis = new Redis(config.SESSION_REDIS_URL)
 const redisSession = new RedisSession({ client: redis, ttl: config.SESSION_EXPIRES })
 
+// 保護されたルートへのアクセス制御を行う関数
+const isAuthorizedForProtectedRoute = (pathname: string, userRole: string): boolean => {
+  // admin関連のパスに対する権限チェック
+  if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
+    return userRole === 'ADMIN' || userRole === 'MODERATOR'
+  }
+  return true
+}
+
 export const auth = defineMiddleware(async (context, next) => {
   // Redisセッション管理用APIを取得
   context.locals.session = redisSession
@@ -18,12 +27,42 @@ export const auth = defineMiddleware(async (context, next) => {
   if (user) {
     context.locals.user = user
 
+    // 保護されたルートへのアクセス権限チェック
+    if (!isAuthorizedForProtectedRoute(context.url.pathname, user.role)) {
+      if (context.url.pathname.startsWith('/api/')) {
+        return new Response(JSON.stringify({ message: 'アクセス権限がありません' }), {
+          status: 403,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+      } else {
+        // 通常のページアクセスの場合は403ページまたはホームにリダイレクト
+        return Response.redirect(new URL('/', context.url))
+      }
+    }
+
     return next()
   } else {
     // セッションがない場合は「remember me」からユーザ情報取得
     const user = await Auth.getRememberMeUser(context)
     if (user) {
       context.locals.user = user
+
+      // 保護されたルートへのアクセス権限チェック
+      if (!isAuthorizedForProtectedRoute(context.url.pathname, user.role)) {
+        if (context.url.pathname.startsWith('/api/')) {
+          return new Response(JSON.stringify({ message: 'アクセス権限がありません' }), {
+            status: 403,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+        } else {
+          // 通常のページアクセスの場合は403ページまたはホームにリダイレクト
+          return Response.redirect(new URL('/', context.url))
+        }
+      }
 
       return next()
     } else {
@@ -48,8 +87,8 @@ export const auth = defineMiddleware(async (context, next) => {
       if (result) {
         // 管理画面と管理用APIはアクセス不可
         if (context.url.pathname.startsWith('/api/')) {
-          return new Response(JSON.stringify({ message: 'アクセスできません' }), {
-            status: 401,
+          return new Response(JSON.stringify({ message: 'アクセス権限がありません' }), {
+            status: 403,
             headers: {
               'Content-Type': 'application/json'
             }
