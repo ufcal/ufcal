@@ -100,7 +100,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
         submitData.append('avatar', formData.avatarFile)
       }
 
-      const response = await fetch('/api/admin/user/profile', {
+      const response = await fetch('/api/admin/profile', {
         method: 'POST',
         body: submitData
       })

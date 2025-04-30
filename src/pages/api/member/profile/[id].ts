@@ -7,18 +7,6 @@ export const prerender = false
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    // セッション確認
-    // TODO: Astroのセッション管理に変更する必要があります
-    const session = request.headers.get('Authorization')
-    if (!session) {
-      return new Response(JSON.stringify({ message: 'Unauthorized' }), {
-        status: 401,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-    }
-
     // アップロードディレクトリの確認と作成
     const uploadDir = path.join(process.cwd(), 'public/uploads/avatars')
     if (!fs.existsSync(uploadDir)) {
