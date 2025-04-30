@@ -5,6 +5,7 @@ import UserStoreInitializer from '@/components/UserStoreInitializer'
 import { convertToUserAuth } from '@/types/user'
 import config from "@/config/config.json"
 import ProfileModal from '@/components/ProfileModal'
+import ChangePasswordModal from '@/components/ChangePasswordModal'
 
 const user = Astro.locals.user
 const userAuth = user ? convertToUserAuth(user) : null  // ユーザ認証情報
@@ -91,6 +92,15 @@ const userAuth = user ? convertToUserAuth(user) : null  // ユーザ認証情報
                   </button>
                 </li>
                 <li>
+                  <button
+                    id="change-password"
+                    class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    role="menuitem"
+                  >
+                    パスワード変更
+                  </button>
+                </li>
+                <li>
                   <a
                     id="logout"
                     href="#"
@@ -115,14 +125,22 @@ const userAuth = user ? convertToUserAuth(user) : null  // ユーザ認証情報
       name: user.name,
       email: user.email,
       avatar: user.avatar,
-      bio: user.bio
+      biography: user.biography
     }}
+  />
+)}
+
+{user && (
+  <ChangePasswordModal
+    client:load
+    userId={user.id}
   />
 )}
 
 <script>
   import AuthFetch from '@/fetch/auth.ts'
   import { showProfileModal } from '@/components/ProfileModal'
+  import { showChangePasswordModal } from '@/components/ChangePasswordModal'
 
   const buttonLogout = document.querySelector('#logout')
   buttonLogout?.addEventListener('click', async () => {
@@ -134,5 +152,11 @@ const userAuth = user ? convertToUserAuth(user) : null  // ユーザ認証情報
   const buttonProfileSettings = document.querySelector('#profile-settings')
   buttonProfileSettings?.addEventListener('click', () => {
     showProfileModal.set(true)
+  })
+
+  // パスワード変更モーダルの制御
+  const buttonChangePassword = document.querySelector('#change-password')
+  buttonChangePassword?.addEventListener('click', () => {
+    showChangePasswordModal.set(true)
   })
 </script>
