@@ -13,6 +13,7 @@ model User {
   email                 String    @unique
   password              String
   avatar                String?
+  biography             String?   @db.Text
   rememberMeToken       String?   @unique
   rememberMeTokenExpiry DateTime?
   role                  String
