@@ -1,6 +1,8 @@
 import config from '@/config/config.json'
 import { prisma } from '@/lib/prisma'
+import { UserDB } from '@/server/db'
 import Session from '@/server/utils/session'
+import { type UserProfile, convertToUserProfile } from '@/types/profile'
 import { type UserSessionData, convertToUserSessionData } from '@/types/user'
 import type { APIRoute } from 'astro'
 import fs from 'fs'
@@ -126,6 +128,54 @@ export const PUT: APIRoute = async (context) => {
   } catch (error) {
     console.error('Error updating profile:', error)
     return new Response(JSON.stringify({ message: 'Internal server error' }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+}
+
+export const GET: APIRoute = async ({ params, locals }) => {
+  try {
+    const userId = Number(params.id)
+
+    // アクセス権限をチェック
+    // 自分のデータのみ編集可能
+    const user = locals.user
+    if (!user || user.id !== userId) {
+      return new Response(JSON.stringify({ message: 'アクセス権限がありません' }), {
+        status: 403,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+
+    // ユーザ情報取得
+    const userWithPassword = await UserDB.getUserById(userId)
+    if (!userWithPassword) {
+      return new Response(
+        JSON.stringify({
+          message: 'Bad credentials'
+        }),
+        {
+          status: 401
+        }
+      )
+    }
+
+    // セッション(ユーザ情報)作成
+    const userProfile: UserProfile = convertToUserProfile(userWithPassword)
+
+    return new Response(JSON.stringify(userProfile), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json'

@@ -2,6 +2,17 @@ import type { User } from '@prisma/client'
 import BaseDB from './base'
 
 class UserDB extends BaseDB {
+  async getUserById(id: number): Promise<User | null> {
+    try {
+      const event = await BaseDB.prisma.user.findUnique({
+        where: { id }
+      })
+      return event
+    } catch (err) {
+      console.error(err)
+      return null
+    }
+  }
   async getUserByEmail(email: string): Promise<User | null> {
     try {
       const user = await BaseDB.prisma.user.findUnique({
