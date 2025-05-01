@@ -120,13 +120,7 @@ const userAuth = user ? convertToUserAuth(user) : null  // ユーザ認証情報
 {user && (
   <ProfileModal
     client:load
-    user={{
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar,
-      biography: user.biography
-    }}
+    userid={user.id}
   />
 )}
 

@@ -2,21 +2,15 @@ import Alert from '@/components/Alert'
 import config from '@/config/config.json'
 import { MemberProfileFetch } from '@/fetch/member'
 import { showProfileModal } from '@/store/profile'
-import type { MemberProfileRequest } from '@/types/profile'
+import type { MemberProfileRequest, MemberProfileResponse } from '@/types/profile'
 import { useStore } from '@nanostores/react'
 import React, { useEffect, useState } from 'react'
 
 interface ProfileModalProps {
-  user: {
-    id: string
-    name: string
-    email: string
-    avatar?: string
-    biography?: string
-  }
+  userid: number
 }
 
-const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
+const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
   const isOpen = useStore(showProfileModal)
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
@@ -30,19 +24,34 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
   })
 
   useEffect(() => {
-    if (isOpen && user) {
-      setSuccess('')
-      setError('')
-      setFormData({
-        name: user.name,
-        email: user.email,
-        biography: user.biography || '',
-        avatar: user.avatar || '',
-        avatarFile: null
-      })
-      setTempImageUrl(null)
+    const fetchProfile = async () => {
+      if (isOpen) {
+        try {
+          setSuccess('')
+          setError('')
+
+          const response = await MemberProfileFetch.getProfile(userid)
+          if (!response || !response.ok) {
+            throw new Error('プロフィールの取得に失敗しました')
+          }
+
+          const profileData: MemberProfileResponse = await response.json()
+          setFormData({
+            name: profileData.name,
+            email: profileData.email,
+            biography: profileData.biography || '',
+            avatar: profileData.avatar || '',
+            avatarFile: null
+          })
+          setTempImageUrl(null)
+        } catch (err) {
+          setError('プロフィールの取得に失敗しました')
+        }
+      }
     }
-  }, [isOpen, user])
+
+    fetchProfile()
+  }, [isOpen, userid])
 
   if (!isOpen) return null
 
@@ -100,7 +109,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
         formDataToSend.append('avatar', formData.avatarFile)
       }
 
-      const response = await MemberProfileFetch.updateProfile(Number(user.id), formDataToSend)
+      const response = await MemberProfileFetch.updateProfile(userid, formDataToSend)
 
       if (!response || !response.ok) {
         throw new Error('プロフィールの更新に失敗しました')
