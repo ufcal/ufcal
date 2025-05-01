@@ -1,11 +1,9 @@
 import Alert from '@/components/Alert'
 import { MemberProfileFetch } from '@/fetch/member'
+import { showProfileModal } from '@/store/profile'
 import type { MemberProfileRequest } from '@/types/profile'
 import { useStore } from '@nanostores/react'
-import { atom } from 'nanostores'
 import React, { useEffect, useState } from 'react'
-
-export const showProfileModal = atom(false)
 
 interface ProfileModalProps {
   user: {

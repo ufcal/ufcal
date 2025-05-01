@@ -139,7 +139,7 @@ const userAuth = user ? convertToUserAuth(user) : null  // ユーザ認証情報
 
 <script>
   import AuthFetch from '@/fetch/auth.ts'
-  import { showProfileModal } from '@/components/ProfileModal'
+  import { showProfileModal } from '@/store/profile'
   import { showChangePasswordModal } from '@/components/ChangePasswordModal'
 
   const buttonLogout = document.querySelector('#logout')
