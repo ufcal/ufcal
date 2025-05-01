@@ -5,8 +5,32 @@ import path from 'path'
 
 export const prerender = false
 
-export const POST: APIRoute = async ({ request }) => {
+export const PUT: APIRoute = async ({ params, locals, request }) => {
   try {
+    const userId = Number(params.id)
+
+    // アクセス権限をチェック
+    // 自分のデータのみ編集可能
+    const user = locals.user
+    if (!user || user.id !== userId) {
+      return new Response(JSON.stringify({ message: 'アクセス権限がありません' }), {
+        status: 403,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+
+    // アクセス権限をチェック
+    /* const id = Number(params.id)
+    if (isNaN(id)) {
+      return new Response(JSON.stringify({ message: '有効なIDが指定されていません' }), {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }*/
     // アップロードディレクトリの確認と作成
     const uploadDir = path.join(process.cwd(), 'public/uploads/avatars')
     if (!fs.existsSync(uploadDir)) {
@@ -15,7 +39,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // FormDataの解析
     const formData = await request.formData()
-    const userId = formData.get('userId')?.toString() || ''
+    //const userId = formData.get('userId')?.toString() || ''
     const name = formData.get('name')?.toString()
     const email = formData.get('email')?.toString()
     const biography = formData.get('biography')?.toString()
@@ -69,21 +93,28 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // データベースの更新
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: updateData
-    })
+    try {
+      const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: updateData
+      })
+    } catch (err) {
+      console.error(err)
+      return null
+    }
+    console.log('#####1')
+    console.log(updateData)
 
     return new Response(
       JSON.stringify({
-        message: 'Profile updated successfully',
-        user: {
+        message: 'Profile updated successfully'
+        /*user: {
           id: updatedUser.id,
           name: updatedUser.name,
           email: updatedUser.email,
           avatar: updatedUser.avatar,
           biography: updatedUser.biography
-        }
+        }*/
       }),
       {
         status: 200,

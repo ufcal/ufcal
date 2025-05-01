@@ -1,4 +1,6 @@
 import Alert from '@/components/Alert'
+import { MemberProfileFetch } from '@/fetch/member'
+import type { MemberProfileRequest } from '@/types/profile'
 import { useStore } from '@nanostores/react'
 import { atom } from 'nanostores'
 import React, { useEffect, useState } from 'react'
@@ -91,21 +93,17 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const submitData = new FormData()
-      submitData.append('userId', user.id)
-      submitData.append('name', formData.name)
-      submitData.append('email', formData.email)
-      submitData.append('biography', formData.biography)
+      const formDataToSend = new FormData()
+      formDataToSend.append('name', formData.name)
+      formDataToSend.append('email', formData.email)
+      formDataToSend.append('biography', formData.biography || '')
       if (formData.avatarFile) {
-        submitData.append('avatar', formData.avatarFile)
+        formDataToSend.append('avatar', formData.avatarFile)
       }
 
-      const response = await fetch('/api/admin/profile', {
-        method: 'POST',
-        body: submitData
-      })
+      const response = await MemberProfileFetch.updateProfile(Number(user.id), formDataToSend)
 
-      if (!response.ok) {
+      if (!response || !response.ok) {
         throw new Error('プロフィールの更新に失敗しました')
       }
 

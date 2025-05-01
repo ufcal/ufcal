@@ -1,14 +1,11 @@
-import type { MemberProfileRequest } from '@/types/profile'
+//import type { MemberProfileRequest } from '@/types/profile'
 
 class MemberProfileFetch {
-  async updateProfile(id: number, params: MemberProfileRequest): Promise<any> {
+  async updateProfile(id: number, params: FormData): Promise<any> {
     try {
       const response = await fetch(`${import.meta.env.PUBLIC_MEMBER_API_URL}/profile/${id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(params)
+        body: params
       })
       return response
     } catch (e) {
