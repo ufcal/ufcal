@@ -5,5 +5,11 @@
     "comments": {
       "enabled": true
     }
+  },
+  "upload": {
+    "avatar": {
+      "url": "/uploads/avatars",
+      "directory": "public/uploads/avatars"
+    }
   }
 }

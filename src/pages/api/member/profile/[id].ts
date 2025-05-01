@@ -1,3 +1,4 @@
+import config from '@/config/config.json'
 import { prisma } from '@/lib/prisma'
 import Session from '@/server/utils/session'
 import { type UserSessionData, convertToUserSessionData } from '@/types/user'
@@ -24,25 +25,14 @@ export const PUT: APIRoute = async (context) => {
       })
     }
 
-    // アクセス権限をチェック
-    /* const id = Number(params.id)
-    if (isNaN(id)) {
-      return new Response(JSON.stringify({ message: '有効なIDが指定されていません' }), {
-        status: 400,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-    }*/
     // アップロードディレクトリの確認と作成
-    const uploadDir = path.join(process.cwd(), 'public/uploads/avatars')
+    const uploadDir = path.join(process.cwd(), config.upload.avatar.directory)
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true })
     }
 
     // FormDataの解析
     const formData = await request.formData()
-    //const userId = formData.get('userId')?.toString() || ''
     const name = formData.get('name')?.toString()
     const email = formData.get('email')?.toString()
     const biography = formData.get('biography')?.toString()
@@ -84,7 +74,7 @@ export const PUT: APIRoute = async (context) => {
       })
 
       if (existingUser?.avatar) {
-        const oldPath = path.join(process.cwd(), 'public', existingUser.avatar)
+        const oldPath = path.join(uploadDir, existingUser.avatar)
         if (fs.existsSync(oldPath)) {
           fs.unlinkSync(oldPath)
         }
@@ -92,7 +82,7 @@ export const PUT: APIRoute = async (context) => {
 
       // 新しいアバター画像を保存
       await fs.promises.writeFile(filePath, Buffer.from(fileBuffer))
-      updateData.avatar = `/uploads/avatars/${fileName}`
+      updateData.avatar = fileName // ファイル名のみを保存
     }
 
     // データベースの更新
@@ -105,31 +95,34 @@ export const PUT: APIRoute = async (context) => {
       // セッション(ユーザ情報)更新
       const sessionData: UserSessionData = convertToUserSessionData(updatedUser)
       await Session.updateUser(context, sessionData)
+
+      return new Response(
+        JSON.stringify({
+          message: 'Profile updated successfully',
+          user: {
+            id: updatedUser.id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            avatar: updatedUser.avatar,
+            biography: updatedUser.biography
+          }
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
     } catch (err) {
       console.error(err)
-      return null
-    }
-    console.log('#####1')
-    console.log(updateData)
-
-    return new Response(
-      JSON.stringify({
-        message: 'Profile updated successfully'
-        /*user: {
-          id: updatedUser.id,
-          name: updatedUser.name,
-          email: updatedUser.email,
-          avatar: updatedUser.avatar,
-          biography: updatedUser.biography
-        }*/
-      }),
-      {
-        status: 200,
+      return new Response(JSON.stringify({ message: 'Database update failed' }), {
+        status: 500,
         headers: {
           'Content-Type': 'application/json'
         }
-      }
-    )
+      })
+    }
   } catch (error) {
     console.error('Error updating profile:', error)
     return new Response(JSON.stringify({ message: 'Internal server error' }), {

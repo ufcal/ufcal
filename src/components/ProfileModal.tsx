@@ -1,4 +1,5 @@
 import Alert from '@/components/Alert'
+import config from '@/config/config.json'
 import { MemberProfileFetch } from '@/fetch/member'
 import { showProfileModal } from '@/store/profile'
 import type { MemberProfileRequest } from '@/types/profile'
@@ -158,8 +159,9 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
                 <img
                   src={
                     tempImageUrl ||
-                    formData.avatar ||
-                    'https://api.dicebear.com/7.x/avataaars/svg?seed=default'
+                    (formData.avatar
+                      ? `${config.upload.avatar.url}/${formData.avatar}`
+                      : 'https://api.dicebear.com/7.x/avataaars/svg?seed=default')
                   }
                   alt="プロフィール画像"
                   className="h-20 w-20 rounded-full object-cover"
