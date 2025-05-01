@@ -166,13 +166,13 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
       onClick={handleOverlayClick}
       className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/60 p-4 backdrop-blur-sm"
     >
-      <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 shadow-2xl dark:from-gray-900 dark:to-gray-800">
+      <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 shadow-2xl">
         {/* ヘッダー */}
         <div className="relative px-6 pt-6">
           <div className="absolute top-6 right-6">
             <button
               onClick={onClose}
-              className="rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600 dark:bg-gray-500 dark:hover:bg-gray-600"
+              className="rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600"
             >
               <svg
                 className="h-5 w-5"
@@ -186,7 +186,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
             </button>
           </div>
 
-          <h2 className="mb-3 text-3xl font-bold text-gray-900 dark:text-white">{event.title}</h2>
+          <h2 className="mb-3 text-3xl font-bold text-gray-900">{event.title}</h2>
         </div>
 
         {/* コンテンツ */}
@@ -196,9 +196,9 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
 
           <div className="mb-6">
             <div className="flex items-center gap-3">
-              <div className="rounded-full bg-blue-100 p-2 dark:bg-blue-900/50">
+              <div className="rounded-full bg-blue-100 p-2">
                 <svg
-                  className="h-5 w-5 text-blue-600 dark:text-blue-300"
+                  className="h-5 w-5 text-blue-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -212,11 +212,9 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
                 </svg>
               </div>
               <div>
-                <div className="text-sm font-medium text-gray-500 dark:text-gray-400">開催日時</div>
+                <div className="text-sm font-medium text-gray-500">開催日時</div>
                 <div className="flex items-center gap-2">
-                  <span className="text-gray-900 dark:text-white">
-                    {formatEventDateTime(event)}
-                  </span>
+                  <span className="text-gray-900">{formatEventDateTime(event)}</span>
                 </div>
               </div>
             </div>
@@ -226,9 +224,9 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
           {(event.description || event.url) && (
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="rounded-full bg-indigo-100 p-2 dark:bg-indigo-900/50">
+                <div className="rounded-full bg-indigo-100 p-2">
                   <svg
-                    className="h-5 w-5 text-indigo-600 dark:text-indigo-300"
+                    className="h-5 w-5 text-indigo-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -241,15 +239,13 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
                     />
                   </svg>
                 </div>
-                <h3 className="text-gray-900 dark:text-white">イベント内容</h3>
+                <h3 className="text-gray-900">イベント内容</h3>
               </div>
 
-              <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800/50">
+              <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
                 {event.description && (
-                  <div className="prose prose-gray dark:prose-invert max-w-none">
-                    <div className="whitespace-pre-line text-gray-600 dark:text-gray-300">
-                      {event.description}
-                    </div>
+                  <div className="prose prose-gray max-w-none">
+                    <div className="whitespace-pre-line text-gray-600">{event.description}</div>
                   </div>
                 )}
                 {event.url && (
@@ -258,7 +254,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
                       href={event.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center rounded-lg bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+                      className="inline-flex items-center rounded-lg bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
                     >
                       <svg
                         className="mr-2 h-4 w-4"
@@ -284,15 +280,12 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
           {/* コメントセクション */}
           {commentsEnabled && (
             <div className="mt-10 space-y-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">コメント</h3>
+              <h3 className="text-lg font-semibold text-gray-900">コメント</h3>
 
               {/* コメント一覧 */}
               <div className="space-y-4">
                 {comments.map((comment) => (
-                  <div
-                    key={comment.id}
-                    className="rounded-lg bg-white p-4 shadow-sm dark:bg-gray-800/50"
-                  >
+                  <div key={comment.id} className="rounded-lg bg-white p-4 shadow-sm">
                     <div className="flex items-start space-x-3">
                       {comment.avatar && (
                         <img
@@ -303,16 +296,10 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
                       )}
                       <div className="flex-1 space-y-1">
                         <div className="flex items-center justify-between">
-                          <h4 className="text-sm font-medium text-gray-900 dark:text-white">
-                            {comment.author}
-                          </h4>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">
-                            {comment.createdAt}
-                          </span>
+                          <h4 className="text-sm font-medium text-gray-900">{comment.author}</h4>
+                          <span className="text-xs text-gray-500">{comment.createdAt}</span>
                         </div>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">
-                          {comment.content}
-                        </p>
+                        <p className="text-sm text-gray-600">{comment.content}</p>
                       </div>
                     </div>
                   </div>
@@ -321,12 +308,12 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
 
               {/* コメント入力フォーム */}
               <form onSubmit={handleSubmitComment} className="space-y-3">
-                <div className="rounded-lg bg-white p-4 shadow-sm dark:bg-gray-800/50">
+                <div className="rounded-lg bg-white p-4 shadow-sm">
                   <textarea
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="コメントを入力..."
-                    className="w-full resize-none rounded-lg border border-gray-200 bg-transparent p-3 text-sm text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:text-white dark:placeholder-gray-400"
+                    className="w-full resize-none rounded-lg border border-gray-200 bg-transparent p-3 text-sm text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                     rows={3}
                   />
                   <div className="mt-3 flex justify-end">

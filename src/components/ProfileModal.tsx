@@ -122,13 +122,13 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
       onClick={handleOverlayClick}
       className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/60 p-4 backdrop-blur-sm"
     >
-      <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 shadow-2xl dark:from-gray-900 dark:to-gray-800">
+      <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 shadow-2xl">
         {/* ヘッダー */}
         <div className="relative px-6 pt-6">
           <div className="absolute top-6 right-6">
             <button
               onClick={handleClose}
-              className="rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600 dark:bg-gray-500 dark:hover:bg-gray-600"
+              className="rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600"
             >
               <svg
                 className="h-5 w-5"
@@ -142,9 +142,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
             </button>
           </div>
 
-          <h2 className="mb-3 text-3xl font-bold text-gray-900 dark:text-white">
-            プロフィール設定
-          </h2>
+          <h2 className="mb-3 text-3xl font-bold text-gray-900">プロフィール設定</h2>
         </div>
 
         {/* コンテンツ */}
@@ -194,19 +192,14 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
                 />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                  プロフィール画像
-                </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">JPG, PNG, GIF (最大 2MB)</p>
+                <h3 className="text-lg font-medium text-gray-900">プロフィール画像</h3>
+                <p className="text-sm text-gray-500">JPG, PNG, GIF (最大 2MB)</p>
               </div>
             </div>
 
             {/* 名前 */}
             <div>
-              <label
-                htmlFor="name"
-                className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="name" className="mb-2 block text-sm font-medium text-gray-900">
                 名前
               </label>
               <input
@@ -214,17 +207,14 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
                 id="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                 required
               />
             </div>
 
             {/* メールアドレス */}
             <div>
-              <label
-                htmlFor="email"
-                className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="email" className="mb-2 block text-sm font-medium text-gray-900">
                 メールアドレス
               </label>
               <input
@@ -232,25 +222,22 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
                 id="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                 required
               />
             </div>
 
             {/* 自己紹介 */}
             <div>
-              <label
-                htmlFor="biography"
-                className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label htmlFor="biography" className="mb-2 block text-sm font-medium text-gray-900">
                 自己紹介
               </label>
               <textarea
                 id="biography"
                 value={formData.biography}
                 onChange={(e) => setFormData({ ...formData, biography: e.target.value })}
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                 rows={4}
-                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               />
             </div>
 
@@ -259,13 +246,13 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
               <button
                 type="button"
                 onClick={handleClose}
-                className="rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-4 focus:ring-gray-200 focus:outline-none dark:border-gray-500 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-600"
+                className="rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-4 focus:ring-gray-200 focus:outline-none"
               >
                 キャンセル
               </button>
               <button
                 type="submit"
-                className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
               >
                 保存
               </button>
