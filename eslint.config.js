@@ -75,8 +75,8 @@ export default [
       '@typescript-eslint/triple-slash-reference': 'off',
 
       // TypeScriptの厳格化
-      '@typescript-eslint/explicit-function-return-type': 'warn',
-      '@typescript-eslint/strict-boolean-expressions': 'warn'
+      '@typescript-eslint/explicit-function-return-type': 'warn'
+      //'@typescript-eslint/strict-boolean-expressions': 'warn'
     }
   },
   {
