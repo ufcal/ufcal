@@ -35,6 +35,8 @@ class Session {
       return null
     }
   }
+
+  // セッション(ユーザ情報)作成
   async createUser(context: APIContext, user: UserSessionData): Promise<UserSessionData | null> {
     // セッションID作成
     const sessionId = uuidv4()
@@ -51,6 +53,24 @@ class Session {
 
     // セッション作成
     await context.locals.session.set(config.SESSION_ID_PREFIX + sessionId, {
+      user: user
+    })
+
+    return user
+  }
+
+  // セッション(ユーザ情報)更新
+  async updateUser(context: APIContext, user: UserSessionData): Promise<UserSessionData | null> {
+    // クッキー取得
+    const cookie = context.cookies.get(config.SESSION_COOKIE_NAME)?.value
+    if (!cookie) return null
+
+    // セッションID取得
+    const unsignedSession = _unsign(cookie, config.SESSION_COOKIE_SECRET)
+    if (!unsignedSession) return null
+
+    // セッション更新
+    await context.locals.session.set(config.SESSION_ID_PREFIX + unsignedSession, {
       user: user
     })
 

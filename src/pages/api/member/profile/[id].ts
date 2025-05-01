@@ -1,12 +1,15 @@
 import { prisma } from '@/lib/prisma'
+import Session from '@/server/utils/session'
+import { type UserSessionData, convertToUserSessionData } from '@/types/user'
 import type { APIRoute } from 'astro'
 import fs from 'fs'
 import path from 'path'
 
 export const prerender = false
 
-export const PUT: APIRoute = async ({ params, locals, request }) => {
+export const PUT: APIRoute = async (context) => {
   try {
+    const { params, locals, request } = context
     const userId = Number(params.id)
 
     // アクセス権限をチェック
@@ -98,6 +101,10 @@ export const PUT: APIRoute = async ({ params, locals, request }) => {
         where: { id: userId },
         data: updateData
       })
+
+      // セッション(ユーザ情報)更新
+      const sessionData: UserSessionData = convertToUserSessionData(updatedUser)
+      await Session.updateUser(context, sessionData)
     } catch (err) {
       console.error(err)
       return null

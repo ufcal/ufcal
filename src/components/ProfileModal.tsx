@@ -106,8 +106,10 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user }) => {
       }
 
       setSuccess('プロフィールを更新しました')
+
+      // 更新成功後、2秒後にページをリロード
       setTimeout(() => {
-        handleClose()
+        window.location.reload()
       }, 2000)
     } catch (err) {
       setError('プロフィールの更新に失敗しました')

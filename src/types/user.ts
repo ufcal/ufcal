@@ -7,6 +7,7 @@ export interface UserAuth {
   id: number
   email: string
   name: string
+  avatar: string
   role: string
 }
 
@@ -15,6 +16,7 @@ export interface UserSessionData {
   id: number
   email: string
   name: string
+  avatar: string
   role: UserRole
 }
 
@@ -24,6 +26,7 @@ export const convertToUserAuth = (user: UserSessionData): UserAuth => {
     id: user.id,
     email: user.email,
     name: user.name,
+    avatar: user.avatar,
     role: user.role
   }
   return userAuth
@@ -36,6 +39,7 @@ export const convertToUserSessionData = (user: User): UserSessionData => {
     id: exceptPassword.id,
     email: exceptPassword.email,
     name: exceptPassword.name,
+    avatar: exceptPassword.avatar ?? '',
     role: exceptPassword.role as UserRole
   }
   return userSessinData
