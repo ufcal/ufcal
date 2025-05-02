@@ -5,6 +5,28 @@ import { showProfileModal } from '@/store/profile'
 import type { MemberProfileResponse } from '@/types/profile'
 import { useStore } from '@nanostores/react'
 import React, { useEffect, useState } from 'react'
+import { z } from 'zod'
+
+// バリデーションスキーマの定義
+const profileSchema = z.object({
+  name: z
+    .string()
+    .min(1, 'お名前を入力してください')
+    .max(10, 'お名前は10文字以内で入力してください'),
+  email: z
+    .string()
+    .min(1, 'メールアドレスを入力してください')
+    .email('正しいメールアドレスを入力してください'),
+  biography: z
+    .string()
+    .max(100, '自己紹介は100文字以内で入力してください')
+    .optional()
+    .transform((v) => v || ''),
+  avatar: z.string(),
+  avatarFile: z.instanceof(File).nullable()
+})
+
+type ProfileFormData = z.infer<typeof profileSchema>
 
 interface ProfileModalProps {
   userid: number
@@ -14,13 +36,14 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
   const isOpen = useStore(showProfileModal)
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
+  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({})
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null)
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ProfileFormData>({
     name: '',
     email: '',
     biography: '',
     avatar: '',
-    avatarFile: null as File | null
+    avatarFile: null
   })
 
   useEffect(() => {
@@ -98,13 +121,39 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
     }
   }
 
+  const validateForm = (): boolean => {
+    try {
+      profileSchema.parse(formData)
+      setValidationErrors({})
+      return true
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        const errors: { [key: string]: string } = {}
+        err.errors.forEach((error) => {
+          if (error.path[0]) {
+            errors[error.path[0].toString()] = error.message
+          }
+        })
+        setValidationErrors(errors)
+      }
+      return false
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError('')
+    setSuccess('')
+
+    if (!validateForm()) {
+      return
+    }
+
     try {
       const formDataToSend = new FormData()
       formDataToSend.append('name', formData.name)
       formDataToSend.append('email', formData.email)
-      formDataToSend.append('biography', formData.biography || '')
+      formDataToSend.append('biography', formData.biography)
       if (formData.avatarFile) {
         formDataToSend.append('avatar', formData.avatarFile)
       }
@@ -210,15 +259,22 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
             <div>
               <label htmlFor="name" className="mb-2 block text-sm font-medium text-gray-900">
                 名前
+                <span className="ml-1 text-sm text-gray-500">({formData.name.length}/10文字)</span>
               </label>
               <input
                 type="text"
                 id="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                className={`block w-full rounded-lg border ${
+                  validationErrors.name ? 'border-red-500' : 'border-gray-300'
+                } bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500`}
                 required
+                maxLength={10}
               />
+              {validationErrors.name && (
+                <p className="mt-1 text-sm text-red-500">{validationErrors.name}</p>
+              )}
             </div>
 
             {/* メールアドレス */}
@@ -231,23 +287,37 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
                 id="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                className={`block w-full rounded-lg border ${
+                  validationErrors.email ? 'border-red-500' : 'border-gray-300'
+                } bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500`}
                 required
               />
+              {validationErrors.email && (
+                <p className="mt-1 text-sm text-red-500">{validationErrors.email}</p>
+              )}
             </div>
 
             {/* 自己紹介 */}
             <div>
               <label htmlFor="biography" className="mb-2 block text-sm font-medium text-gray-900">
                 自己紹介
+                <span className="ml-1 text-sm text-gray-500">
+                  ({formData.biography.length}/100文字)
+                </span>
               </label>
               <textarea
                 id="biography"
                 value={formData.biography}
                 onChange={(e) => setFormData({ ...formData, biography: e.target.value })}
-                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                className={`block w-full rounded-lg border ${
+                  validationErrors.biography ? 'border-red-500' : 'border-gray-300'
+                } bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500`}
                 rows={4}
+                maxLength={100}
               />
+              {validationErrors.biography && (
+                <p className="mt-1 text-sm text-red-500">{validationErrors.biography}</p>
+              )}
             </div>
 
             {/* ボタン */}
