@@ -164,14 +164,13 @@ export const GET: APIRoute = async ({ params, locals }) => {
     // ユーザ情報取得
     const userWithPassword = await UserDB.getUserById(userId)
     if (!userWithPassword) {
-      return new Response(
-        JSON.stringify({
-          message: 'Bad credentials'
-        }),
-        {
-          status: 401
+      return new Response(JSON.stringify({ message: 'ユーザ情報が見つかりません' }), {
+        status: 404,
+        statusText: 'Not Found',
+        headers: {
+          'Content-Type': 'application/json'
         }
-      )
+      })
     }
 
     // セッション(ユーザ情報)作成

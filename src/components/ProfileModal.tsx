@@ -2,7 +2,7 @@ import Alert from '@/components/Alert'
 import config from '@/config/config.json'
 import { MemberProfileFetch } from '@/fetch/member'
 import { showProfileModal } from '@/store/profile'
-import type { MemberProfileRequest, MemberProfileResponse } from '@/types/profile'
+import type { MemberProfileResponse } from '@/types/profile'
 import { useStore } from '@nanostores/react'
 import React, { useEffect, useState } from 'react'
 
