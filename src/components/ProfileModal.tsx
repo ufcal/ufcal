@@ -70,16 +70,16 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
     const file = e.target.files?.[0]
     if (!file) return
 
-    // ファイルサイズの検証（2MB以下）
-    if (file.size > 2 * 1024 * 1024) {
-      setError('ファイルサイズは2MB以下にしてください')
+    // ファイルサイズの検証（500KB以下）
+    if (file.size > 500 * 1024) {
+      setError('ファイルサイズは500KB以下にしてください')
       return
     }
 
     // ファイル形式の検証
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
     if (!allowedTypes.includes(file.type)) {
-      setError('JPG、PNG、GIF形式のファイルのみアップロード可能です')
+      setError('JPG、PNG、GIF、WebP形式のファイルのみアップロード可能です')
       return
     }
 
@@ -162,7 +162,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* アバター設定 */}
             <div className="flex items-center space-x-4">
-              <div className="relative">
+              <div className="group relative cursor-pointer">
                 <img
                   src={
                     tempImageUrl ||
@@ -171,11 +171,11 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
                       : 'https://api.dicebear.com/7.x/avataaars/svg?seed=default')
                   }
                   alt="プロフィール画像"
-                  className="h-20 w-20 rounded-full object-cover"
+                  className="h-20 w-20 rounded-full object-cover ring-2 ring-gray-200 transition-all group-hover:ring-blue-400"
                 />
                 <label
                   htmlFor="avatar-upload"
-                  className="absolute right-0 bottom-0 rounded-full bg-blue-600 p-2 text-white hover:bg-blue-700"
+                  className="absolute right-0 bottom-0 cursor-pointer rounded-full bg-blue-600 p-2 text-white transition-colors hover:bg-blue-700"
                 >
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
@@ -202,7 +202,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
               </div>
               <div>
                 <h3 className="text-lg font-medium text-gray-900">プロフィール画像</h3>
-                <p className="text-sm text-gray-500">JPG, PNG, GIF (最大 2MB)</p>
+                <p className="text-sm text-gray-500">JPG, PNG, GIF, WebP (最大 500KB)</p>
               </div>
             </div>
 

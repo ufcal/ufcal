@@ -90,7 +90,7 @@ export const PUT: APIRoute = async (context) => {
           fit: 'cover', // アスペクト比を維持しながら指定サイズに収める
           position: 'center' // 中央を基準に切り取り
         })
-        .webp({ quality: 80 }) // WebP形式で保存、品質は80%
+        .webp({ quality: 70 }) // WebP形式で保存、品質は70%
         .toFile(filePath)
 
       updateData.avatar = fileName // ファイル名のみを保存
