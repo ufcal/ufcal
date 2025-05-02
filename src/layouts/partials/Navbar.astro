@@ -9,6 +9,7 @@ import ChangePasswordModal from '@/components/ChangePasswordModal'
 
 const user = Astro.locals.user
 const userAuth = user ? convertToUserAuth(user) : null  // ユーザ認証情報
+const avatarUrl = user?.avatar ? `${config.upload.avatar.url}/${user.avatar}` : null
 ---
 <!-- ログイン時はユーザ情報を取得 -->
 <UserStoreInitializer userAuth={userAuth} client:load />
@@ -62,13 +63,23 @@ const userAuth = user ? convertToUserAuth(user) : null  // ユーザ認証情報
           <div class="ml-3 flex items-center">
             <button
               type="button"
-              class="inline-flex items-center justify-center rounded-full bg-blue-600 p-1 text-white"
+              class="inline-flex items-center justify-center rounded-full overflow-hidden w-10 h-10 ring-2 ring-white"
               aria-expanded="false"
               data-dropdown-toggle="dropdown-2"
               aria-label="userアイコン"
             >
               <span class="sr-only">Open user menu</span>
-              <Icon class="h-8 w-8" name="mdi:account" />
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt={`${user.name}のアバター`}
+                  class="w-full h-full object-cover"
+                />
+              ) : (
+                <div class="w-full h-full bg-blue-600 flex items-center justify-center">
+                  <Icon class="h-8 w-8 text-white" name="mdi:account" />
+                </div>
+              )}
             </button>
             <!-- Dropdown menu -->
             <div

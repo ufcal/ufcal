@@ -3,6 +3,7 @@ import config from '@/config/config.json'
 import { Icon } from 'astro-icon/components'
 
 const user = Astro.locals.user
+const avatarUrl = user?.avatar ? `${config.upload.avatar.url}/${user.avatar}` : null
 ---
 
 <nav class="fixed z-30 w-full border-b border-gray-200 bg-white">
@@ -50,13 +51,25 @@ const user = Astro.locals.user
         <div class="flex items-center">
           <button
             type="button"
-            class="inline-flex items-center justify-center rounded-full bg-blue-600 p-1 text-white"
+            class="inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-full ring-2 ring-white"
             aria-expanded="false"
             data-dropdown-toggle="dropdown-2"
             aria-label="userアイコン"
           >
             <span class="sr-only">Open user menu</span>
-            <Icon class="h-8 w-8" name="mdi:account" />
+            {
+              avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt={`${user.name}のアバター`}
+                  class="h-full w-full object-cover"
+                />
+              ) : (
+                <div class="flex h-full w-full items-center justify-center bg-blue-600">
+                  <Icon class="h-8 w-8 text-white" name="mdi:account" />
+                </div>
+              )
+            }
           </button>
           <!-- Dropdown menu -->
           <div
