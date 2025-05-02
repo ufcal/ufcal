@@ -7,6 +7,7 @@ import { type UserSessionData, convertToUserSessionData } from '@/types/user'
 import type { APIRoute } from 'astro'
 import fs from 'fs'
 import path from 'path'
+import sharp from 'sharp'
 
 export const prerender = false
 
@@ -64,7 +65,7 @@ export const PUT: APIRoute = async (context) => {
     // アバター画像の処理
     if (avatarFile) {
       const fileBuffer = await avatarFile.arrayBuffer()
-      const fileExt = avatarFile.name.split('.').pop() || ''
+      const fileExt = 'webp' // WebPフォーマットに統一
       const timestamp = new Date().getTime()
       const fileName = `${userId}-${timestamp}.${fileExt}`
       const filePath = path.join(uploadDir, fileName)
@@ -82,8 +83,16 @@ export const PUT: APIRoute = async (context) => {
         }
       }
 
-      // 新しいアバター画像を保存
-      await fs.promises.writeFile(filePath, Buffer.from(fileBuffer))
+      // 画像を正方形に加工してリサイズ
+      const size = config.upload.avatar.size.width // 正方形なので width = height
+      await sharp(Buffer.from(fileBuffer))
+        .resize(size, size, {
+          fit: 'cover', // アスペクト比を維持しながら指定サイズに収める
+          position: 'center' // 中央を基準に切り取り
+        })
+        .webp({ quality: 80 }) // WebP形式で保存、品質は80%
+        .toFile(filePath)
+
       updateData.avatar = fileName // ファイル名のみを保存
     }
 
@@ -174,8 +183,9 @@ export const GET: APIRoute = async ({ params, locals }) => {
         'Content-Type': 'application/json'
       }
     })
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+    return new Response(JSON.stringify({ message: errorMessage }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json'

@@ -9,7 +9,11 @@
   "upload": {
     "avatar": {
       "url": "/uploads/avatars",
-      "directory": "public/uploads/avatars"
+      "directory": "public/uploads/avatars",
+      "size": {
+        "width": 200,
+        "height": 200
+      }
     }
   }
 }
