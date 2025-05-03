@@ -5,7 +5,7 @@ import { showProfileModal } from '@/store/profile'
 import type { MemberProfileResponse } from '@/types/profile'
 import { profileSchema } from '@/types/profile'
 import { useStore } from '@nanostores/react'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { z } from 'zod'
 
 type ProfileFormData = z.infer<typeof profileSchema> & {
@@ -30,37 +30,32 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
     avatarFile: null
   })
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (isOpen) {
-        try {
-          setSuccess('')
-          setError('')
-
-          // 古い一時URLを解放
-          //setTempImageUrl(null)
-
-          const response = await MemberProfileFetch.getProfile(userid)
-          if (!response || !response.ok) {
-            throw new Error('プロフィールの取得に失敗しました')
-          }
-
-          const profileData: MemberProfileResponse = await response.json()
-          setFormData({
-            name: profileData.name,
-            email: profileData.email,
-            biography: profileData.biography || '',
-            avatar: profileData.avatar || '',
-            avatarFile: null
-          })
-        } catch (err) {
-          setError('プロフィールの取得に失敗しました')
-        }
+  const fetchProfile = useCallback(async () => {
+    try {
+      setSuccess('')
+      setError('')
+      const response = await MemberProfileFetch.getProfile(userid)
+      if (!response || !response.ok) {
+        throw new Error('プロフィールの取得に失敗しました')
       }
+      const profileData: MemberProfileResponse = await response.json()
+      setFormData({
+        name: profileData.name,
+        email: profileData.email,
+        biography: profileData.biography || '',
+        avatar: profileData.avatar || '',
+        avatarFile: null
+      })
+    } catch (err) {
+      setError('プロフィールの取得に失敗しました')
     }
+  }, [userid])
 
-    fetchProfile()
-  }, [isOpen, userid])
+  useEffect(() => {
+    if (isOpen) {
+      fetchProfile()
+    }
+  }, [isOpen, userid, fetchProfile])
 
   useEffect(() => {
     return () => {
@@ -163,20 +158,22 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
 
       if (!response.ok) {
         if (response.status === 400 && data.errors) {
-          // バリデーションエラーの処理
           setValidationErrors(data.errors)
           return
         }
         throw new Error(data.message || 'プロフィールの更新に失敗しました')
       }
 
-      // 更新成功時に一時URLを解放
+      // アップロード完了した画像の一時URLを解放
       if (tempImageUrl) {
         setTempImageUrl(null)
       }
 
+      // プロフィール再取得でサーバー側の画像を即時反映
+      await fetchProfile()
       setSuccess('プロフィールを更新しました')
 
+      // 2秒後にページをリロードし、ナビゲーションバーのユーザ情報を更新
       setTimeout(() => {
         window.location.reload()
       }, 2000)
