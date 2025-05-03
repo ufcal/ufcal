@@ -100,13 +100,10 @@ export const PUT: APIRoute = async (context) => {
         const filePath = path.join(uploadDir, fileName)
 
         // 既存のアバター画像を削除
-        const existingUser = await prisma.user.findUnique({
-          where: { id: userId },
-          select: { avatar: true }
-        })
+        const existingAvatar = await UserDB.getUserAvatarById(userId)
 
-        if (existingUser?.avatar) {
-          const oldPath = path.join(uploadDir, existingUser.avatar)
+        if (existingAvatar) {
+          const oldPath = path.join(uploadDir, existingAvatar)
           if (fs.existsSync(oldPath)) {
             fs.unlinkSync(oldPath)
           }
@@ -127,11 +124,15 @@ export const PUT: APIRoute = async (context) => {
 
       // データベースの更新
       try {
-        const updatedUser = await prisma.user.update({
-          where: { id: userId },
-          data: updateData
-        })
-
+        const updatedUser = await UserDB.updateUserProfile(userId, updateData)
+        if (!updatedUser) {
+          return new Response(JSON.stringify({ message: 'Database update failed' }), {
+            status: 500,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+        }
         // セッション(ユーザ情報)更新
         const sessionData: UserSessionData = convertToUserSessionData(updatedUser)
         await Session.updateUser(context, sessionData)

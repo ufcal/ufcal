@@ -61,5 +61,36 @@ class UserDB extends BaseDB {
       return null
     }
   }
+
+  // プロフィール更新用メソッド
+  async updateUserProfile(
+    id: number,
+    data: { name: string; email: string; biography: string | null; avatar?: string }
+  ): Promise<User | null> {
+    try {
+      const user = await BaseDB.prisma.user.update({
+        where: { id },
+        data
+      })
+      return user
+    } catch (err) {
+      console.error(err)
+      return null
+    }
+  }
+
+  // アバター名取得用メソッド
+  async getUserAvatarById(id: number): Promise<string | null> {
+    try {
+      const user = await BaseDB.prisma.user.findUnique({
+        where: { id },
+        select: { avatar: true }
+      })
+      return user?.avatar || null
+    } catch (err) {
+      console.error(err)
+      return null
+    }
+  }
 }
 export default new UserDB()
