@@ -3,30 +3,14 @@ import config from '@/config/config.json'
 import { MemberProfileFetch } from '@/fetch/member'
 import { showProfileModal } from '@/store/profile'
 import type { MemberProfileResponse } from '@/types/profile'
+import { profileSchema } from '@/types/profile'
 import { useStore } from '@nanostores/react'
 import React, { useEffect, useState } from 'react'
 import { z } from 'zod'
 
-// バリデーションスキーマの定義
-const profileSchema = z.object({
-  name: z
-    .string()
-    .min(1, 'お名前を入力してください')
-    .max(10, 'お名前は10文字以内で入力してください'),
-  email: z
-    .string()
-    .min(1, 'メールアドレスを入力してください')
-    .email('正しいメールアドレスを入力してください'),
-  biography: z
-    .string()
-    .max(100, '自己紹介は100文字以内で入力してください')
-    .optional()
-    .transform((v) => v || ''),
-  avatar: z.string(),
-  avatarFile: z.instanceof(File).nullable()
-})
-
-type ProfileFormData = z.infer<typeof profileSchema>
+type ProfileFormData = z.infer<typeof profileSchema> & {
+  avatarFile: File | null
+}
 
 interface ProfileModalProps {
   userid: number
@@ -53,6 +37,9 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
           setSuccess('')
           setError('')
 
+          // 古い一時URLを解放
+          //setTempImageUrl(null)
+
           const response = await MemberProfileFetch.getProfile(userid)
           if (!response || !response.ok) {
             throw new Error('プロフィールの取得に失敗しました')
@@ -66,7 +53,6 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
             avatar: profileData.avatar || '',
             avatarFile: null
           })
-          setTempImageUrl(null)
         } catch (err) {
           setError('プロフィールの取得に失敗しました')
         }
@@ -75,6 +61,14 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
 
     fetchProfile()
   }, [isOpen, userid])
+
+  useEffect(() => {
+    return () => {
+      if (tempImageUrl) {
+        URL.revokeObjectURL(tempImageUrl)
+      }
+    }
+  }, [tempImageUrl])
 
   if (!isOpen) return null
 
@@ -117,13 +111,18 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
         avatarFile: file
       }))
     } catch (err) {
+      if (tempImageUrl) {
+        setTempImageUrl(null)
+      }
+
       setError('画像の読み込みに失敗しました')
     }
   }
 
   const validateForm = (): boolean => {
     try {
-      profileSchema.parse(formData)
+      const { avatarFile, ...formDataWithoutFile } = formData
+      profileSchema.parse(formDataWithoutFile)
       setValidationErrors({})
       return true
     } catch (err) {
@@ -144,6 +143,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
     e.preventDefault()
     setError('')
     setSuccess('')
+    setValidationErrors({})
 
     if (!validateForm()) {
       return
@@ -159,19 +159,29 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
       }
 
       const response = await MemberProfileFetch.updateProfile(userid, formDataToSend)
+      const data = await response.json()
 
-      if (!response || !response.ok) {
-        throw new Error('プロフィールの更新に失敗しました')
+      if (!response.ok) {
+        if (response.status === 400 && data.errors) {
+          // バリデーションエラーの処理
+          setValidationErrors(data.errors)
+          return
+        }
+        throw new Error(data.message || 'プロフィールの更新に失敗しました')
+      }
+
+      // 更新成功時に一時URLを解放
+      if (tempImageUrl) {
+        setTempImageUrl(null)
       }
 
       setSuccess('プロフィールを更新しました')
 
-      // 更新成功後、2秒後にページをリロード
       setTimeout(() => {
         window.location.reload()
       }, 2000)
     } catch (err) {
-      setError('プロフィールの更新に失敗しました')
+      setError(err instanceof Error ? err.message : 'プロフィールの更新に失敗しました')
     }
   }
 

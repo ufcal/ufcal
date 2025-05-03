@@ -2,12 +2,13 @@ import config from '@/config/config.json'
 import { prisma } from '@/lib/prisma'
 import { UserDB } from '@/server/db'
 import Session from '@/server/utils/session'
-import { type UserProfile, convertToUserProfile } from '@/types/profile'
+import { type UserProfile, convertToUserProfile, profileSchema } from '@/types/profile'
 import { type UserSessionData, convertToUserSessionData } from '@/types/user'
 import type { APIRoute } from 'astro'
 import fs from 'fs'
 import path from 'path'
 import sharp from 'sharp'
+import { z } from 'zod'
 
 export const prerender = false
 
@@ -36,103 +37,147 @@ export const PUT: APIRoute = async (context) => {
 
     // FormDataの解析
     const formData = await request.formData()
-    const name = formData.get('name')?.toString()
-    const email = formData.get('email')?.toString()
-    const biography = formData.get('biography')?.toString()
+    const name = formData.get('name')?.toString() ?? ''
+    const email = formData.get('email')?.toString() ?? ''
+    const biography = formData.get('biography')?.toString() ?? ''
     const avatarFile = formData.get('avatar') as File | null
 
-    if (!userId || !name || !email) {
-      return new Response(JSON.stringify({ message: 'Required fields are missing' }), {
-        status: 400,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-    }
-
-    // プロフィール更新データの準備
-    const updateData: {
-      name: string
-      email: string
-      biography: string | null
-      avatar?: string
-    } = {
-      name,
-      email,
-      biography: biography || null
-    }
-
-    // アバター画像の処理
-    if (avatarFile) {
-      const fileBuffer = await avatarFile.arrayBuffer()
-      const fileExt = 'webp' // WebPフォーマットに統一
-      const timestamp = new Date().getTime()
-      const fileName = `${userId}-${timestamp}.${fileExt}`
-      const filePath = path.join(uploadDir, fileName)
-
-      // 既存のアバター画像を削除
-      const existingUser = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { avatar: true }
+    // バリデーション
+    try {
+      const validatedData = profileSchema.parse({
+        name,
+        email,
+        biography
       })
 
-      if (existingUser?.avatar) {
-        const oldPath = path.join(uploadDir, existingUser.avatar)
-        if (fs.existsSync(oldPath)) {
-          fs.unlinkSync(oldPath)
-        }
+      // プロフィール更新データの準備
+      const updateData: {
+        name: string
+        email: string
+        biography: string | null
+        avatar?: string
+      } = {
+        name: validatedData.name,
+        email: validatedData.email,
+        biography: validatedData.biography || null
       }
 
-      // 画像を正方形に加工してリサイズ
-      const size = config.upload.avatar.size.width // 正方形なので width = height
-      await sharp(Buffer.from(fileBuffer))
-        .resize(size, size, {
-          fit: 'cover', // アスペクト比を維持しながら指定サイズに収める
-          position: 'center' // 中央を基準に切り取り
+      // アバター画像の処理
+      if (avatarFile) {
+        // ファイルサイズのバリデーション
+        if (avatarFile.size > 500 * 1024) {
+          return new Response(
+            JSON.stringify({
+              message: 'Validation failed',
+              errors: { avatar: 'ファイルサイズは500KB以下にしてください' }
+            }),
+            {
+              status: 400,
+              headers: { 'Content-Type': 'application/json' }
+            }
+          )
+        }
+
+        // ファイル形式のバリデーション
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+        if (!allowedTypes.includes(avatarFile.type)) {
+          return new Response(
+            JSON.stringify({
+              message: 'Validation failed',
+              errors: { avatar: 'JPG、PNG、GIF、WebP形式のファイルのみアップロード可能です' }
+            }),
+            {
+              status: 400,
+              headers: { 'Content-Type': 'application/json' }
+            }
+          )
+        }
+
+        const fileBuffer = await avatarFile.arrayBuffer()
+        const fileExt = 'webp'
+        const timestamp = new Date().getTime()
+        const fileName = `${userId}-${timestamp}.${fileExt}`
+        const filePath = path.join(uploadDir, fileName)
+
+        // 既存のアバター画像を削除
+        const existingUser = await prisma.user.findUnique({
+          where: { id: userId },
+          select: { avatar: true }
         })
-        .webp({ quality: 70 }) // WebP形式で保存、品質は70%
-        .toFile(filePath)
 
-      updateData.avatar = fileName // ファイル名のみを保存
-    }
-
-    // データベースの更新
-    try {
-      const updatedUser = await prisma.user.update({
-        where: { id: userId },
-        data: updateData
-      })
-
-      // セッション(ユーザ情報)更新
-      const sessionData: UserSessionData = convertToUserSessionData(updatedUser)
-      await Session.updateUser(context, sessionData)
-
-      return new Response(
-        JSON.stringify({
-          message: 'Profile updated successfully',
-          user: {
-            id: updatedUser.id,
-            name: updatedUser.name,
-            email: updatedUser.email,
-            avatar: updatedUser.avatar,
-            biography: updatedUser.biography
+        if (existingUser?.avatar) {
+          const oldPath = path.join(uploadDir, existingUser.avatar)
+          if (fs.existsSync(oldPath)) {
+            fs.unlinkSync(oldPath)
           }
-        }),
-        {
-          status: 200,
+        }
+
+        // 画像を正方形に加工してリサイズ
+        const size = config.upload.avatar.size.width
+        await sharp(Buffer.from(fileBuffer))
+          .resize(size, size, {
+            fit: 'cover',
+            position: 'center'
+          })
+          .webp({ quality: 70 })
+          .toFile(filePath)
+
+        updateData.avatar = fileName
+      }
+
+      // データベースの更新
+      try {
+        const updatedUser = await prisma.user.update({
+          where: { id: userId },
+          data: updateData
+        })
+
+        // セッション(ユーザ情報)更新
+        const sessionData: UserSessionData = convertToUserSessionData(updatedUser)
+        await Session.updateUser(context, sessionData)
+
+        return new Response(
+          JSON.stringify({
+            message: 'Profile updated successfully',
+            user: {
+              id: updatedUser.id,
+              name: updatedUser.name,
+              email: updatedUser.email,
+              avatar: updatedUser.avatar,
+              biography: updatedUser.biography
+            }
+          }),
+          {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        )
+      } catch (err) {
+        console.error(err)
+        return new Response(JSON.stringify({ message: 'Database update failed' }), {
+          status: 500,
           headers: {
             'Content-Type': 'application/json'
           }
-        }
-      )
+        })
+      }
     } catch (err) {
-      console.error(err)
-      return new Response(JSON.stringify({ message: 'Database update failed' }), {
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      if (err instanceof z.ZodError) {
+        const errors = Object.fromEntries(err.errors.map((error) => [error.path[0], error.message]))
+        return new Response(
+          JSON.stringify({
+            message: 'Validation failed',
+            errors
+          }),
+          {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        )
+      }
+      throw err
     }
   } catch (error) {
     console.error('Error updating profile:', error)

@@ -1,5 +1,3 @@
-//import type { MemberProfileRequest } from '@/types/profile'
-
 class MemberProfileFetch {
   async updateProfile(id: number, params: FormData): Promise<any> {
     try {
