@@ -140,6 +140,7 @@ export default function UserList({
                         type="button"
                         onClick={() => onEdit(user)}
                         variant="primary"
+                        size="md"
                         icon="mdi:square-edit-outline"
                       >
                         編集
@@ -148,6 +149,7 @@ export default function UserList({
                         type="button"
                         onClick={() => onDelete(user)}
                         variant="error"
+                        size="md"
                         icon="mdi:trash-can-outline"
                       >
                         削除
