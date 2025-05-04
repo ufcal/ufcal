@@ -1,6 +1,6 @@
+import type { ButtonAttr } from '@/types/component.ts'
 import { Icon } from '@iconify/react'
 import { twMerge } from 'tailwind-merge'
-import type { ButtonAttr } from '@/types.d.ts'
 
 const variants = {
   default:
@@ -39,9 +39,9 @@ const Component = ({
   return type === 'button' || type === 'submit' || type === 'reset' ? (
     <span className={disabled ? 'cursor-not-allowed' : ''}>
       <button type={type} className={twMerge(mergedClass, className)} {...rest}>
-        {icon && !isIconRight ? <Icon icon={icon} className="w-4 h-4 mr-1" /> : ''}
+        {icon && !isIconRight ? <Icon icon={icon} className="mr-1 h-4 w-4" /> : ''}
         {text ? text : children}
-        {icon && isIconRight ? <Icon icon={icon} className="w-4 h-4 ml-1" /> : ''}
+        {icon && isIconRight ? <Icon icon={icon} className="ml-1 h-4 w-4" /> : ''}
       </button>
     </span>
   ) : variant === 'icon' ? (
@@ -50,7 +50,7 @@ const Component = ({
       {...(target ? { target: target, rel: 'noopener noreferrer' } : {})}
       {...rest}
     >
-      {icon && <Icon icon={icon} className="w-8 h-8" />}
+      {icon && <Icon icon={icon} className="h-8 w-8" />}
     </a>
   ) : (
     <a
@@ -58,9 +58,9 @@ const Component = ({
       {...(target ? { target: target, rel: 'noopener noreferrer' } : {})}
       {...rest}
     >
-      {icon && !isIconRight ? <Icon icon={icon} className="w-4 h-4 mr-1" /> : ''}
+      {icon && !isIconRight ? <Icon icon={icon} className="mr-1 h-4 w-4" /> : ''}
       {text ? text : children}
-      {icon && isIconRight ? <Icon icon={icon} className="w-4 h-4 ml-1" /> : ''}
+      {icon && isIconRight ? <Icon icon={icon} className="ml-1 h-4 w-4" /> : ''}
     </a>
   )
 }
