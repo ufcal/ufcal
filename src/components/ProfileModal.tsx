@@ -219,7 +219,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* アバター設定 */}
             <div className="flex items-center space-x-4">
-              <div className="group relative cursor-pointer">
+              <label className="group relative cursor-pointer">
                 <img
                   src={
                     tempImageUrl ||
@@ -230,10 +230,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
                   alt="プロフィール画像"
                   className="h-20 w-20 rounded-full object-cover ring-2 ring-gray-200 transition-all group-hover:ring-blue-400"
                 />
-                <label
-                  htmlFor="avatar-upload"
-                  className="absolute right-0 bottom-0 cursor-pointer rounded-full bg-blue-600 p-2 text-white transition-colors hover:bg-blue-700"
-                >
+                <span className="absolute right-0 bottom-0 cursor-pointer rounded-full bg-blue-600 p-2 text-white transition-colors hover:bg-blue-700">
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
@@ -248,7 +245,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
                       d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
                     />
                   </svg>
-                </label>
+                </span>
                 <input
                   type="file"
                   id="avatar-upload"
@@ -256,7 +253,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
                   accept="image/*"
                   onChange={handleImageUpload}
                 />
-              </div>
+              </label>
               <div>
                 <h3 className="text-lg font-medium text-gray-900">プロフィール画像</h3>
                 <p className="text-sm text-gray-500">JPG, PNG, GIF, WebP (最大 500KB)</p>
