@@ -1,4 +1,5 @@
 import Alert from '@/components/Alert'
+import Button from '@/components/base/Button'
 import AuthFetch from '@/fetch/auth.ts'
 import { type FormEventHandler, useState } from 'react'
 
@@ -73,12 +74,9 @@ export default function Login() {
             <span className="ml-2 text-gray-900">ログイン状態を保持する</span>
           </label>
         </div>
-        <button
-          type="submit"
-          className="bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 rounded-lg px-5 py-2.5 text-center font-medium text-white focus:ring-4 focus:outline-none"
-        >
-          ログイン
-        </button>
+        <div className="flex justify-end">
+          <Button variant="primary" type="submit" text="ログイン" />
+        </div>
       </form>
     </div>
   )
