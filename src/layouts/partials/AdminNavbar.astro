@@ -62,10 +62,10 @@ const avatarUrl = user?.avatar ? `${config.upload.avatar.url}/${user.avatar}` : 
                 <img
                   src={avatarUrl}
                   alt={`${user.name}のアバター`}
-                  class="h-full w-full object-cover"
+                  class="h-full w-full rounded-full border border-gray-300 object-cover"
                 />
               ) : (
-                <div class="flex h-full w-full items-center justify-center bg-blue-600">
+                <div class="flex h-full w-full items-center justify-center rounded-full border border-gray-300 bg-blue-600">
                   <Icon class="h-8 w-8 text-white" name="mdi:account" />
                 </div>
               )

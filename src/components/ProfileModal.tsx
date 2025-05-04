@@ -330,10 +330,10 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
 
             {/* ボタン */}
             <div className="flex justify-end space-x-3">
-              <Button type="button" onClick={handleClose} variant="default">
+              <Button type="button" onClick={handleClose} variant="default" class="px-5">
                 キャンセル
               </Button>
-              <Button type="submit" variant="primary">
+              <Button type="submit" variant="primary" class="px-5">
                 保存
               </Button>
             </div>
