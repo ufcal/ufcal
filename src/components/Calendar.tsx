@@ -1,8 +1,10 @@
 import EventInfoModal from '@/components/event/EventInfoModal'
+import config from '@/config/config.json'
 import EventFetch from '@/fetch/event'
 import useWatch from '@/lib/watchState.tsx'
 import { isEventUpdated } from '@/store/event'
 import { userStore } from '@/store/user'
+import type { EventClickArg } from '@fullcalendar/core'
 import jaLocale from '@fullcalendar/core/locales/ja'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import FullCalendar from '@fullcalendar/react'
@@ -26,13 +28,13 @@ export default function Calendar() {
   const [dateRange, setDateRange] = useState<DateRange>({ startStr: '', endStr: '' })
   const { data: events, mutate: mutateEvents } = useSWR(
     dateRange.startStr && dateRange.endStr
-      ? `${import.meta.env.PUBLIC_API_URL}/event?start=${dateRange.startStr}&end=${dateRange.endStr}`
+      ? `${config.api.rootUrl}/event?start=${dateRange.startStr}&end=${dateRange.endStr}`
       : null,
     fetcher
   )
   const { data: holidays } = useSWR(
     dateRange.startStr && dateRange.endStr
-      ? `${import.meta.env.PUBLIC_API_URL}/holiday?start=${dateRange.startStr}&end=${dateRange.endStr}`
+      ? `${config.api.rootUrl}/holiday?start=${dateRange.startStr}&end=${dateRange.endStr}`
       : null,
     fetcher
   )
@@ -86,10 +88,10 @@ export default function Calendar() {
   /**
    * イベント情報を表示
    */
-  const handleEventClick = async (clickInfo) => {
+  const handleEventClick = async (clickInfo: EventClickArg) => {
     // イベント情報を取得
     try {
-      const response = await EventFetch.getEvent(clickInfo.event.id)
+      const response = await EventFetch.getEvent(Number(clickInfo.event.id))
       if (!response.ok) {
         const errorData = await response.json()
         //setError(`データの取得に失敗しました: ${errorData.message}`)

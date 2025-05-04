@@ -1,7 +1,8 @@
+import config from '@/config/config.json'
 import { beforeAll, describe, expect, expectTypeOf, it, test, vi } from 'vitest'
 
-const AUTH_API_URL = `${import.meta.env.PUBLIC_BASE_URL}${import.meta.env.PUBLIC_API_URL}/auth`
-const EVENT_API_URL = `${import.meta.env.PUBLIC_BASE_URL}${import.meta.env.PUBLIC_ADMIN_API_URL}/event`
+const AUTH_API_URL = `${import.meta.env.PUBLIC_BASE_URL}${config.api.rootUrl}/auth`
+const EVENT_API_URL = `${import.meta.env.PUBLIC_BASE_URL}${config.api.adminUrl}/event`
 const BEFORE_ALL_TIMEOUT = 30000 // 30 sec
 const LOGIN_EMAIL = 'admin@example.com'
 const LOGIN_PASSWORD = 'password'
@@ -44,7 +45,7 @@ describe('API Routes', () => {
 
     // 既存のデータを削除
     // for (const item of body) {
-    //   await fetch(`${import.meta.env.PUBLIC_API_URL}/event/${item.id}`, {
+    //   await fetch(`${config.api.rootUrl}/event/${item.id}`, {
     //     method: 'DELETE'
     //   })
     // }

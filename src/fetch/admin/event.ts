@@ -1,9 +1,10 @@
+import config from '@/config/config.json'
 import type { EventAdminRequest } from '@/types/event'
 
 class AdminEventFetch {
   async addEvent(params: EventAdminRequest): Promise<any> {
     try {
-      const response = await fetch(`${import.meta.env.PUBLIC_ADMIN_API_URL}/event`, {
+      const response = await fetch(`${config.api.adminUrl}/event`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -18,7 +19,7 @@ class AdminEventFetch {
 
   async removeEvent(id: number): Promise<any> {
     try {
-      const response = await fetch(`${import.meta.env.PUBLIC_ADMIN_API_URL}/event/${id}`, {
+      const response = await fetch(`${config.api.adminUrl}/event/${id}`, {
         method: 'DELETE'
       })
       return response
@@ -29,7 +30,7 @@ class AdminEventFetch {
 
   async updateEvent(id: number, params: EventAdminRequest): Promise<any> {
     try {
-      const response = await fetch(`${import.meta.env.PUBLIC_ADMIN_API_URL}/event/${id}`, {
+      const response = await fetch(`${config.api.adminUrl}/event/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -44,7 +45,7 @@ class AdminEventFetch {
 
   async getEvent(id: number): Promise<any> {
     try {
-      const response = await fetch(`${import.meta.env.PUBLIC_ADMIN_API_URL}/event/${id}`)
+      const response = await fetch(`${config.api.adminUrl}/event/${id}`)
       return response
     } catch (e) {
       return null
@@ -53,7 +54,7 @@ class AdminEventFetch {
 
   async getEvents(): Promise<any> {
     try {
-      const response = await fetch(`${import.meta.env.PUBLIC_ADMIN_API_URL}/event`)
+      const response = await fetch(`${config.api.adminUrl}/event`)
       return response
     } catch (e) {
       return null

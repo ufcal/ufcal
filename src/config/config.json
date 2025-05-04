@@ -15,5 +15,10 @@
         "height": 200
       }
     }
+  },
+  "api": {
+    "rootUrl": "/api",
+    "adminUrl": "/api/admin",
+    "memberUrl": "/api/member"
   }
 }

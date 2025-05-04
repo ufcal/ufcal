@@ -1,7 +1,9 @@
+import config from '@/config/config.json'
+
 class MemberProfileFetch {
   async updateProfile(id: number, params: FormData): Promise<any> {
     try {
-      const response = await fetch(`${import.meta.env.PUBLIC_MEMBER_API_URL}/profile/${id}`, {
+      const response = await fetch(`${config.api.memberUrl}/profile/${id}`, {
         method: 'PUT',
         body: params
       })
@@ -13,7 +15,7 @@ class MemberProfileFetch {
 
   async getProfile(id: number): Promise<any> {
     try {
-      const response = await fetch(`${import.meta.env.PUBLIC_MEMBER_API_URL}/profile/${id}`)
+      const response = await fetch(`${config.api.memberUrl}/profile/${id}`)
       return response
     } catch (e) {
       return null
