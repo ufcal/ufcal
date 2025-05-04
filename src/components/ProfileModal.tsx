@@ -186,7 +186,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
   return (
     <div
       onClick={handleOverlayClick}
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/60 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/50"
     >
       <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 shadow-2xl">
         {/* ヘッダー */}
@@ -278,7 +278,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
                 maxLength={10}
               />
               {validationErrors.name && (
-                <p className="mt-1 text-red-500">{validationErrors.name}</p>
+                <p className="mt-1 text-sm text-red-500">{validationErrors.name}</p>
               )}
             </div>
 
@@ -298,7 +298,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
                 required
               />
               {validationErrors.email && (
-                <p className="mt-1 text-red-500">{validationErrors.email}</p>
+                <p className="mt-1 text-sm text-red-500">{validationErrors.email}</p>
               )}
             </div>
 
@@ -319,7 +319,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
                 maxLength={100}
               />
               {validationErrors.biography && (
-                <p className="mt-1 text-red-500">{validationErrors.biography}</p>
+                <p className="mt-1 text-sm text-red-500">{validationErrors.biography}</p>
               )}
             </div>
 

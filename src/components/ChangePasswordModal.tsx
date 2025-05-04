@@ -1,4 +1,5 @@
 import Alert from '@/components/Alert'
+import Button from '@/components/base/Button'
 import { useStore } from '@nanostores/react'
 import { atom } from 'nanostores'
 import React, { useState } from 'react'
@@ -88,15 +89,15 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
   return (
     <div
       onClick={handleOverlayClick}
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/60 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/50"
     >
-      <div className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 shadow-2xl dark:from-gray-900 dark:to-gray-800">
+      <div className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 shadow-2xl">
         {/* ヘッダー */}
         <div className="relative px-6 pt-6">
           <div className="absolute top-6 right-6">
             <button
               onClick={handleClose}
-              className="rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600 dark:bg-gray-500 dark:hover:bg-gray-600"
+              className="rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600"
             >
               <svg
                 className="h-5 w-5"
@@ -110,7 +111,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
             </button>
           </div>
 
-          <h2 className="mb-3 text-3xl font-bold text-gray-900 dark:text-white">パスワード変更</h2>
+          <h2 className="mb-3 text-3xl font-bold text-gray-900">パスワード変更</h2>
         </div>
 
         {/* コンテンツ */}
@@ -123,7 +124,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
             <div>
               <label
                 htmlFor="currentPassword"
-                className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                className="mb-1 block text-base font-medium text-gray-900"
               >
                 現在のパスワード
               </label>
@@ -133,13 +134,13 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
                   id="currentPassword"
                   value={formData.currentPassword}
                   onChange={(e) => setFormData({ ...formData, currentPassword: e.target.value })}
-                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => togglePasswordVisibility('current')}
-                  className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                  className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
                   {showPasswords.current ? (
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -174,7 +175,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
             <div>
               <label
                 htmlFor="newPassword"
-                className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                className="mb-1 block text-base font-medium text-gray-900"
               >
                 新しいパスワード
               </label>
@@ -184,14 +185,14 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
                   id="newPassword"
                   value={formData.newPassword}
                   onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
-                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                   required
                   minLength={8}
                 />
                 <button
                   type="button"
                   onClick={() => togglePasswordVisibility('new')}
-                  className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                  className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
                   {showPasswords.new ? (
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -220,16 +221,14 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
                   )}
                 </button>
               </div>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                8文字以上で入力してください
-              </p>
+              <p className="mt-1 text-sm text-gray-500">8文字以上で入力してください</p>
             </div>
 
             {/* パスワード確認 */}
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                className="mb-1 block text-base font-medium text-gray-900"
               >
                 新しいパスワード（確認）
               </label>
@@ -239,13 +238,13 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
                   id="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => togglePasswordVisibility('confirm')}
-                  className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                  className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
                   {showPasswords.confirm ? (
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -278,19 +277,12 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
 
             {/* ボタン */}
             <div className="flex justify-end space-x-3">
-              <button
-                type="button"
-                onClick={handleClose}
-                className="rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-4 focus:ring-gray-200 focus:outline-none dark:border-gray-500 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-600"
-              >
+              <Button type="button" onClick={handleClose} variant="default">
                 キャンセル
-              </button>
-              <button
-                type="submit"
-                className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
+              </Button>
+              <Button type="submit" variant="primary">
                 変更
-              </button>
+              </Button>
             </div>
           </form>
         </div>
