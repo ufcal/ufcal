@@ -256,15 +256,15 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
               </label>
               <div>
                 <h3 className="text-lg font-medium text-gray-900">プロフィール画像</h3>
-                <p className="text-sm text-gray-500">JPG, PNG, GIF, WebP (最大 500KB)</p>
+                <p className="text-gray-500">JPG, PNG, GIF, WebP (最大 500KB)</p>
               </div>
             </div>
 
             {/* 名前 */}
             <div>
-              <label htmlFor="name" className="mb-2 block text-sm font-medium text-gray-900">
+              <label htmlFor="name" className="mb-1 block font-medium text-gray-900">
                 名前
-                <span className="ml-1 text-sm text-gray-500">({formData.name.length}/10文字)</span>
+                <span className="ml-1 text-gray-500">({formData.name.length}/10文字)</span>
               </label>
               <input
                 type="text"
@@ -278,13 +278,13 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
                 maxLength={10}
               />
               {validationErrors.name && (
-                <p className="mt-1 text-sm text-red-500">{validationErrors.name}</p>
+                <p className="mt-1 text-red-500">{validationErrors.name}</p>
               )}
             </div>
 
             {/* メールアドレス */}
             <div>
-              <label htmlFor="email" className="mb-2 block text-sm font-medium text-gray-900">
+              <label htmlFor="email" className="mb-1 block font-medium text-gray-900">
                 メールアドレス
               </label>
               <input
@@ -298,17 +298,15 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
                 required
               />
               {validationErrors.email && (
-                <p className="mt-1 text-sm text-red-500">{validationErrors.email}</p>
+                <p className="mt-1 text-red-500">{validationErrors.email}</p>
               )}
             </div>
 
             {/* 自己紹介 */}
             <div>
-              <label htmlFor="biography" className="mb-2 block text-sm font-medium text-gray-900">
+              <label htmlFor="biography" className="mb-1 block font-medium text-gray-900">
                 自己紹介
-                <span className="ml-1 text-sm text-gray-500">
-                  ({formData.biography.length}/100文字)
-                </span>
+                <span className="ml-1 text-gray-500">({formData.biography.length}/100文字)</span>
               </label>
               <textarea
                 id="biography"
@@ -321,7 +319,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
                 maxLength={100}
               />
               {validationErrors.biography && (
-                <p className="mt-1 text-sm text-red-500">{validationErrors.biography}</p>
+                <p className="mt-1 text-red-500">{validationErrors.biography}</p>
               )}
             </div>
 
