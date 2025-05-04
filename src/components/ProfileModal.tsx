@@ -1,4 +1,5 @@
 import Alert from '@/components/Alert'
+import Button from '@/components/base/Button'
 import config from '@/config/config.json'
 import { MemberProfileFetch } from '@/fetch/member'
 import { showProfileModal } from '@/store/profile'
@@ -329,19 +330,12 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
 
             {/* ボタン */}
             <div className="flex justify-end space-x-3">
-              <button
-                type="button"
-                onClick={handleClose}
-                className="rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-4 focus:ring-gray-200 focus:outline-none"
-              >
+              <Button type="button" onClick={handleClose} variant="default">
                 キャンセル
-              </button>
-              <button
-                type="submit"
-                className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
-              >
+              </Button>
+              <Button type="submit" variant="primary">
                 保存
-              </button>
+              </Button>
             </div>
           </form>
         </div>
