@@ -2,7 +2,7 @@ import Alert from '@/components/Alert'
 import Button from '@/components/base/Button'
 import { useStore } from '@nanostores/react'
 import { atom } from 'nanostores'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export const showChangePasswordModal = atom(false)
 
@@ -24,6 +24,19 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
     new: false,
     confirm: false
   })
+
+  useEffect(() => {
+    const dropdown = document.getElementById('accountDropdown')
+    if (isOpen) {
+      if (dropdown) {
+        dropdown.style.visibility = 'hidden'
+      }
+    } else {
+      if (dropdown) {
+        dropdown.style.visibility = 'visible'
+      }
+    }
+  }, [isOpen])
 
   if (!isOpen) return null
 

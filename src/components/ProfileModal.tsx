@@ -66,6 +66,19 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
     }
   }, [tempImageUrl])
 
+  useEffect(() => {
+    const dropdown = document.getElementById('accountDropdown')
+    if (isOpen) {
+      if (dropdown) {
+        dropdown.style.visibility = 'hidden'
+      }
+    } else {
+      if (dropdown) {
+        dropdown.style.visibility = 'visible'
+      }
+    }
+  }, [isOpen])
+
   if (!isOpen) return null
 
   const handleClose = () => {
@@ -297,6 +310,9 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
                 } bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500`}
                 required
               />
+              <p className="mt-1 text-sm text-gray-500">
+                ※このメールアドレスは他のユーザには公開されません
+              </p>
               {validationErrors.email && (
                 <p className="mt-1 text-sm text-red-500">{validationErrors.email}</p>
               )}

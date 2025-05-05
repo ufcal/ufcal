@@ -65,7 +65,7 @@ const avatarUrl = user?.avatar ? `${config.upload.avatar.url}/${user.avatar}` : 
               type="button"
               class="inline-flex items-center justify-center rounded-full overflow-hidden w-10 h-10 ring-2 ring-white"
               aria-expanded="false"
-              data-dropdown-toggle="dropdown-2"
+              data-dropdown-toggle="accountDropdown"
               aria-label="userアイコン"
             >
               <span class="sr-only">Open user menu</span>
@@ -84,7 +84,7 @@ const avatarUrl = user?.avatar ? `${config.upload.avatar.url}/${user.avatar}` : 
             <!-- Dropdown menu -->
             <div
               class="z-50 my-4 hidden list-none divide-y divide-gray-100 rounded bg-white text-base shadow ring-1 ring-black/5"
-              id="dropdown-2"
+              id="accountDropdown"
             >
               <div class="px-4 py-3" role="none">
                 <p class="text-gray-900" role="none">{user.name}</p>
