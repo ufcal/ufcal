@@ -38,7 +38,14 @@ export const auth = defineMiddleware(async (context, next) => {
         })
       } else {
         // 通常のページアクセスの場合は403ページまたはホームにリダイレクト
-        return Response.redirect(new URL('/', context.url))
+        //return Response.redirect(new URL('/', context.url))// NG
+        return new Response(null, {
+          status: 302,
+          headers: {
+            Location: new URL('/', context.url).toString(),
+            'Content-Type': 'text/html'
+          }
+        })
       }
     }
 
@@ -60,7 +67,14 @@ export const auth = defineMiddleware(async (context, next) => {
           })
         } else {
           // 通常のページアクセスの場合は403ページまたはホームにリダイレクト
-          return Response.redirect(new URL('/', context.url))
+          //return Response.redirect(new URL('/', context.url)) // NG
+          return new Response(null, {
+            status: 302,
+            headers: {
+              Location: new URL('/', context.url).toString(),
+              'Content-Type': 'text/html'
+            }
+          })
         }
       }
 
