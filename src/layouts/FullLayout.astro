@@ -7,6 +7,7 @@
 import '@/styles/global.css'
 //import '@/styles/index.css'
 import Navbar from '@/layouts/partials/Navbar.astro'
+import SizeIndicator from '@/components/SizeIndicator.astro'
 
 interface Props {
   title: string
@@ -26,6 +27,7 @@ const { title } = Astro.props
     <title>{title}</title>
   </head>
   <body id="root">
+    <SizeIndicator />
     <Navbar />
     <main class="container mx-auto px-4">
       <slot />

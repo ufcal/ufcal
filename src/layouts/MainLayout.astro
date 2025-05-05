@@ -2,7 +2,7 @@
 import '@/styles/global.css'
 //import '@/styles/index.css'
 import Navbar from '@/layouts/partials/Navbar.astro'
-import TwSizeIndicator from '@/components/TwSizeIndicator.astro'
+import SizeIndicator from '@/components/SizeIndicator.astro'
 
 interface Props {
   title: string
@@ -22,7 +22,7 @@ const { title } = Astro.props
     <title>{title}</title>
   </head>
   <body id="root">
-    <TwSizeIndicator />
+    <SizeIndicator />
     <Navbar />
     <slot />
     <script src="../scripts/index.js"></script>
