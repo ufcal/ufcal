@@ -86,12 +86,6 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
     setTempImageUrl(null)
   }
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      handleClose()
-    }
-  }
-
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -197,10 +191,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
   }
 
   return (
-    <div
-      onClick={handleOverlayClick}
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/50"
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/50">
       <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 shadow-2xl">
         {/* ヘッダー */}
         <div className="relative px-6 pt-6">

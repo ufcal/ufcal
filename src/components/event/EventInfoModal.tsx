@@ -149,12 +149,6 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
     }
   }
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose()
-    }
-  }
-
   const handleSubmitComment = (e: React.FormEvent) => {
     e.preventDefault()
     // ここでコメントの送信処理を実装
@@ -162,10 +156,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
   }
 
   return (
-    <div
-      onClick={handleOverlayClick}
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/60 p-4 backdrop-blur-sm"
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/60 p-4 backdrop-blur-sm">
       <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 shadow-2xl">
         {/* ヘッダー */}
         <div className="relative px-6 pt-6">

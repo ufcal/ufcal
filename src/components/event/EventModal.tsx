@@ -289,36 +289,34 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
   if (!isModalVisible) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50">
-      {/* モーダルダイアログ */}
-      <div className="relative mt-10 mb-10 w-full max-w-2xl rounded-lg bg-white shadow">
-        <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
-          {/* モーダルヘッダ部 */}
-          <div className="flex items-start justify-between rounded-t border-b border-gray-200 p-5">
-            <h3 className="text-xl font-semibold">
-              {eventId ? 'イベントを編集' : 'イベントを作成'}
-            </h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/50">
+      <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 shadow-2xl">
+        {/* ヘッダー */}
+        <div className="relative px-6 pt-6">
+          <div className="absolute top-6 right-6">
             <button
               type="button"
-              className="ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-gray-400 hover:bg-gray-200 hover:text-gray-900"
               onClick={handleCancel}
+              className="rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600"
             >
               <svg
                 className="h-5 w-5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                viewBox="0 0 24 24"
               >
-                <path
-                  fillRule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                ></path>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
-          {/* モーダルボディ部 */}
-          <div className="space-y-4 p-6">
+          <h2 className="mb-3 text-3xl font-bold text-gray-900">
+            {eventId ? 'イベントを編集' : 'イベントを作成'}
+          </h2>
+        </div>
+        {/* コンテンツ */}
+        <div className="px-6 pt-0 pb-6">
+          <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-6">
             {success && <Alert message={success} type="success" />}
             {error && <Alert message={error} type="error" />}
 
@@ -497,10 +495,9 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                 </div>
               </div>
             </fieldset>
-          </div>
-          {/* モーダルフッタ部 */}
-          <div className="items-center rounded-b border-t border-gray-200 p-6">
-            <div className="flex items-center justify-end space-x-3 sm:space-x-4">
+
+            {/* モーダルフッタ部 */}
+            <div className="flex justify-end space-x-3 pt-4">
               {!completed && (
                 <Button type="submit" variant="primary" disabled={isSubmitting}>
                   {eventId ? '更新する' : '追加する'}
@@ -512,8 +509,8 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                 </Button>
               )}
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   )

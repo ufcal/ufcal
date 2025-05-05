@@ -54,12 +54,6 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
     })
   }
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      handleClose()
-    }
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSuccess('')
@@ -100,10 +94,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
   }
 
   return (
-    <div
-      onClick={handleOverlayClick}
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/50"
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/50">
       <div className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 shadow-2xl">
         {/* ヘッダー */}
         <div className="relative px-6 pt-6">
