@@ -277,7 +277,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className={`block w-full rounded-lg border ${
                   validationErrors.name ? 'border-red-500' : 'border-gray-300'
-                } bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500`}
+                } focus:border-primary-500 focus:ring-primary-500 bg-gray-50 p-2.5 text-gray-900`}
                 required
                 maxLength={10}
               />
@@ -298,7 +298,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className={`block w-full rounded-lg border ${
                   validationErrors.email ? 'border-red-500' : 'border-gray-300'
-                } bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500`}
+                } focus:border-primary-500 focus:ring-primary-500 bg-gray-50 p-2.5 text-gray-900`}
                 required
               />
               <p className="mt-1 text-sm text-gray-500">
@@ -321,7 +321,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
                 onChange={(e) => setFormData({ ...formData, biography: e.target.value })}
                 className={`block w-full rounded-lg border ${
                   validationErrors.biography ? 'border-red-500' : 'border-gray-300'
-                } bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500`}
+                } focus:border-primary-500 focus:ring-primary-500 bg-gray-50 p-2.5 text-gray-900`}
                 rows={4}
                 maxLength={100}
               />

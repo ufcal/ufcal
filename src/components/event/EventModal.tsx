@@ -330,7 +330,9 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                     type="text"
                     id="title"
                     {...register('title')}
-                    className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 shadow-sm"
+                    className={`block w-full rounded-lg border ${
+                      errors.title ? 'border-red-500' : 'border-gray-300'
+                    } focus:border-primary-500 focus:ring-primary-500 bg-gray-50 p-2.5 text-gray-900`}
                     required
                   />
                   {errors.title && (
@@ -353,6 +355,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                         onChange={(start, end) => onChange({ startDate: start, endDate: end })}
                         isRangeMode={true}
                         placeholder="日付を選択"
+                        className="cursor-pointer"
                       />
                     )}
                   />
@@ -474,7 +477,9 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                     id="description"
                     {...register('description')}
                     rows={4}
-                    className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900"
+                    className={`block w-full rounded-lg border ${
+                      errors.description ? 'border-red-500' : 'border-gray-300'
+                    } focus:border-primary-500 focus:ring-primary-500 bg-gray-50 p-2.5 text-gray-900`}
                   ></textarea>
                 </div>
                 <div className="col-span-4">
@@ -485,7 +490,9 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                     id="url"
                     {...register('url')}
                     placeholder="https://example.com"
-                    className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 shadow-sm"
+                    className={`block w-full rounded-lg border ${
+                      errors.url ? 'border-red-500' : 'border-gray-300'
+                    } focus:border-primary-500 focus:ring-primary-500 bg-gray-50 p-2.5 text-gray-900`}
                   />
                   {errors.url && (
                     <p className="mt-1 text-sm text-red-600">

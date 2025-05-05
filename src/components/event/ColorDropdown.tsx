@@ -21,11 +21,11 @@ const ColorDropdown: React.FC<ColorDropdownProps> = ({ id, selectedIndex, onChan
 
   return (
     <>
-      <div className="relative mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
+      <div className="focus:border-primary-500 focus:ring-primary-500 relative mt-1 block w-full rounded-lg border border-gray-300 shadow-sm">
         <button
           type="button"
           id={id}
-          className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left"
+          className="flex w-full cursor-pointer items-center justify-between rounded-lg px-3 py-2.5 text-left"
           style={{
             backgroundColor: selectedIndex !== null ? colors[selectedIndex]!.color : 'white',
             color: selectedIndex !== null ? 'white' : 'black'
