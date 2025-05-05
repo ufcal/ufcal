@@ -334,7 +334,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                     required
                   />
                   {errors.title && (
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-500">
+                    <p className="mt-1 text-sm text-red-600">
                       <span className="font-medium">{errors.title.message}</span>
                     </p>
                   )}
@@ -357,7 +357,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                     )}
                   />
                   {errors.eventDate?.startDate && (
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-500">
+                    <p className="mt-1 text-sm text-red-600">
                       <span className="font-medium">{errors.eventDate.startDate.message}</span>
                     </p>
                   )}
@@ -405,7 +405,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                         />
                       </div>
                       {errors.eventTimeStart && (
-                        <p className="mt-1 text-sm text-red-600 dark:text-red-500">
+                        <p className="mt-1 text-sm text-red-600">
                           <span className="font-medium">{errors.eventTimeStart.message}</span>
                         </p>
                       )}
@@ -438,7 +438,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                         />
                       </div>
                       {errors.eventTimeEnd && (
-                        <p className="mt-1 text-sm text-red-600 dark:text-red-500">
+                        <p className="mt-1 text-sm text-red-600">
                           <span className="font-medium">{errors.eventTimeEnd.message}</span>
                         </p>
                       )}
@@ -461,7 +461,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                     )}
                   />
                   {errors.category && (
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-500">
+                    <p className="mt-1 text-sm text-red-600">
                       <span className="font-medium">{errors.category.message}</span>
                     </p>
                   )}
@@ -488,7 +488,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                     className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 shadow-sm"
                   />
                   {errors.url && (
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-500">
+                    <p className="mt-1 text-sm text-red-600">
                       <span className="font-medium">{errors.url.message}</span>
                     </p>
                   )}
