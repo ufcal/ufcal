@@ -43,10 +43,11 @@ SESSION_REDIS_URL=redis://localhost:6379/
 
 ## DB構築
 
-Prismaの初期化とDBの作成を行います。
+Prismaの初期化とDBの作成、初期データインストールを行います。
 
 ```
 pnpm dlx prisma migrate dev --name init
+pnpm dlx prisma migrate reset
 ```
 
 ## 起動
