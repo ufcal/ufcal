@@ -46,7 +46,11 @@ const Component = ({
 
   return type === 'button' || type === 'submit' || type === 'reset' ? (
     <span className={disabled ? 'cursor-not-allowed' : ''}>
-      <button type={type} className={twMerge(mergedClass, className)} {...rest}>
+      <button
+        type={type}
+        className={twMerge(mergedClass, className, !disabled && 'cursor-pointer')}
+        {...rest}
+      >
         {icon && !isIconRight ? <Icon icon={icon} className="mr-1 h-4 w-4" /> : ''}
         {text ? text : children}
         {icon && isIconRight ? <Icon icon={icon} className="ml-1 h-4 w-4" /> : ''}
@@ -54,7 +58,7 @@ const Component = ({
     </span>
   ) : variant === 'icon' ? (
     <a
-      className={twMerge(mergedClass, className)}
+      className={twMerge(mergedClass, className, 'cursor-pointer')}
       {...(target ? { target: target, rel: 'noopener noreferrer' } : {})}
       {...rest}
     >
@@ -62,7 +66,7 @@ const Component = ({
     </a>
   ) : (
     <a
-      className={twMerge(mergedClass, className)}
+      className={twMerge(mergedClass, className, 'cursor-pointer')}
       {...(target ? { target: target, rel: 'noopener noreferrer' } : {})}
       {...rest}
     >
