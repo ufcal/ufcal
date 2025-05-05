@@ -1,4 +1,5 @@
 import Alert from '@/components/Alert'
+import Button from '@/components/base/Button'
 import DateRangePicker from '@/components/DateRangePicker'
 import ColorDropdown from '@/components/event/ColorDropdown'
 import { AdminEventFetch } from '@/fetch/admin'
@@ -499,24 +500,16 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
           </div>
           {/* モーダルフッタ部 */}
           <div className="items-center rounded-b border-t border-gray-200 p-6">
-            <div className="flex items-center space-x-3 sm:space-x-4">
+            <div className="flex items-center justify-end space-x-3 sm:space-x-4">
               {!completed && (
-                <button
-                  type="submit"
-                  className="bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 rounded-lg px-5 py-2.5 text-center font-medium text-white focus:ring-4"
-                  disabled={isSubmitting}
-                >
+                <Button type="submit" variant="primary" disabled={isSubmitting}>
                   {eventId ? '更新する' : '追加する'}
-                </button>
+                </Button>
               )}
               {completed && (
-                <button
-                  type="button"
-                  className="hover:text-primary-700 rounded-lg border border-gray-200 bg-white px-5 py-2.5 font-medium text-gray-900 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-200 focus:outline-none"
-                  onClick={handleCancel}
-                >
+                <Button type="button" variant="default" onClick={handleCancel}>
                   閉じる
-                </button>
+                </Button>
               )}
             </div>
           </div>
