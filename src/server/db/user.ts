@@ -2,6 +2,21 @@ import type { User } from '@prisma/client'
 import BaseDB from './base'
 
 class UserDB extends BaseDB {
+  async getUsers(): Promise<User[]> {
+    try {
+      const users = await BaseDB.prisma.user.findMany({
+        orderBy: [
+          {
+            id: 'desc'
+          }
+        ]
+      })
+      return users
+    } catch (err) {
+      console.error(err)
+      return []
+    }
+  }
   async getUserById(id: number): Promise<User | null> {
     try {
       const event = await BaseDB.prisma.user.findUnique({
@@ -90,6 +105,20 @@ class UserDB extends BaseDB {
     } catch (err) {
       console.error(err)
       return null
+    }
+  }
+
+  // パスワード更新用メソッド
+  async updatePassword(id: number, hashedPassword: string): Promise<boolean> {
+    try {
+      await BaseDB.prisma.user.update({
+        where: { id },
+        data: { password: hashedPassword }
+      })
+      return true
+    } catch (err) {
+      console.error(err)
+      return false
     }
   }
 }

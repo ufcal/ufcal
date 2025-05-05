@@ -1,5 +1,6 @@
 import Alert from '@/components/Alert'
 import Button from '@/components/base/Button'
+import { MemberPasswordFetch } from '@/fetch/member'
 import { useStore } from '@nanostores/react'
 import { atom } from 'nanostores'
 import React, { useEffect, useState } from 'react'
@@ -71,12 +72,15 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
     }
 
     try {
-      // TODO: API呼び出しの実装
-      // const response = await updatePassword({
-      //   userId,
-      //   currentPassword: formData.currentPassword,
-      //   newPassword: formData.newPassword
-      // })
+      const response = await MemberPasswordFetch.updatePassword(userId, {
+        currentPassword: formData.currentPassword,
+        newPassword: formData.newPassword
+      })
+      const result = await response.json()
+      if (!response.ok) {
+        setError(result.message || 'パスワードの更新に失敗しました')
+        return
+      }
       setSuccess('パスワードを更新しました')
       setTimeout(() => {
         handleClose()

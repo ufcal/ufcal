@@ -1,5 +1,4 @@
 import config from '@/config/config.json'
-import { prisma } from '@/lib/prisma'
 import { UserDB } from '@/server/db'
 import Session from '@/server/utils/session'
 import { type UserProfile, convertToUserProfile, profileSchema } from '@/types/profile'
