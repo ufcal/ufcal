@@ -9,6 +9,7 @@ type User = {
   role: string
   createdAt: Date
   isGuest?: boolean
+  isActive?: boolean
   status?: 'active' | 'inactive'
   biography?: string
   position?: string
@@ -94,7 +95,7 @@ export default function UserList({
                     登録日時
                   </th>
                   <th scope="col" className="p-4 text-left font-medium text-gray-500">
-                    Status
+                    状態
                   </th>
                   <th scope="col" className="p-4 text-left font-medium text-gray-500">
                     操作
@@ -145,10 +146,10 @@ export default function UserList({
                       <div className="flex items-center">
                         <div
                           className={`h-2.5 w-2.5 rounded-full ${
-                            user.status === 'active' ? 'bg-green-400' : 'bg-red-500'
+                            user.isActive ? 'bg-green-400' : 'bg-red-500'
                           } mr-2`}
                         />
-                        <span>{user.status === 'active' ? 'アクティブ' : '非アクティブ'}</span>
+                        <span>{user.isActive ? 'アクティブ' : '非アクティブ'}</span>
                       </div>
                     </td>
                     <td className="space-x-2 p-4 whitespace-nowrap">
