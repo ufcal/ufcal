@@ -9,7 +9,7 @@ type User = {
   role: string
   createdAt: Date
   isGuest?: boolean
-  isActive?: boolean
+  isEnabled?: boolean
   status?: 'active' | 'inactive'
   biography?: string
   position?: string
@@ -146,10 +146,10 @@ export default function UserList({
                       <div className="flex items-center">
                         <div
                           className={`h-2.5 w-2.5 rounded-full ${
-                            user.isActive ? 'bg-green-400' : 'bg-red-500'
+                            user.isEnabled ? 'bg-green-400' : 'bg-red-500'
                           } mr-2`}
                         />
-                        <span>{user.isActive ? 'アクティブ' : '非アクティブ'}</span>
+                        <span>{user.isEnabled ? '有効' : '無効'}</span>
                       </div>
                     </td>
                     <td className="space-x-2 p-4 whitespace-nowrap">

@@ -18,7 +18,7 @@ model User {
   rememberMeTokenExpiry DateTime?
   role                  String
   isGuest               Boolean   @default(false)
-  isActive              Boolean   @default(true)
+  isEnabled             Boolean   @default(true)
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
   Events                Event[]
