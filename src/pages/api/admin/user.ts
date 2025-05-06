@@ -1,12 +1,12 @@
 import { UserDB } from '@/server/db'
-import type { EventAdminRequest } from '@/types/event'
+import type { UserAdminRequest } from '@/types/user'
 import type { APIRoute } from 'astro'
 
 // Event API
 export const GET: APIRoute = async () => {
-  const events = await UserDB.getUsers()
+  const users = await UserDB.getUsers()
 
-  return new Response(JSON.stringify(events), {
+  return new Response(JSON.stringify(users), {
     status: 200,
     headers: {
       'Content-Type': 'application/json'

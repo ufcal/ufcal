@@ -5,6 +5,7 @@ import { UserDeleteModal } from './UserDeleteModal'
 import { UserEditModal } from './UserEditModal'
 import UserList from './UserListMain'
 ///import UserList from './UserList'
+import AdminUserFetch from '@/fetch/admin/user'
 
 type User = {
   id: number
@@ -32,14 +33,12 @@ export default function UserListPanel() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/api/admin/users/list')
-
-        if (!response.ok) {
-          throw new Error(`エラー: ${response.status}`)
+        const response = await AdminUserFetch.getUsers()
+        if (!response || !response.ok) {
+          throw new Error(`エラー: ${response ? response.status : 'no response'}`)
         }
-
-        const data = await response.json()
-        setUsers(data.users)
+        const users = await response.json()
+        setUsers(users)
       } catch (err) {
         setError('ユーザー情報の取得に失敗しました')
         console.error('Users fetch error:', err)
@@ -47,7 +46,6 @@ export default function UserListPanel() {
         setLoading(false)
       }
     }
-
     fetchUsers()
   }, [])
 
