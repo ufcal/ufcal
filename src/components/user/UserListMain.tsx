@@ -34,6 +34,14 @@ export default function UserList({
   const itemsPerPage = 10
   const totalPages = Math.ceil(users.length / itemsPerPage)
 
+  // ロールの日本語ラベル変換
+  const roleLabel: Record<string, string> = {
+    ADMIN: 'システム管理者',
+    MODERATOR: 'サイト運営者',
+    EDITOR: 'コンテンツ編集者',
+    MEMBER: 'メンバー'
+  }
+
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       setSelectedUsers(users.map((user) => user.id))
@@ -80,10 +88,10 @@ export default function UserList({
                     名前
                   </th>
                   <th scope="col" className="p-4 text-left font-medium text-gray-500">
-                    Biography
+                    ロール
                   </th>
                   <th scope="col" className="p-4 text-left font-medium text-gray-500">
-                    Position
+                    登録日時
                   </th>
                   <th scope="col" className="p-4 text-left font-medium text-gray-500">
                     Status
@@ -125,11 +133,13 @@ export default function UserList({
                         <div className="font-normal text-gray-500">{user.email}</div>
                       </div>
                     </td>
-                    <td className="max-w-sm truncate overflow-hidden p-4 text-base font-normal text-gray-500 xl:max-w-xs">
-                      {user.biography || '-'}
-                    </td>
                     <td className="p-4 text-base font-medium whitespace-nowrap text-gray-900">
-                      {user.position || '-'}
+                      {roleLabel[user.role] ?? '-'}
+                    </td>
+                    <td className="p-4 text-base font-normal whitespace-nowrap text-gray-900">
+                      {user.createdAt instanceof Date
+                        ? user.createdAt.toLocaleDateString('ja-JP')
+                        : new Date(user.createdAt).toLocaleDateString('ja-JP')}
                     </td>
                     <td className="p-4 text-base font-normal whitespace-nowrap text-gray-900">
                       <div className="flex items-center">
