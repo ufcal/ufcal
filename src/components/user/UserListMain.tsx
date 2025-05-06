@@ -1,4 +1,5 @@
 import Button from '@/components/base/Button.tsx'
+import config from '@/config/config.json'
 import { useState } from 'react'
 
 type User = {
@@ -11,6 +12,7 @@ type User = {
   status?: 'active' | 'inactive'
   biography?: string
   position?: string
+  avatar?: string
 }
 
 type UserListProps = {
@@ -110,8 +112,12 @@ export default function UserList({
                     </td>
                     <td className="mr-12 flex items-center space-x-6 p-4 whitespace-nowrap">
                       <img
-                        className="h-10 w-10 rounded-full"
-                        src={`/images/users/default-avatar.png`}
+                        className="h-10 w-10 rounded-full border border-gray-300 object-cover"
+                        src={
+                          user.avatar
+                            ? `${config.upload.avatar.url}/${user.avatar}`
+                            : `${config.upload.avatar.url}/${config.upload.avatar.default}`
+                        }
                         alt={`${user.name} avatar`}
                       />
                       <div className="font-normal text-gray-500">

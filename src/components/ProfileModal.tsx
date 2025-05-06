@@ -229,7 +229,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
                     tempImageUrl ||
                     (formData.avatar
                       ? `${config.upload.avatar.url}/${formData.avatar}`
-                      : 'https://api.dicebear.com/7.x/avataaars/svg?seed=default')
+                      : `${config.upload.avatar.url}/${config.upload.avatar.default}`)
                   }
                   alt="プロフィール画像"
                   className="h-20 w-20 rounded-full object-cover ring-2 ring-gray-200 transition-all group-hover:ring-blue-400"

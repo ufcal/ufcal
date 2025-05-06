@@ -13,7 +13,8 @@
       "size": {
         "width": 200,
         "height": 200
-      }
+      },
+      "default": "default.svg"
     }
   },
   "api": {
