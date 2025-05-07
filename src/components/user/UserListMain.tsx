@@ -7,13 +7,9 @@ type User = {
   email: string
   name: string
   role: string
-  createdAt: Date
-  isGuest?: boolean
   isEnabled?: boolean
-  status?: 'active' | 'inactive'
-  biography?: string
-  position?: string
   avatar?: string
+  createdAt: Date
 }
 
 type UserListProps = {
@@ -92,7 +88,7 @@ export default function UserList({
                     権限
                   </th>
                   <th scope="col" className="p-4 text-left font-medium text-gray-500">
-                    登録日時
+                    登録日
                   </th>
                   <th scope="col" className="p-4 text-left font-medium text-gray-500">
                     状態
