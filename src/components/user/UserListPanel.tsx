@@ -165,9 +165,19 @@ export default function UserListPanel() {
         <UserAddModal
           open={showAddModal}
           onClose={() => setShowAddModal(false)}
-          onUserAdded={(newUser) => {
-            setUsers([...users, newUser])
-            setShowAddModal(false)
+          onUserAdded={async () => {
+            try {
+              const response = await AdminUserFetch.getUsers()
+              if (!response || !response.ok) {
+                throw new Error(`エラー: ${response ? response.status : 'no response'}`)
+              }
+              const updatedUsers = await response.json()
+              setUsers(updatedUsers)
+              setShowAddModal(false)
+            } catch (err) {
+              setError('ユーザー一覧の更新に失敗しました')
+              console.error('Users fetch error:', err)
+            }
           }}
         />
       )}
