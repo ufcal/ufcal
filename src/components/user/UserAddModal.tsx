@@ -68,6 +68,17 @@ export default function UserAddModal({ open, onClose, onUserAdded }: UserAddModa
     }
   }
 
+  // 強力なランダムパスワード生成関数
+  function generatePassword(length = 12) {
+    const chars =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?'
+    let password = ''
+    for (let i = 0; i < length; i++) {
+      password += chars.charAt(Math.floor(Math.random() * chars.length))
+    }
+    return password
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/50">
       <div className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 shadow-2xl">
@@ -128,9 +139,32 @@ export default function UserAddModal({ open, onClose, onUserAdded }: UserAddModa
                   />
                 </div>
                 <div className="col-span-4">
-                  <label htmlFor="password" className="mb-1 block font-medium text-gray-900">
-                    パスワード
-                  </label>
+                  <div className="mb-1 flex items-center">
+                    <label htmlFor="password" className="mr-2 block font-medium text-gray-900">
+                      パスワード
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setForm((f) => ({ ...f, password: generatePassword() }))}
+                      className="hover:text-primary-600 text-gray-400 focus:outline-none"
+                      title="ランダムパスワード生成"
+                      aria-label="ランダムパスワード生成"
+                    >
+                      <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M4.5 12a7.5 7.5 0 0113.5-5.303M19.5 12a7.5 7.5 0 01-13.5 5.303M4.5 12H2.25M19.5 12h2.25"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                   <div className="relative">
                     <input
                       type={showPassword ? 'text' : 'password'}
