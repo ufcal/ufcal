@@ -174,7 +174,11 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
       const data = await response.json()
 
       if (!response.ok) {
-        if (response.status === 400 && data.errors) {
+        if (response.status === 422) {
+          // 422エラーの場合、サーバーからのエラーメッセージを表示
+          setError(data.message || '入力内容に問題があります')
+          return
+        } else if (response.status === 400 && data.errors) {
           setValidationErrors(data.errors)
           return
         }
