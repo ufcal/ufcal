@@ -121,5 +121,25 @@ class UserDB extends BaseDB {
       return false
     }
   }
+
+  // ユーザー作成用メソッド
+  async addUser(data: {
+    name: string
+    email: string
+    password: string
+    role: string
+  }): Promise<User | null> {
+    try {
+      // ユーザーの作成
+      const user = await BaseDB.prisma.user.create({
+        data
+      })
+
+      return user
+    } catch (err) {
+      console.error('ユーザー作成エラー:', err)
+      return null
+    }
+  }
 }
 export default new UserDB()

@@ -10,6 +10,20 @@ class AdminUserFetch {
       return null
     }
   }
+  async addUser(params: UserAdminRequest): Promise<any> {
+    try {
+      const response = await fetch(`${config.api.adminUrl}/user`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(params)
+      })
+      return response
+    } catch (e) {
+      return null
+    }
+  }
 }
 
 export default new AdminUserFetch()

@@ -1,5 +1,7 @@
 import Alert from '@/components/Alert'
 import Button from '@/components/base/Button'
+import { AdminUserFetch } from '@/fetch/admin'
+import { generate } from 'generate-password-ts'
 import { useState } from 'react'
 
 export type UserRole = 'ADMIN' | 'MODERATOR' | 'EDITOR' | 'MEMBER'
@@ -48,16 +50,12 @@ export default function UserAddModal({ open, onClose, onUserAdded }: UserAddModa
     }
     setIsSubmitting(true)
     try {
-      const response = await fetch('/api/admin/users/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
+      const newUser = await AdminUserFetch.addUser({
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        role: form.role
       })
-      if (!response.ok) {
-        const res = await response.json().catch(() => ({}))
-        throw new Error(res.message || 'ユーザの作成に失敗しました')
-      }
-      const newUser = await response.json()
       setSuccess('ユーザを追加しました')
       setCompleted(true)
       onUserAdded(newUser)
@@ -68,15 +66,12 @@ export default function UserAddModal({ open, onClose, onUserAdded }: UserAddModa
     }
   }
 
-  // 強力なランダムパスワード生成関数
-  function generatePassword(length = 12) {
-    const chars =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?'
-    let password = ''
-    for (let i = 0; i < length; i++) {
-      password += chars.charAt(Math.floor(Math.random() * chars.length))
-    }
-    return password
+  // パスワード生成関数
+  function generatePassword(): string {
+    return generate({
+      length: 10,
+      numbers: true
+    })
   }
 
   return (
