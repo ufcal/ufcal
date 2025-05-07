@@ -148,17 +148,26 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
     setSuccess('')
     setValidationErrors({})
 
+    // 入力値をtrim
+    const trimmedFormData = {
+      ...formData,
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      biography: formData.biography.trim()
+    }
+    setFormData(trimmedFormData)
+
     if (!validateForm()) {
       return
     }
 
     try {
       const formDataToSend = new FormData()
-      formDataToSend.append('name', formData.name)
-      formDataToSend.append('email', formData.email)
-      formDataToSend.append('biography', formData.biography)
-      if (formData.avatarFile) {
-        formDataToSend.append('avatar', formData.avatarFile)
+      formDataToSend.append('name', trimmedFormData.name)
+      formDataToSend.append('email', trimmedFormData.email)
+      formDataToSend.append('biography', trimmedFormData.biography)
+      if (trimmedFormData.avatarFile) {
+        formDataToSend.append('avatar', trimmedFormData.avatarFile)
       }
 
       const response = await MemberProfileFetch.updateProfile(userid, formDataToSend)

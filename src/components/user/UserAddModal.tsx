@@ -43,6 +43,15 @@ export default function UserAddModal({ open, onClose, onUserAdded }: UserAddModa
     e.preventDefault()
     setSuccess('')
     setError('')
+
+    // 入力値をtrim
+    const trimmedForm = {
+      ...form,
+      name: form.name.trim(),
+      email: form.email.trim()
+    }
+    setForm(trimmedForm)
+
     const v = validate()
     if (v) {
       setError(v)
@@ -51,10 +60,10 @@ export default function UserAddModal({ open, onClose, onUserAdded }: UserAddModa
     setIsSubmitting(true)
     try {
       const newUser = await AdminUserFetch.addUser({
-        name: form.name,
-        email: form.email,
-        password: form.password,
-        role: form.role
+        name: trimmedForm.name,
+        email: trimmedForm.email,
+        password: trimmedForm.password,
+        role: trimmedForm.role
       })
       setSuccess('ユーザを追加しました')
       setCompleted(true)
