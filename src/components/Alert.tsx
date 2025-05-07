@@ -20,10 +20,17 @@ const Alert: React.FC<AlertProps> = ({ message, type = 'info' }) => {
     info: 'mdi:information'
   }
 
+  const alertRoles = {
+    success: 'status',
+    error: 'alert',
+    warning: 'alert',
+    info: 'status'
+  }
+
   return (
     <div
       className={`mb-4 flex items-center rounded-lg p-4 text-sm ${alertStyles[type]}`}
-      role="alert"
+      role={alertRoles[type]}
     >
       <Icon className="mr-1 h-8 w-8" icon={alertIcons[type]} />
       <span className="sr-only">{type}</span>
