@@ -1,74 +1,94 @@
-# Astroベースのイベントカレンダーシステム
+# UFCal - イベントカレンダーシステム
 
 Astroフレームワークベースのカレンダーシステムです。
 ユーザログイン機能を持ち、カレンダーに表示するイベントを管理することができます。
 
-主な仕様は以下です。
-
-- AstroフレームワークベースのSSRシステム
-- ユーザ情報、イベント情報をMariaDBで管理。DBはPrismaで接続。
-- セッション情報をRedisで管理
-- TypeScript言語
-- バックエンドはNode.jsベース
-- フロントエンドは、Tailwind, Flowbite, Reactコンポーネントで構成
-
 ![screencapture-localhost-3000-2024-08-16-11_55_49](https://github.com/user-attachments/assets/ad352e7d-3d34-4034-8a5f-21ca3eb21c8d)
 
-## 環境
+## 主な機能
 
-必要な環境は以下です。
+- イベントの作成、編集、削除
+- カレンダー表示（月表示）
+- ユーザー認証（ログイン/ログアウト）
+- 管理者機能
+- レスポンシブデザイン
 
-- Node v20.0以上
+## 技術スタック
+
+- **フロントエンド**
+  - Astro (SSR)
+  - React
+  - Tailwind CSS
+  - Flowbite
+  - FullCalendar
+  - Zod (バリデーション)
+
+- **バックエンド**
+  - Node.js
+  - Prisma (ORM)
+  - MariaDB
+  - Redis (セッション管理)
+
+- **開発ツール**
+  - TypeScript
+  - ESLint
+  - Prettier
+
+## 環境要件
+
+- Node.js v20.0以上
 - MariaDB v10.0以上
 - Redis v7.0以上
 
-## インストール
+## セットアップ
 
-必要なモジュールをインストールします。**Prismaクライアント**をインストールします。
-
+1. リポジトリのクローン
+```bash
+git clone [repository-url]
+cd ufcal
 ```
+
+2. 依存関係のインストール
+```bash
 pnpm install
 pnpm dlx prisma generate
 ```
 
-## 接続情報の設定
-
-MariaDBのRedesの接続情報を設定します。
-`.env`ファイルの`DATABASE_URL`と`SESSION_REDIS_URL`に接続可能な値を設定します。
-
-```
+3. 環境変数の設定
+`.env`ファイルを作成し、以下の内容を設定：
+```env
 DATABASE_URL=mysql://testuser:testuser@localhost:3306/ufcal-db
 SESSION_REDIS_URL=redis://localhost:6379/
 ```
 
-## DB構築
-
-Prismaの初期化とDBの作成、初期データインストールを行います。
-
-```
+4. データベースのセットアップ
+```bash
 pnpm dlx prisma migrate dev --name init
 pnpm dlx prisma migrate reset
 ```
 
-## 起動
+## 開発サーバーの起動
 
-デバッグ起動の方法です。
-VSCodeの**実行とデバッグ**の機能で、**デバッグの開始**から**Development server**を起動します。
-Webブラウザで以下のURLにアクセスします。
-
-```
-http://localhost:3000
+```bash
+pnpm dev
 ```
 
-ページ右上の**ユーザ**アイコンのリンクからログインを行います。
-アカウント`admin@example.com`とパスワード`password`で管理者アカウントでログインできます。
+開発サーバーは http://localhost:3000 で起動します。
 
-## ビルドからの起動
+### テストユーザー
+- 管理者アカウント
+  - メール: admin@example.com
+  - パスワード: password
 
-ビルドモジュールを作成し、単体起動するには以下を行います。
+## ビルドとデプロイ
 
-```
+1. プロダクションビルド
+```bash
 pnpm build
+```
+
+2. サーバーの起動
+```bash
 pnpm start
 ```
 
