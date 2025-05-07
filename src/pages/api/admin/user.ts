@@ -21,35 +21,40 @@ export const POST: APIRoute = async ({ request }) => {
     const { email, name, password, role } = body as UserAdminRequest
 
     if (!name || !email || !password || !role) {
-      return new Response(
-        JSON.stringify({
-          message: '必要な情報が不足しています',
-          errors: {
-            name: '名前は必須です',
-            email: 'メールアドレスは必須です',
-            password: 'パスワードは必須です',
-            role: '権限は必須です'
-          }
-        }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' }
+      const errMessage = '必要な情報が不足しています'
+      return new Response(JSON.stringify({ message: errMessage }), {
+        status: 422,
+        statusText: 'Unprocessable Entity',
+        headers: {
+          'Content-Type': 'application/json'
         }
-      )
+      })
+    }
+
+    // 名前の重複チェック
+    const existingName = await UserDB.getUserByName(name)
+    if (existingName) {
+      const errMessage = 'この名前は既に使用されています'
+      return new Response(JSON.stringify({ message: errMessage }), {
+        status: 422,
+        statusText: 'Unprocessable Entity',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
     }
 
     // メールアドレスの重複チェック
     const existingUser = await await UserDB.getUserByEmail(email)
     if (existingUser) {
-      return new Response(
-        JSON.stringify({
-          message: 'このメールアドレスは既に使用されています'
-        }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' }
+      const errMessage = 'このメールアドレスは既に使用されています'
+      return new Response(JSON.stringify({ message: errMessage }), {
+        status: 422,
+        statusText: 'Unprocessable Entity',
+        headers: {
+          'Content-Type': 'application/json'
         }
-      )
+      })
     }
 
     // パスワードのハッシュ化

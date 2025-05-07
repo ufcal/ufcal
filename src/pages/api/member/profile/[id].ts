@@ -121,6 +121,32 @@ export const PUT: APIRoute = async (context) => {
         updateData.avatar = fileName
       }
 
+      // 名前の重複チェック
+      let existingUser = await UserDB.getUserByName(updateData.name)
+      if (existingUser && existingUser.id !== userId) {
+        const errMessage = 'この名前は既に使用されています'
+        return new Response(JSON.stringify({ message: errMessage }), {
+          status: 422,
+          statusText: 'Unprocessable Entity',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+      }
+
+      // メールアドレスの重複チェック
+      existingUser = await await UserDB.getUserByEmail(updateData.email)
+      if (existingUser && existingUser.id !== userId) {
+        const errMessage = 'このメールアドレスは既に使用されています'
+        return new Response(JSON.stringify({ message: errMessage }), {
+          status: 422,
+          statusText: 'Unprocessable Entity',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+      }
+
       // データベースの更新
       try {
         const updatedUser = await UserDB.updateUserProfile(userId, updateData)

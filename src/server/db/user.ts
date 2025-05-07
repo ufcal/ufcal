@@ -141,5 +141,19 @@ class UserDB extends BaseDB {
       return null
     }
   }
+
+  async getUserByName(name: string): Promise<User | null> {
+    try {
+      const user = await BaseDB.prisma.user.findFirst({
+        where: {
+          name: name
+        }
+      })
+      return user
+    } catch (err) {
+      console.error(err)
+      return null
+    }
+  }
 }
 export default new UserDB()

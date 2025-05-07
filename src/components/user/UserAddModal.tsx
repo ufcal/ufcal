@@ -59,17 +59,38 @@ export default function UserAddModal({ open, onClose, onUserAdded }: UserAddModa
     }
     setIsSubmitting(true)
     try {
-      const newUser = await AdminUserFetch.addUser({
+      const response = await AdminUserFetch.addUser({
         name: trimmedForm.name,
         email: trimmedForm.email,
         password: trimmedForm.password,
         role: trimmedForm.role
       })
-      setSuccess('ユーザを追加しました')
-      setCompleted(true)
-      onUserAdded(newUser)
+
+      if (response.ok) {
+        const newUser = await response.json()
+        setSuccess('ユーザを追加しました')
+        setCompleted(true)
+        onUserAdded(newUser)
+      } else if (response.status === 422) {
+        // バリデーションエラー
+        const resBody = await response.json()
+        if (resBody && resBody.message) {
+          setError(resBody.message)
+        } else {
+          setError('入力データが無効です。再度確認してください。')
+        }
+      } else if (response.status === 401) {
+        setError('アクセス権がありません。再度ログインしてください。')
+      } else {
+        const resBody = await response.json()
+        if (resBody && resBody.message) {
+          setError(resBody.message)
+        } else {
+          setError('サーバでエラーが発生しました')
+        }
+      }
     } catch (err: any) {
-      setError(err.message || 'ユーザの作成に失敗しました')
+      setError('通信エラーが発生しました')
     } finally {
       setIsSubmitting(false)
     }
@@ -247,9 +268,14 @@ export default function UserAddModal({ open, onClose, onUserAdded }: UserAddModa
             </fieldset>
             <div className="flex justify-end space-x-3 pt-4">
               {!completed && (
-                <Button type="submit" variant="primary" disabled={isSubmitting}>
-                  追加する
-                </Button>
+                <>
+                  <Button type="button" variant="default" onClick={onClose}>
+                    キャンセル
+                  </Button>
+                  <Button type="submit" variant="primary" disabled={isSubmitting}>
+                    追加する
+                  </Button>
+                </>
               )}
               {completed && (
                 <Button type="button" variant="default" onClick={onClose}>
