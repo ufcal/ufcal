@@ -13,13 +13,20 @@ const Alert: React.FC<AlertProps> = ({ message, type = 'info' }) => {
     info: 'bg-info-50 text-info-800'
   }
 
+  const alertIcons = {
+    success: 'mdi:check-circle',
+    error: 'mdi:alert-circle',
+    warning: 'mdi:alert',
+    info: 'mdi:information'
+  }
+
   return (
     <div
       className={`mb-4 flex items-center rounded-lg p-4 text-sm ${alertStyles[type]}`}
       role="alert"
     >
-      <Icon className="mr-1 h-8 w-8" icon="mdi:close-circle" />
-      <span className="sr-only">Info</span>
+      <Icon className="mr-1 h-8 w-8" icon={alertIcons[type]} />
+      <span className="sr-only">{type}</span>
       <div>{message}</div>
     </div>
   )
