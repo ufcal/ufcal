@@ -1,6 +1,6 @@
 import Button from '@/components/base/Button.tsx'
 import { useEffect, useState } from 'react'
-import { UserAddModal } from './UserAddModal'
+import UserAddModal from './UserAddModal'
 import { UserDeleteModal } from './UserDeleteModal'
 import { UserEditModal } from './UserEditModal'
 import UserList from './UserListMain'
@@ -40,7 +40,7 @@ export default function UserListPanel() {
         const users = await response.json()
         setUsers(users)
       } catch (err) {
-        setError('ユーザー情報の取得に失敗しました')
+        setError('ユーザ情報の取得に失敗しました')
         console.error('Users fetch error:', err)
       } finally {
         setLoading(false)
@@ -60,7 +60,7 @@ export default function UserListPanel() {
   )
 
   if (loading) {
-    return <div className="py-10 text-center">ユーザー情報を読み込み中...</div>
+    return <div className="py-10 text-center">ユーザ情報を読み込み中...</div>
   }
 
   if (error) {

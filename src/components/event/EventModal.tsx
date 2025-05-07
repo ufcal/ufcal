@@ -355,7 +355,6 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                         onChange={(start, end) => onChange({ startDate: start, endDate: end })}
                         isRangeMode={true}
                         placeholder="日付を選択"
-                        className="cursor-pointer"
                       />
                     )}
                   />

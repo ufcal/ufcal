@@ -37,10 +37,10 @@ export default function UserList({
 
   // ロールの日本語ラベル変換
   const roleLabel: Record<string, string> = {
-    ADMIN: 'システム管理者',
-    MODERATOR: 'サイト運営者',
-    EDITOR: 'コンテンツ編集者',
-    MEMBER: 'メンバー'
+    ADMIN: '管理者',
+    MODERATOR: 'モデレータ',
+    EDITOR: '編集者',
+    MEMBER: '一般メンバー'
   }
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,7 +89,7 @@ export default function UserList({
                     名前
                   </th>
                   <th scope="col" className="p-4 text-left font-medium text-gray-500">
-                    ロール
+                    権限
                   </th>
                   <th scope="col" className="p-4 text-left font-medium text-gray-500">
                     登録日時
@@ -177,7 +177,7 @@ export default function UserList({
                 {users.length === 0 && (
                   <tr>
                     <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
-                      ユーザーがいません
+                      ユーザがいません
                     </td>
                   </tr>
                 )}

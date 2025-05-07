@@ -23,7 +23,6 @@ interface DateRangePickerProps {
   onChange?: (startDate: Date | null, endDate: Date | null) => void
   isRangeMode?: boolean // 日付範囲選択モードかどうかを指定するプロパティ
   placeholder?: string // プレースホルダーテキスト
-  className?: string // 追加のスタイルクラス
 }
 
 const DateRangePicker: React.FC<DateRangePickerProps> = ({
@@ -31,8 +30,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
   endDate: externalEndDate,
   onChange,
   isRangeMode = true, // デフォルトは日付範囲選択モード
-  placeholder = '日付を選択',
-  className = '' // デフォルト値を空文字列に設定
+  placeholder = '日付を選択'
 }) => {
   // 内部で状態を管理
   const [currentMonth, setCurrentMonth] = useState(new Date())
