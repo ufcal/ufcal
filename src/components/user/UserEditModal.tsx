@@ -1,15 +1,20 @@
-import { useEffect, useState } from 'react'
+import Alert from '@/components/Alert'
+import Button from '@/components/base/Button'
+import config from '@/config/config.json'
+import { AdminUserFetch } from '@/fetch/admin'
+import { useState } from 'react'
+
+type UserRole = 'ADMIN' | 'MODERATOR' | 'EDITOR' | 'MEMBER'
 
 type User = {
   id: number
   email: string
   name: string
-  role: string
+  role: UserRole
   createdAt: Date
-  isGuest?: boolean
-  status?: 'active' | 'inactive'
+  isEnabled?: boolean
+  avatar?: string
   biography?: string
-  position?: string
 }
 
 type UserEditModalProps = {
@@ -20,247 +25,246 @@ type UserEditModalProps = {
 }
 
 export function UserEditModal({ open, user, onClose, onUserUpdated }: UserEditModalProps) {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+  const [form, setForm] = useState({
+    name: '',
     email: '',
-    position: '',
-    newPassword: '',
-    biography: '',
-    role: '',
-    status: ''
+    role: 'MEMBER' as UserRole,
+    isEnabled: true
   })
+  const [success, setSuccess] = useState('')
+  const [error, setError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [completed, setCompleted] = useState(false)
 
-  useEffect(() => {
-    const [firstName = '', lastName = ''] = user.name.split(' ')
-    setFormData({
-      firstName,
-      lastName,
+  // 初期値の設定
+  useState(() => {
+    setForm({
+      name: user.name,
       email: user.email,
-      position: user.position || '',
-      newPassword: '',
-      biography: user.biography || '',
       role: user.role,
-      status: user.status || 'active'
+      isEnabled: user.isEnabled ?? true
     })
-  }, [user])
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    try {
-      const response = await fetch(`/api/admin/users/${user.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: `${formData.firstName} ${formData.lastName}`.trim(),
-          email: formData.email,
-          ...(formData.newPassword && { password: formData.newPassword }),
-          role: formData.role,
-          position: formData.position,
-          biography: formData.biography,
-          status: formData.status
-        })
-      })
-
-      if (!response.ok) {
-        throw new Error('ユーザーの更新に失敗しました')
-      }
-
-      const updatedUser = await response.json()
-      onUserUpdated(updatedUser)
-    } catch (error) {
-      console.error('Error updating user:', error)
-      // エラー処理を追加する場合はここに実装
-    }
-  }
+  })
 
   if (!open) return null
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const value =
+      e.target.type === 'checkbox' ? (e.target as HTMLInputElement).checked : e.target.value
+    setForm({ ...form, [e.target.name]: value })
+  }
+
+  const validate = () => {
+    if (!form.name.trim()) return '氏名は必須です'
+    if (!form.email.trim()) return 'メールアドレスは必須です'
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) return 'メールアドレスの形式が不正です'
+    return ''
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSuccess('')
+    setError('')
+
+    // 入力値をtrim
+    const trimmedForm = {
+      ...form,
+      name: form.name.trim(),
+      email: form.email.trim()
+    }
+    setForm(trimmedForm)
+
+    const v = validate()
+    if (v) {
+      setError(v)
+      return
+    }
+
+    setIsSubmitting(true)
+    try {
+      const response = await AdminUserFetch.updateUser(user.id, {
+        name: trimmedForm.name,
+        email: trimmedForm.email,
+        role: trimmedForm.role,
+        isEnabled: trimmedForm.isEnabled
+      })
+
+      if (response.ok) {
+        const updatedUser = await response.json()
+        setSuccess('ユーザを更新しました')
+        setCompleted(true)
+        onUserUpdated(updatedUser)
+      } else if (response.status === 422) {
+        // バリデーションエラー
+        const resBody = await response.json()
+        if (resBody && resBody.message) {
+          setError(resBody.message)
+        } else {
+          setError('入力データが無効です。再度確認してください。')
+        }
+      } else if (response.status === 401) {
+        setError('アクセス権がありません。再度ログインしてください。')
+      } else {
+        const resBody = await response.json()
+        if (resBody && resBody.message) {
+          setError(resBody.message)
+        } else {
+          setError('サーバでエラーが発生しました')
+        }
+      }
+    } catch (err: any) {
+      setError('通信エラーが発生しました')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
-    <div className="h-modal bg-opacity-50 fixed top-4 right-0 left-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-gray-900 sm:h-full md:inset-0">
-      <div className="relative h-full w-full max-w-2xl px-4 md:h-auto">
-        <div className="relative rounded-lg bg-white shadow dark:bg-gray-800">
-          <div className="flex items-start justify-between rounded-t border-b p-5 dark:border-gray-700">
-            <h3 className="text-xl font-semibold dark:text-white">ユーザー編集</h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/50">
+      <div className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 shadow-2xl">
+        {/* ヘッダー */}
+        <div className="relative px-6 pt-6">
+          <div className="absolute top-6 right-6">
             <button
               type="button"
               onClick={onClose}
-              className="ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-white"
+              className="cursor-pointer rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600"
             >
               <svg
                 className="h-5 w-5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                viewBox="0 0 24 24"
               >
-                <path
-                  fillRule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                ></path>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-6 p-6">
-              <div className="grid grid-cols-6 gap-6">
-                <div className="col-span-6 sm:col-span-3">
-                  <label
-                    htmlFor="first-name"
-                    className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    姓
+          <h2 className="mb-3 text-3xl font-bold text-gray-900">ユーザ編集</h2>
+        </div>
+        {/* コンテンツ */}
+        <div className="px-6 pt-0 pb-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {success && <Alert message={success} type="success" />}
+            {error && <Alert message={error} type="error" />}
+
+            <fieldset disabled={completed || isSubmitting}>
+              <div className="grid grid-cols-4 gap-4">
+                {/* 表示のみの情報 */}
+                <div className="col-span-4">
+                  <label className="mb-1 block font-medium text-gray-500">アバター</label>
+                  <div className="flex items-center space-x-4">
+                    <img
+                      className="h-16 w-16 rounded-full border border-gray-300 object-cover"
+                      src={
+                        user.avatar
+                          ? `${config.upload.avatar.url}/${user.avatar}`
+                          : `${config.upload.avatar.url}/${config.upload.avatar.default}`
+                      }
+                      alt={`${user.name} avatar`}
+                    />
+                  </div>
+                </div>
+
+                {user.biography && (
+                  <div className="col-span-4">
+                    <label className="mb-1 block font-medium text-gray-500">自己紹介</label>
+                    <div className="text-gray-900">{user.biography}</div>
+                  </div>
+                )}
+
+                {/* 編集可能な情報 */}
+                <div className="col-span-4">
+                  <label htmlFor="name" className="mb-1 block font-medium text-gray-900">
+                    名前
                   </label>
                   <input
                     type="text"
-                    name="first-name"
-                    id="first-name"
-                    value={formData.firstName}
-                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    className="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 shadow-sm sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    id="name"
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900"
                     required
                   />
                 </div>
-                <div className="col-span-6 sm:col-span-3">
-                  <label
-                    htmlFor="last-name"
-                    className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    名
-                  </label>
-                  <input
-                    type="text"
-                    name="last-name"
-                    id="last-name"
-                    value={formData.lastName}
-                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    className="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 shadow-sm sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                    required
-                  />
-                </div>
-                <div className="col-span-6 sm:col-span-3">
-                  <label
-                    htmlFor="email"
-                    className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                  >
+
+                <div className="col-span-4">
+                  <label htmlFor="email" className="mb-1 block font-medium text-gray-900">
                     メールアドレス
                   </label>
                   <input
                     type="email"
-                    name="email"
                     id="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 shadow-sm sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900"
                     required
                   />
                 </div>
-                <div className="col-span-6 sm:col-span-3">
-                  <label
-                    htmlFor="position"
-                    className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    役職
-                  </label>
-                  <input
-                    type="text"
-                    name="position"
-                    id="position"
-                    value={formData.position}
-                    onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-                    className="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 shadow-sm sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                  />
-                </div>
-                <div className="col-span-6 sm:col-span-3">
-                  <label
-                    htmlFor="role"
-                    className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                  >
+
+                <div className="col-span-4">
+                  <label htmlFor="role" className="mb-1 block font-medium text-gray-900">
                     権限
                   </label>
                   <select
                     id="role"
                     name="role"
-                    value={formData.role}
-                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                    className="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 shadow-sm sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    value={form.role}
+                    onChange={handleChange}
+                    className="focus:border-primary-500 focus:ring-primary-500 block w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900"
+                    required
                   >
-                    <option value="USER">一般ユーザー</option>
+                    <option value="MEMBER">一般メンバー</option>
+                    <option value="EDITOR">編集者</option>
+                    <option value="MODERATOR">モデレータ</option>
                     <option value="ADMIN">管理者</option>
-                    <option value="GUEST">ゲスト</option>
                   </select>
                 </div>
-                <div className="col-span-6 sm:col-span-3">
-                  <label
-                    htmlFor="status"
-                    className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    ステータス
+
+                <div className="col-span-4 pt-2">
+                  <label className="inline-flex cursor-pointer items-center">
+                    <input
+                      type="checkbox"
+                      name="isEnabled"
+                      checked={form.isEnabled}
+                      onChange={handleChange}
+                      className="peer sr-only"
+                    />
+                    <div className="peer peer-checked:bg-primary-600 peer-focus:ring-primary-300 relative h-6 w-11 rounded-full bg-gray-200 peer-focus:ring-2 peer-focus:outline-none after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white rtl:peer-checked:after:-translate-x-full"></div>
+                    <span className="ms-3 font-medium text-gray-900">アカウントを有効にする</span>
                   </label>
-                  <select
-                    id="status"
-                    name="status"
-                    value={formData.status}
-                    onChange={(e) =>
-                      setFormData({ ...formData, status: e.target.value as 'active' | 'inactive' })
-                    }
-                    className="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 shadow-sm sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                  >
-                    <option value="active">アクティブ</option>
-                    <option value="inactive">非アクティブ</option>
-                  </select>
                 </div>
-                <div className="col-span-6">
-                  <label
-                    htmlFor="new-password"
-                    className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    新しいパスワード（変更する場合のみ）
-                  </label>
-                  <input
-                    type="password"
-                    name="new-password"
-                    id="new-password"
-                    value={formData.newPassword}
-                    onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
-                    className="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 shadow-sm sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                  />
-                </div>
-                <div className="col-span-6">
-                  <label
-                    htmlFor="biography"
-                    className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    自己紹介
-                  </label>
-                  <textarea
-                    id="biography"
-                    name="biography"
-                    rows={4}
-                    value={formData.biography}
-                    onChange={(e) => setFormData({ ...formData, biography: e.target.value })}
-                    className="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                  ></textarea>
+
+                <div className="col-span-4">
+                  <label className="mb-1 block font-medium text-gray-500">登録日</label>
+                  <div className="text-gray-900">
+                    {user.createdAt instanceof Date
+                      ? user.createdAt.toLocaleDateString('ja-JP')
+                      : new Date(user.createdAt).toLocaleDateString('ja-JP')}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex items-center space-x-2 rounded-b border-t border-gray-200 p-6 dark:border-gray-700">
-              <button
-                type="submit"
-                className="bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 rounded-lg px-5 py-2.5 text-center text-sm font-medium text-white focus:ring-4"
-              >
-                保存
-              </button>
-              <button
-                type="button"
-                onClick={onClose}
-                className="rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-4 focus:ring-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-              >
-                キャンセル
-              </button>
+            </fieldset>
+
+            <div className="flex justify-end space-x-3 pt-4">
+              {!completed && (
+                <>
+                  <Button type="button" variant="default" onClick={onClose}>
+                    キャンセル
+                  </Button>
+                  <Button type="submit" variant="primary" disabled={isSubmitting}>
+                    更新する
+                  </Button>
+                </>
+              )}
+              {completed && (
+                <Button type="button" variant="default" onClick={onClose}>
+                  閉じる
+                </Button>
+              )}
             </div>
           </form>
         </div>
