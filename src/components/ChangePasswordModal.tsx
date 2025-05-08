@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react'
 export const showChangePasswordModal = atom(false)
 
 interface ChangePasswordModalProps {
-  userId: string
+  userId: number
 }
 
 const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => {
@@ -105,7 +105,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
           <div className="absolute top-6 right-6">
             <button
               onClick={handleClose}
-              className="rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600"
+              className="cursor-pointer rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600"
             >
               <svg
                 className="h-5 w-5"
@@ -148,7 +148,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
                 <button
                   type="button"
                   onClick={() => togglePasswordVisibility('current')}
-                  className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700"
                 >
                   {showPasswords.current ? (
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -200,7 +200,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
                 <button
                   type="button"
                   onClick={() => togglePasswordVisibility('new')}
-                  className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700"
                 >
                   {showPasswords.new ? (
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -252,7 +252,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
                 <button
                   type="button"
                   onClick={() => togglePasswordVisibility('confirm')}
-                  className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700"
                 >
                   {showPasswords.confirm ? (
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

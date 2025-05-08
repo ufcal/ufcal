@@ -211,7 +211,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
           <div className="absolute top-6 right-6">
             <button
               onClick={handleClose}
-              className="rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600"
+              className="cursor-pointer rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600"
             >
               <svg
                 className="h-5 w-5"
