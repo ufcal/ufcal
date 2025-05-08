@@ -19,10 +19,10 @@ class UserDB extends BaseDB {
   }
   async getUserById(id: number): Promise<User | null> {
     try {
-      const event = await BaseDB.prisma.user.findUnique({
+      const user = await BaseDB.prisma.user.findUnique({
         where: { id }
       })
-      return event
+      return user
     } catch (err) {
       console.error(err)
       return null
@@ -148,6 +148,18 @@ class UserDB extends BaseDB {
         where: {
           name: name
         }
+      })
+      return user
+    } catch (err) {
+      console.error(err)
+      return null
+    }
+  }
+
+  async deleteUser(id: number): Promise<User | null> {
+    try {
+      const user = await BaseDB.prisma.user.delete({
+        where: { id }
       })
       return user
     } catch (err) {
