@@ -189,8 +189,8 @@ export default function UserListPanel() {
           }}
           onUserUpdated={(updatedUser) => {
             setUsers(users.map((u) => (u.id === updatedUser.id ? updatedUser : u)))
-            setShowEditModal(false)
-            setSelectedUser(null)
+            //setShowEditModal(false)
+            //setSelectedUser(null)
           }}
         />
       )}
@@ -205,8 +205,8 @@ export default function UserListPanel() {
           }}
           onUserDeleted={(deletedUserId) => {
             setUsers(users.filter((u) => u.id !== deletedUserId))
-            setShowDeleteModal(false)
-            setSelectedUser(null)
+            //setShowDeleteModal(false)
+            //setSelectedUser(null)
           }}
         />
       )}

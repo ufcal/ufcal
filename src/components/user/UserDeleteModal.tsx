@@ -44,8 +44,7 @@ export function UserDeleteModal({ open, user, onClose, onUserDeleted }: UserDele
       if (response.ok) {
         setSuccess('ユーザを削除しました')
         setCompleted(true)
-      } else if (response.status === 401) {
-        setError('アクセス権がありません。再度ログインしてください。')
+        onUserDeleted(user.id)
       } else {
         const resBody = await response.json()
         if (resBody && resBody.message) {
