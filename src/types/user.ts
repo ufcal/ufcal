@@ -67,6 +67,7 @@ export interface UserAdminRequest {
   isEnabled: boolean
 }
 
+// 管理機能用ユーザー情報
 export interface IUser {
   id: number
   email: string

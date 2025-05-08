@@ -170,7 +170,7 @@ export default function UserListPanel() {
               }
               const updatedUsers = await response.json()
               setUsers(updatedUsers)
-              setShowAddModal(false)
+              //setShowAddModal(false)
             } catch (err) {
               setError('ユーザー一覧の更新に失敗しました')
               console.error('Users fetch error:', err)
