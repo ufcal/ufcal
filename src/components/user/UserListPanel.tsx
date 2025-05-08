@@ -24,7 +24,6 @@ export default function UserListPanel() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedUsers, setSelectedUsers] = useState<number[]>([])
   const [showAddModal, setShowAddModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -149,8 +148,6 @@ export default function UserListPanel() {
 
       <UserList
         users={filteredUsers}
-        selectedUsers={selectedUsers}
-        setSelectedUsers={setSelectedUsers}
         onEdit={(user) => {
           setSelectedUser(user)
           setShowEditModal(true)

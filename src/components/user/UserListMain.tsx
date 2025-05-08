@@ -14,19 +14,11 @@ type User = {
 
 type UserListProps = {
   users: User[]
-  selectedUsers: number[]
-  setSelectedUsers: (ids: number[]) => void
   onEdit: (user: User) => void
   onDelete: (user: User) => void
 }
 
-export default function UserList({
-  users,
-  selectedUsers,
-  setSelectedUsers,
-  onEdit,
-  onDelete
-}: UserListProps) {
+export default function UserList({ users, onEdit, onDelete }: UserListProps) {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
   const totalPages = Math.ceil(users.length / itemsPerPage)
@@ -37,22 +29,6 @@ export default function UserList({
     MODERATOR: 'モデレータ',
     EDITOR: '編集者',
     MEMBER: '一般メンバー'
-  }
-
-  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      setSelectedUsers(users.map((user) => user.id))
-    } else {
-      setSelectedUsers([])
-    }
-  }
-
-  const handleSelectUser = (userId: number) => {
-    if (selectedUsers.includes(userId)) {
-      setSelectedUsers(selectedUsers.filter((id) => id !== userId))
-    } else {
-      setSelectedUsers([...selectedUsers, userId])
-    }
   }
 
   const startIndex = (currentPage - 1) * itemsPerPage
@@ -67,20 +43,6 @@ export default function UserList({
             <table className="min-w-full table-fixed divide-y divide-gray-200">
               <thead className="bg-gray-100">
                 <tr>
-                  <th scope="col" className="p-4">
-                    <div className="flex items-center">
-                      <input
-                        id="checkbox-all"
-                        type="checkbox"
-                        className="focus:ring-primary-300 h-4 w-4 rounded border-gray-300 bg-gray-50 focus:ring-3"
-                        checked={selectedUsers.length === users.length}
-                        onChange={handleSelectAll}
-                      />
-                      <label htmlFor="checkbox-all" className="sr-only">
-                        checkbox
-                      </label>
-                    </div>
-                  </th>
                   <th scope="col" className="p-4 text-left font-medium text-gray-500">
                     名前
                   </th>
@@ -101,20 +63,6 @@ export default function UserList({
               <tbody className="divide-y divide-gray-200 bg-white">
                 {currentUsers.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-100">
-                    <td className="w-4 p-4">
-                      <div className="flex items-center">
-                        <input
-                          id={`checkbox-${user.id}`}
-                          type="checkbox"
-                          className="focus:ring-primary-300 h-4 w-4 rounded border-gray-300 bg-gray-50 focus:ring-3"
-                          checked={selectedUsers.includes(user.id)}
-                          onChange={() => handleSelectUser(user.id)}
-                        />
-                        <label htmlFor={`checkbox-${user.id}`} className="sr-only">
-                          checkbox
-                        </label>
-                      </div>
-                    </td>
                     <td className="mr-12 flex items-center space-x-6 p-4 whitespace-nowrap">
                       <img
                         className="h-10 w-10 rounded-full border border-gray-300 object-cover"
@@ -172,7 +120,7 @@ export default function UserList({
                 ))}
                 {users.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
+                    <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
                       ユーザがいません
                     </td>
                   </tr>
