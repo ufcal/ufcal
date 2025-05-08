@@ -1,15 +1,15 @@
 import Alert from '@/components/Alert'
 import Button from '@/components/base/Button'
 import { AdminUserFetch } from '@/fetch/admin'
+import { type IUser, type UserRole } from '@/types/user'
 import { generate } from 'generate-password-ts'
 import { useState } from 'react'
-
-export type UserRole = 'ADMIN' | 'MODERATOR' | 'EDITOR' | 'MEMBER'
+//export type UserRole = 'ADMIN' | 'MODERATOR' | 'EDITOR' | 'MEMBER'
 
 interface UserAddModalProps {
   open: boolean
   onClose: () => void
-  onUserAdded: (user: any) => void
+  onUserAdded: (user: IUser) => void
 }
 
 export default function UserAddModal({ open, onClose, onUserAdded }: UserAddModalProps) {
@@ -63,7 +63,8 @@ export default function UserAddModal({ open, onClose, onUserAdded }: UserAddModa
         name: trimmedForm.name,
         email: trimmedForm.email,
         password: trimmedForm.password,
-        role: trimmedForm.role
+        role: trimmedForm.role,
+        isEnabled: true
       })
 
       if (response.ok) {

@@ -2,8 +2,10 @@ import Alert from '@/components/Alert'
 import Button from '@/components/base/Button'
 import config from '@/config/config.json'
 import { AdminUserFetch } from '@/fetch/admin'
+import { type IUser, type UserRole } from '@/types/user'
 import { useState } from 'react'
 
+/*
 type UserRole = 'ADMIN' | 'MODERATOR' | 'EDITOR' | 'MEMBER'
 
 type User = {
@@ -15,13 +17,13 @@ type User = {
   isEnabled?: boolean
   avatar?: string
   biography?: string
-}
+}*/
 
 type UserEditModalProps = {
   open: boolean
-  user: User
+  user: IUser
   onClose: () => void
-  onUserUpdated: (user: User) => void
+  onUserUpdated: (user: IUser) => void
 }
 
 export function UserEditModal({ open, user, onClose, onUserUpdated }: UserEditModalProps) {

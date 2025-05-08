@@ -2,8 +2,10 @@ import Alert from '@/components/Alert'
 import Button from '@/components/base/Button'
 import config from '@/config/config.json'
 import { AdminUserFetch } from '@/fetch/admin'
+import { type IUser } from '@/types/user'
 import { useState } from 'react'
 
+/*
 type UserRole = 'ADMIN' | 'MODERATOR' | 'EDITOR' | 'MEMBER'
 
 type User = {
@@ -15,11 +17,11 @@ type User = {
   isEnabled?: boolean
   avatar?: string
   biography?: string
-}
+}*/
 
 type UserDeleteModalProps = {
   open: boolean
-  user: User
+  user: IUser
   onClose: () => void
   onUserDeleted: (userId: number) => void
 }

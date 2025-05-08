@@ -1,7 +1,9 @@
 import Button from '@/components/base/Button.tsx'
 import config from '@/config/config.json'
+import { type IUser } from '@/types/user'
 import { useState } from 'react'
 
+/*
 type User = {
   id: number
   email: string
@@ -10,12 +12,12 @@ type User = {
   isEnabled?: boolean
   avatar?: string
   createdAt: Date
-}
+}*/
 
 type UserListProps = {
-  users: User[]
-  onEdit: (user: User) => void
-  onDelete: (user: User) => void
+  users: IUser[]
+  onEdit: (user: IUser) => void
+  onDelete: (user: IUser) => void
 }
 
 export default function UserList({ users, onEdit, onDelete }: UserListProps) {

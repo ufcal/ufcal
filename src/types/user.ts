@@ -8,7 +8,8 @@ export interface UserAuth {
   email: string
   name: string
   avatar: string
-  role: string
+  //role: string
+  role: UserRole
 }
 
 // セッションに保存するユーザ情報
@@ -64,4 +65,15 @@ export interface UserAdminRequest {
   password?: string
   role: UserRole
   isEnabled: boolean
+}
+
+export interface IUser {
+  id: number
+  email: string
+  name: string
+  role: UserRole
+  createdAt: Date
+  isEnabled: boolean
+  avatar?: string
+  biography?: string
 }

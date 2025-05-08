@@ -1,12 +1,12 @@
 import Button from '@/components/base/Button.tsx'
+import AdminUserFetch from '@/fetch/admin/user'
+import { type IUser } from '@/types/user'
 import { useEffect, useState } from 'react'
 import UserAddModal from './UserAddModal'
 import { UserDeleteModal } from './UserDeleteModal'
 import { UserEditModal } from './UserEditModal'
 import UserList from './UserListMain'
-///import UserList from './UserList'
-import AdminUserFetch from '@/fetch/admin/user'
-
+/*
 type User = {
   id: number
   email: string
@@ -17,17 +17,17 @@ type User = {
   status?: 'active' | 'inactive'
   biography?: string
   position?: string
-}
+}*/
 
 export default function UserListPanel() {
-  const [users, setUsers] = useState<User[]>([])
+  const [users, setUsers] = useState<IUser[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [showAddModal, setShowAddModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [selectedUser, setSelectedUser] = useState<IUser | null>(null)
 
   useEffect(() => {
     const fetchUsers = async () => {
