@@ -113,7 +113,7 @@ export default function UserAddModal({ open, onClose, onUserAdded }: UserAddModa
             <button
               type="button"
               onClick={onClose}
-              className="rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600"
+              className="cursor-pointer rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600"
             >
               <svg
                 className="h-5 w-5"
@@ -171,7 +171,7 @@ export default function UserAddModal({ open, onClose, onUserAdded }: UserAddModa
                     <button
                       type="button"
                       onClick={() => setForm((f) => ({ ...f, password: generatePassword() }))}
-                      className="hover:text-primary-600 text-gray-400 focus:outline-none"
+                      className="hover:text-primary-600 cursor-pointer text-gray-400 focus:outline-none"
                       title="ランダムパスワード生成"
                       aria-label="ランダムパスワード生成"
                     >
@@ -204,7 +204,7 @@ export default function UserAddModal({ open, onClose, onUserAdded }: UserAddModa
                     <button
                       type="button"
                       onClick={() => setShowPassword((prev) => !prev)}
-                      className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700"
                       tabIndex={-1}
                       aria-label={showPassword ? 'パスワードを非表示' : 'パスワードを表示'}
                     >
@@ -255,7 +255,7 @@ export default function UserAddModal({ open, onClose, onUserAdded }: UserAddModa
                     name="role"
                     value={form.role}
                     onChange={handleChange}
-                    className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900"
+                    className="focus:border-primary-500 focus:ring-primary-500 block w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900"
                     required
                   >
                     <option value="MEMBER">一般メンバー</option>
