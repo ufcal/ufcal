@@ -140,6 +140,7 @@ export default function Calendar() {
         fixedWeekCount={false} // 週数を固定しない⇒月の週数が変わる
         height={'90vh'} // カレンダーの高さを制限
         //contentHeight={'auto'} // カレンダーのコンテンツの高さを自動調整
+        eventClassNames="cursor-pointer" // イベントにカーソルポインターを適用
       />
       <EventInfoModal
         isOpen={isModalOpen}

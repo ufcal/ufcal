@@ -297,7 +297,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
             <button
               type="button"
               onClick={handleCancel}
-              className="rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600"
+              className="cursor-pointer rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600"
             >
               <svg
                 className="h-5 w-5"

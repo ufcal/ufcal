@@ -1,4 +1,5 @@
 import Alert from '@/components/Alert'
+import Button from '@/components/base/Button'
 import config from '@/config/config.json'
 import { AdminEventFetch } from '@/fetch/admin'
 import { modalEventId, notifyEventUpdate, showEventModal } from '@/store/event'
@@ -156,14 +157,14 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/60 p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/50">
       <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 shadow-2xl">
         {/* ヘッダー */}
         <div className="relative px-6 pt-6">
           <div className="absolute top-6 right-6">
             <button
               onClick={onClose}
-              className="rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600"
+              className="cursor-pointer rounded-full bg-gray-500 p-2 text-white transition-all hover:bg-gray-600"
             >
               <svg
                 className="h-5 w-5"
@@ -325,11 +326,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
             <div className="mt-6 flex items-center justify-between">
               <div className="flex items-center space-x-3 sm:space-x-4">
                 {!completed && (
-                  <button
-                    type="button"
-                    className="bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 inline-flex items-center rounded-lg px-5 py-2.5 text-center font-medium text-white focus:ring-4 focus:outline-none"
-                    onClick={handleEditEvent}
-                  >
+                  <Button type="button" variant="primary" onClick={handleEditEvent}>
                     <svg
                       aria-hidden="true"
                       className="mr-1 -ml-1 h-5 w-5"
@@ -345,24 +342,16 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
                       ></path>
                     </svg>
                     編集
-                  </button>
+                  </Button>
                 )}
                 {completed && (
-                  <button
-                    type="button"
-                    className="hover:text-primary-700 rounded-lg border border-gray-200 bg-white px-5 py-2.5 font-medium text-gray-900 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-200 focus:outline-none"
-                    onClick={onClose}
-                  >
+                  <Button type="button" variant="default" onClick={onClose}>
                     閉じる
-                  </button>
+                  </Button>
                 )}
               </div>
               {!completed && (
-                <button
-                  type="button"
-                  className="inline-flex items-center rounded-lg bg-red-600 px-5 py-2.5 text-center font-medium text-white hover:bg-red-700 focus:ring-4 focus:ring-red-300 focus:outline-none"
-                  onClick={handleDeleteEvent}
-                >
+                <Button type="button" variant="error" onClick={handleDeleteEvent}>
                   <svg
                     aria-hidden="true"
                     className="mr-1.5 -ml-1 h-5 w-5"
@@ -377,7 +366,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
                     ></path>
                   </svg>
                   削除
-                </button>
+                </Button>
               )}
             </div>
           )}
