@@ -61,7 +61,7 @@ export interface UserAdminResponse {
 export interface UserAdminRequest {
   email: string
   name: string
-  password: string
+  password?: string
   role: UserRole
-  //isEnabled: boolean
+  isEnabled: boolean
 }
