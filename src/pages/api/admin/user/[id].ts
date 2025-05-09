@@ -1,8 +1,7 @@
-import { EventDB, UserDB } from '@/server/db'
-import type { EventAdminResponse } from '@/types/event'
+import type user from '@/fetch/admin/user'
+import { UserDB } from '@/server/db'
 import type { UserAdminRequest, UserAdminResponse } from '@/types/user'
 import type { APIRoute } from 'astro'
-import { id } from 'date-fns/locale'
 
 export const DELETE: APIRoute = async ({ locals, params }) => {
   try {
@@ -47,11 +46,12 @@ export const DELETE: APIRoute = async ({ locals, params }) => {
 
 export const PUT: APIRoute = async ({ params, request }) => {
   try {
-    // リクエストパラメータ:
-    // - title: イベントのタイトル (string)
+    const id = Number(params.id)
+    const body = (await request.json()) as UserAdminRequest
 
-    if (title.length === 0) {
-      return new Response(JSON.stringify({ message: 'データ登録に失敗しました' }), {
+    // 必須フィールドのバリデーション
+    if (!body.name || !body.email || !body.role) {
+      return new Response(JSON.stringify({ message: '必須項目が入力されていません' }), {
         status: 400,
         statusText: 'Bad Request',
         headers: {
@@ -60,24 +60,31 @@ export const PUT: APIRoute = async ({ params, request }) => {
       })
     }
 
-    const event = await UserDB.updateUser(Number(id), {
-      title: title,
-      start: startDate,
-      end: endDate,
-      isAllDay: allDay,
-      categoryId: category,
-      description: description,
-      url: url
+    const user = await UserDB.updateUser(id, {
+      name: body.name,
+      email: body.email,
+      role: body.role,
+      isEnabled: body.isEnabled
     })
 
-    return new Response(JSON.stringify(event), {
+    if (!user) {
+      return new Response(JSON.stringify({ message: 'ユーザの更新に失敗しました' }), {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+
+    return new Response(JSON.stringify(user), {
       status: 200,
       headers: {
         'Content-Type': 'application/json'
       }
     })
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : '予期せぬエラーが発生しました'
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json'
@@ -89,10 +96,10 @@ export const PUT: APIRoute = async ({ params, request }) => {
 export const GET: APIRoute = async ({ params }) => {
   try {
     const { id } = params
-    const event = await EventDB.getEventById(Number(id))
+    const user = await UserDB.getUserById(Number(id))
 
-    if (!event) {
-      return new Response(JSON.stringify({ message: 'イベントが見つかりませんでした' }), {
+    if (!user) {
+      return new Response(JSON.stringify({ message: 'ユーザが見つかりませんでした' }), {
         status: 404,
         statusText: 'Not Found',
         headers: {
@@ -101,32 +108,7 @@ export const GET: APIRoute = async ({ params }) => {
       })
     }
 
-    const mappedEvent = {} as EventAdminResponse
-    mappedEvent.id = event.id
-    mappedEvent.title = event.title
-    mappedEvent.allDay = event.isAllDay
-    if (event.isAllDay) {
-      mappedEvent.start = new Date(event.start)
-        .toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' })
-        .split(' ')[0]!
-      mappedEvent.end = new Date(event.end)
-        .toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' })
-        .split(' ')[0]!
-    } else {
-      mappedEvent.start = new Date(event.start)
-        .toLocaleString('sv-SE', {
-          timeZone: 'Asia/Tokyo'
-        })
-        .replace(' ', 'T')
-      mappedEvent.end = new Date(event.end)
-        .toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' })
-        .replace(' ', 'T')
-    }
-    mappedEvent.categoryId = event.categoryId
-    mappedEvent.description = event.description ?? ''
-    mappedEvent.url = event.url ?? ''
-
-    return new Response(JSON.stringify(mappedEvent), {
+    return new Response(JSON.stringify(user), {
       status: 200,
       headers: {
         'Content-Type': 'application/json'

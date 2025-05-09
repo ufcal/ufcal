@@ -167,5 +167,32 @@ class UserDB extends BaseDB {
       return null
     }
   }
+
+  // ユーザー更新用メソッド
+  async updateUser(
+    id: number,
+    data: {
+      name: string
+      email: string
+      role: string
+      isEnabled: boolean
+    }
+  ): Promise<User | null> {
+    try {
+      const user = await BaseDB.prisma.user.update({
+        where: { id },
+        data: {
+          name: data.name,
+          email: data.email,
+          role: data.role,
+          isEnabled: data.isEnabled
+        }
+      })
+      return user
+    } catch (err) {
+      console.error(err)
+      return null
+    }
+  }
 }
 export default new UserDB()
