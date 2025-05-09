@@ -3,7 +3,7 @@ import { hash } from '@/server/utils/password'
 import type { UserAdminRequest } from '@/types/user'
 import type { APIRoute } from 'astro'
 
-export const DELETE: APIRoute = async ({ locals, params }) => {
+export const DELETE: APIRoute = async ({ params, locals }) => {
   try {
     const id = Number(params.id)
 
@@ -44,7 +44,7 @@ export const DELETE: APIRoute = async ({ locals, params }) => {
   }
 }
 
-export const PUT: APIRoute = async ({ params, locals, request }) => {
+export const PUT: APIRoute = async ({ params, request, locals }) => {
   try {
     const id = Number(params.id)
     const body = (await request.json()) as UserAdminRequest

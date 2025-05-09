@@ -13,7 +13,7 @@ export const prerender = false
 
 export const PUT: APIRoute = async (context) => {
   try {
-    const { params, locals, request } = context
+    const { params, request, locals } = context
     const userId = Number(params.id)
 
     // アクセス権限をチェック

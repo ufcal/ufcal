@@ -2,7 +2,7 @@ import { UserDB } from '@/server/db'
 import { hash, verify } from '@/server/utils/password'
 import type { APIRoute } from 'astro'
 
-export const PUT: APIRoute = async ({ params, locals, request }) => {
+export const PUT: APIRoute = async ({ params, request, locals }) => {
   const userId = Number(params.id)
 
   // アクセス権限をチェック
