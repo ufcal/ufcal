@@ -62,7 +62,7 @@ export interface UserAdminResponse {
 export interface UserAdminRequest {
   email: string
   name: string
-  password?: string
+  password?: string | undefined
   role: UserRole
   isEnabled: boolean
 }

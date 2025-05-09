@@ -3,6 +3,7 @@ import Button from '@/components/base/Button'
 import config from '@/config/config.json'
 import { AdminUserFetch } from '@/fetch/admin'
 import { type IUser, type UserRole } from '@/types/user'
+import { generate } from 'generate-password-ts'
 import { useState } from 'react'
 
 /*
@@ -31,12 +32,14 @@ export function UserEditModal({ open, user, onClose, onUserUpdated }: UserEditMo
     name: '',
     email: '',
     role: 'MEMBER' as UserRole,
-    isEnabled: true
+    isEnabled: true,
+    password: ''
   })
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [completed, setCompleted] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   // 初期値の設定
   useState(() => {
@@ -44,9 +47,18 @@ export function UserEditModal({ open, user, onClose, onUserUpdated }: UserEditMo
       name: user.name,
       email: user.email,
       role: user.role,
-      isEnabled: user.isEnabled ?? true
+      isEnabled: user.isEnabled ?? true,
+      password: ''
     })
   })
+
+  // パスワード生成関数
+  function generatePassword(): string {
+    return generate({
+      length: 10,
+      numbers: true
+    })
+  }
 
   if (!open) return null
 
@@ -72,7 +84,8 @@ export function UserEditModal({ open, user, onClose, onUserUpdated }: UserEditMo
     const trimmedForm = {
       ...form,
       name: form.name.trim(),
-      email: form.email.trim()
+      email: form.email.trim(),
+      password: form.password.trim()
     }
     setForm(trimmedForm)
 
@@ -88,7 +101,8 @@ export function UserEditModal({ open, user, onClose, onUserUpdated }: UserEditMo
         name: trimmedForm.name,
         email: trimmedForm.email,
         role: trimmedForm.role,
-        isEnabled: trimmedForm.isEnabled
+        isEnabled: trimmedForm.isEnabled,
+        password: trimmedForm.password || undefined
       })
 
       if (response.ok) {
@@ -205,6 +219,90 @@ export function UserEditModal({ open, user, onClose, onUserUpdated }: UserEditMo
                     className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900"
                     required
                   />
+                </div>
+
+                <div className="col-span-4">
+                  <div className="mb-1 flex items-center">
+                    <label htmlFor="password" className="mr-2 block font-medium text-gray-900">
+                      パスワード
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setForm((f) => ({ ...f, password: generatePassword() }))}
+                      className="hover:text-primary-600 cursor-pointer text-gray-400 focus:outline-none"
+                      title="ランダムパスワード生成"
+                      aria-label="ランダムパスワード生成"
+                    >
+                      <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M4.5 12a7.5 7.5 0 0113.5-5.303M19.5 12a7.5 7.5 0 01-13.5 5.303M4.5 12H2.25M19.5 12h2.25"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      id="password"
+                      name="password"
+                      value={form.password}
+                      onChange={handleChange}
+                      className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pr-12 text-gray-900"
+                      placeholder="変更する場合のみ入力してください"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                    >
+                      {showPassword ? (
+                        <svg
+                          className="h-5 w-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          className="h-5 w-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                          />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                  <p className="mt-1 text-sm text-gray-500">
+                    入力がない場合は現在のパスワードが維持されます
+                  </p>
                 </div>
 
                 <div className="col-span-4">
