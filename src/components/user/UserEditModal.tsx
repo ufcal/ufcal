@@ -102,7 +102,7 @@ export function UserEditModal({ open, user, onClose, onUserUpdated }: UserEditMo
         email: trimmedForm.email,
         role: trimmedForm.role,
         isEnabled: trimmedForm.isEnabled,
-        password: trimmedForm.password || undefined
+        password: trimmedForm.password || null
       })
 
       if (response.ok) {

@@ -1,6 +1,6 @@
-import type user from '@/fetch/admin/user'
 import { UserDB } from '@/server/db'
-import type { UserAdminRequest, UserAdminResponse } from '@/types/user'
+import { hash } from '@/server/utils/password'
+import type { UserAdminRequest } from '@/types/user'
 import type { APIRoute } from 'astro'
 
 export const DELETE: APIRoute = async ({ locals, params }) => {
@@ -44,10 +44,21 @@ export const DELETE: APIRoute = async ({ locals, params }) => {
   }
 }
 
-export const PUT: APIRoute = async ({ params, request }) => {
+export const PUT: APIRoute = async ({ params, locals, request }) => {
   try {
     const id = Number(params.id)
     const body = (await request.json()) as UserAdminRequest
+
+    // 自分自身を無効にすることは不可
+    const localUser = locals.user
+    if (localUser && localUser.id === id && !body.isEnabled) {
+      return new Response(JSON.stringify({ message: '自分自身は無効にできません' }), {
+        status: 403,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
 
     // 必須フィールドのバリデーション
     if (!body.name || !body.email || !body.role) {
@@ -60,6 +71,21 @@ export const PUT: APIRoute = async ({ params, request }) => {
       })
     }
 
+    // パスワードが指定されている場合は更新
+    if (body.password) {
+      const hashedPassword = await hash(body.password)
+      const passwordUpdated = await UserDB.updatePassword(id, hashedPassword)
+      if (!passwordUpdated) {
+        return new Response(JSON.stringify({ message: 'パスワードの更新に失敗しました' }), {
+          status: 400,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+      }
+    }
+
+    // パスワード以外のユーザ情報の更新
     const user = await UserDB.updateUser(id, {
       name: body.name,
       email: body.email,
