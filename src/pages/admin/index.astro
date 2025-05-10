@@ -35,7 +35,7 @@ const recentAdminActivities = [
   {
     id: '2',
     type: 'user_management',
-    title: 'ユーザー権限の更新',
+    title: 'ユーザ権限の更新',
     adminName: '佐藤花子',
     createdAt: new Date('2024-03-15T13:15:00')
   },
@@ -74,10 +74,10 @@ const recentUserActivities = [
   <div class="p-4">
     <div class="mb-6">
       <h1 class="text-2xl font-bold text-gray-900">ダッシュボード</h1>
-      <p class="text-gray-600">システム管理概要</p>
     </div>
 
     <!-- 管理者活動セクション -->
+    <!--
     <div class="mb-8">
       <h2 class="mb-4 text-xl font-bold text-gray-900">管理者活動</h2>
       <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -128,7 +128,7 @@ const recentUserActivities = [
               </svg>
             </div>
             <div class="ml-4">
-              <h3 class="text-lg font-semibold text-gray-700">ユーザー管理</h3>
+              <h3 class="text-lg font-semibold text-gray-700">ユーザ管理</h3>
               <p class="text-2xl font-bold text-green-600">{adminStats.userManagement.count}</p>
               <p class="text-sm text-gray-500">
                 今月の管理操作数 ({adminStats.userManagement.trend})
@@ -161,11 +161,11 @@ const recentUserActivities = [
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <!-- ユーザー活動セクション -->
+    <!-- ユーザ活動セクション -->
     <div class="mb-8">
-      <h2 class="mb-4 text-xl font-bold text-gray-900">ユーザー活動</h2>
+      <h2 class="mb-4 text-xl font-bold text-gray-900">ユーザ活動</h2>
       <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
         <div class="rounded-lg bg-white p-4 shadow-sm">
           <div class="flex items-center">
@@ -185,7 +185,7 @@ const recentUserActivities = [
               </svg>
             </div>
             <div class="ml-4">
-              <h3 class="text-lg font-semibold text-gray-700">総ユーザー数</h3>
+              <h3 class="text-lg font-semibold text-gray-700">総ユーザ数</h3>
               <p class="text-2xl font-bold text-blue-600">{userStats.totalUsers}</p>
               <p class="text-sm text-gray-500">前月比 +12%</p>
             </div>
@@ -209,7 +209,7 @@ const recentUserActivities = [
               </svg>
             </div>
             <div class="ml-4">
-              <h3 class="text-lg font-semibold text-gray-700">アクティブユーザー</h3>
+              <h3 class="text-lg font-semibold text-gray-700">アクティブユーザ</h3>
               <p class="text-2xl font-bold text-green-600">{userStats.activeUsers}</p>
               <p class="text-sm text-gray-500">直近30日間</p>
             </div>
@@ -279,7 +279,7 @@ const recentUserActivities = [
                   <div>
                     <span class="inline-block rounded bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800">
                       {activity.type === 'event_management' && 'イベント管理'}
-                      {activity.type === 'user_management' && 'ユーザー管理'}
+                      {activity.type === 'user_management' && 'ユーザ管理'}
                       {activity.type === 'system_settings' && 'システム設定'}
                     </span>
                     <h4 class="mt-1 font-medium text-gray-900">{activity.title}</h4>
@@ -297,7 +297,7 @@ const recentUserActivities = [
 
       <!-- ユーザーの最近の活動 -->
       <div class="rounded-lg bg-white p-6 shadow-sm">
-        <h2 class="mb-4 text-xl font-bold text-gray-900">ユーザーの最近の活動</h2>
+        <h2 class="mb-4 text-xl font-bold text-gray-900">ユーザの最近の活動</h2>
         <div class="space-y-4">
           {
             recentUserActivities.map((activity) => (
