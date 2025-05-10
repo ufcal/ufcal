@@ -31,6 +31,10 @@ class Auth {
     // セッション(ユーザ情報)作成
     const sessionData: UserSessionData = convertToUserSessionData(userWithPassword)
     const user = await Session.createUser(context, sessionData)
+
+    // 最終ログイン日時を更新
+    await UserDB.updateLastLoginAt(userWithPassword.id)
+
     return user
   }
   async createRememberMe(context: APIContext, userId: number) {

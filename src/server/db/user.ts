@@ -194,5 +194,20 @@ class UserDB extends BaseDB {
       return null
     }
   }
+
+  async updateLastLoginAt(userId: number): Promise<void> {
+    try {
+      await BaseDB.prisma.user.update({
+        where: {
+          id: userId
+        },
+        data: {
+          lastLoginAt: new Date()
+        }
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }
 }
 export default new UserDB()

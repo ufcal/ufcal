@@ -76,6 +76,9 @@ export const POST: APIRoute = async (context) => {
       )
     }
 
+    // 最終ログイン日時を更新
+    await UserDB.updateLastLoginAt(userWithPassword.id)
+
     // セッション(ユーザ情報)作成
     const sessionData: UserSessionData = convertToUserSessionData(userWithPassword)
     await Session.createUser(context, sessionData)
