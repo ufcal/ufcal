@@ -23,19 +23,35 @@ model User {
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
   Events                Event[]
+  Comments              Comment[]
 }
 
 model Event {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
   description String?
   url         String?
   start       DateTime
   end         DateTime
-  isAllDay    Boolean  @default(false)
-  categoryId  Int      @default(0)
+  isAllDay    Boolean   @default(false)
+  categoryId  Int       @default(0)
   creatorId   Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  creator     User     @relation(fields: [creatorId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  creator     User      @relation(fields: [creatorId], references: [id])
+  Comments    Comment[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String   @db.Text
+  eventId   Int
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  event     Event    @relation(fields: [eventId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([eventId])
+  @@index([userId])
 }
