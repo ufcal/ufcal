@@ -3,7 +3,7 @@
     "id": "dashboard",
     "title": "ダッシュボード",
     "icon": "mdi:view-dashboard",
-    "href": "/"
+    "href": "/admin"
   },
   {
     "id": "user",

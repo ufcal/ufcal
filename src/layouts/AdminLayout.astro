@@ -6,9 +6,10 @@ import '@/styles/global.css'
 
 export interface Props {
   title: string
+  activeMenu?: string
 }
 
-const { title } = Astro.props
+const { title, activeMenu } = Astro.props
 ---
 
 <!doctype html>
@@ -25,7 +26,7 @@ const { title } = Astro.props
     <SizeIndicator />
     <AdminNavbar />
     <div class="flex overflow-hidden bg-gray-50 pt-16">
-      <Sidebar />
+      <Sidebar activeMenu={activeMenu} />
       <main class="relative h-full w-full overflow-y-auto bg-gray-50 lg:ml-64">
         <slot />
       </main>

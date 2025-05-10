@@ -1,10 +1,324 @@
 ---
 import AdminLayout from '@/layouts/AdminLayout.astro'
+
+// サンプルデータ
+const adminStats = {
+  eventManagement: {
+    count: 15,
+    trend: '+5'
+  },
+  userManagement: {
+    count: 23,
+    trend: '+8'
+  },
+  systemSettings: {
+    count: 3,
+    trend: '+1'
+  }
+}
+
+const userStats = {
+  totalUsers: 156,
+  activeUsers: 89,
+  newRegistrations: 12,
+  comments: 45
+}
+
+const recentAdminActivities = [
+  {
+    id: '1',
+    type: 'event_management',
+    title: '2024年度新入生歓迎会の作成',
+    adminName: '山田太郎',
+    createdAt: new Date('2024-03-15T14:30:00')
+  },
+  {
+    id: '2',
+    type: 'user_management',
+    title: 'ユーザー権限の更新',
+    adminName: '佐藤花子',
+    createdAt: new Date('2024-03-15T13:15:00')
+  },
+  {
+    id: '3',
+    type: 'system_settings',
+    title: 'メール通知設定の更新',
+    adminName: '山田太郎',
+    createdAt: new Date('2024-03-15T10:00:00')
+  }
+]
+
+const recentUserActivities = [
+  {
+    id: '1',
+    content: '新入生歓迎会の詳細について質問があります',
+    userName: '鈴木一郎',
+    createdAt: new Date('2024-03-15T15:45:00')
+  },
+  {
+    id: '2',
+    content: '部活動説明会の日程を確認しました',
+    userName: '田中誠',
+    createdAt: new Date('2024-03-15T15:30:00')
+  },
+  {
+    id: '3',
+    content: '新入生歓迎会に参加します！',
+    userName: '佐々木美咲',
+    createdAt: new Date('2024-03-15T15:00:00')
+  }
+]
 ---
 
 <AdminLayout title="ダッシュボード" activeMenu="dashboard">
-  <div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-900">ダッシュボード</h1>
-    <p class="text-gray-600">イベントカレンダーシステムの管理画面です</p>
+  <div class="p-4">
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-gray-900">ダッシュボード</h1>
+      <p class="text-gray-600">システム管理概要</p>
+    </div>
+
+    <!-- 管理者活動セクション -->
+    <div class="mb-8">
+      <h2 class="mb-4 text-xl font-bold text-gray-900">管理者活動</h2>
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div class="rounded-lg bg-white p-4 shadow-sm">
+          <div class="flex items-center">
+            <div
+              class="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-500"
+            >
+              <svg
+                class="h-4 w-4"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 19"
+              >
+                <path
+                  d="M14.5 0A3.987 3.987 0 0 0 11 2.1a4.977 4.977 0 0 1 3.9 5.858A3.989 3.989 0 0 0 14.5 0ZM9 13h2a4 4 0 0 1 4 4v2H5v-2a4 4 0 0 1 4-4Z"
+                ></path>
+                <path
+                  d="M5 19h10v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2ZM8 1a2.5 2.5 0 0 0 0 5 2.5 2.5 0 0 0 0-5Z"
+                ></path>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-semibold text-gray-700">イベント管理</h3>
+              <p class="text-2xl font-bold text-blue-600">{adminStats.eventManagement.count}</p>
+              <p class="text-sm text-gray-500">
+                今月の作成/編集数 ({adminStats.eventManagement.trend})
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="rounded-lg bg-white p-4 shadow-sm">
+          <div class="flex items-center">
+            <div
+              class="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500"
+            >
+              <svg
+                class="h-4 w-4"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 18"
+              >
+                <path
+                  d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"
+                ></path>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-semibold text-gray-700">ユーザー管理</h3>
+              <p class="text-2xl font-bold text-green-600">{adminStats.userManagement.count}</p>
+              <p class="text-sm text-gray-500">
+                今月の管理操作数 ({adminStats.userManagement.trend})
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="rounded-lg bg-white p-4 shadow-sm">
+          <div class="flex items-center">
+            <div
+              class="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 text-purple-500"
+            >
+              <svg
+                class="h-4 w-4"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M18 7.5h-.423l-.452-1.09.3-.3a1.5 1.5 0 0 0 0-2.121L16.6 2.8a1.5 1.5 0 0 0-2.121 0l-.3.3-1.09-.452V2A1.5 1.5 0 0 0 11.5.5h-3A1.5 1.5 0 0 0 7 2v.423l-1.09.452-.3-.3a1.5 1.5 0 0 0-2.121 0L2.8 3.4a1.5 1.5 0 0 0 0 2.121l.3.3L2.423 7.5H2A1.5 1.5 0 0 0 .5 9v3A1.5 1.5 0 0 0 2 13.5h.423l.452 1.09-.3.3a1.5 1.5 0 0 0 0 2.121l1.414 1.414a1.5 1.5 0 0 0 2.121 0l.3-.3 1.09.452V18A1.5 1.5 0 0 0 8.5 19.5h3a1.5 1.5 0 0 0 1.5-1.5v-.423l1.09-.452.3.3a1.5 1.5 0 0 0 2.121 0l1.414-1.414a1.5 1.5 0 0 0 0-2.121l-.3-.3.452-1.09H18a1.5 1.5 0 0 0 1.5-1.5v-3A1.5 1.5 0 0 0 18 7.5Zm-8 6a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"
+                ></path>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-semibold text-gray-700">システム設定</h3>
+              <p class="text-2xl font-bold text-purple-600">{adminStats.systemSettings.count}</p>
+              <p class="text-sm text-gray-500">今月の変更数 ({adminStats.systemSettings.trend})</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ユーザー活動セクション -->
+    <div class="mb-8">
+      <h2 class="mb-4 text-xl font-bold text-gray-900">ユーザー活動</h2>
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
+        <div class="rounded-lg bg-white p-4 shadow-sm">
+          <div class="flex items-center">
+            <div
+              class="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-500"
+            >
+              <svg
+                class="h-4 w-4"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 18"
+              >
+                <path
+                  d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"
+                ></path>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-semibold text-gray-700">総ユーザー数</h3>
+              <p class="text-2xl font-bold text-blue-600">{userStats.totalUsers}</p>
+              <p class="text-sm text-gray-500">前月比 +12%</p>
+            </div>
+          </div>
+        </div>
+        <div class="rounded-lg bg-white p-4 shadow-sm">
+          <div class="flex items-center">
+            <div
+              class="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500"
+            >
+              <svg
+                class="h-4 w-4"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 18"
+              >
+                <path
+                  d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"
+                ></path>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-semibold text-gray-700">アクティブユーザー</h3>
+              <p class="text-2xl font-bold text-green-600">{userStats.activeUsers}</p>
+              <p class="text-sm text-gray-500">直近30日間</p>
+            </div>
+          </div>
+        </div>
+        <div class="rounded-lg bg-white p-4 shadow-sm">
+          <div class="flex items-center">
+            <div
+              class="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 text-purple-500"
+            >
+              <svg
+                class="h-4 w-4"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 18"
+              >
+                <path
+                  d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"
+                ></path>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-semibold text-gray-700">新規登録</h3>
+              <p class="text-2xl font-bold text-purple-600">{userStats.newRegistrations}</p>
+              <p class="text-sm text-gray-500">今月</p>
+            </div>
+          </div>
+        </div>
+        <div class="rounded-lg bg-white p-4 shadow-sm">
+          <div class="flex items-center">
+            <div
+              class="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-500"
+            >
+              <svg
+                class="h-4 w-4"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 18"
+              >
+                <path
+                  d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"
+                ></path>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-semibold text-gray-700">コメント数</h3>
+              <p class="text-2xl font-bold text-orange-600">{userStats.comments}</p>
+              <p class="text-sm text-gray-500">今月</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 最近の活動ログ -->
+    <div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+      <!-- 管理者の最近の活動 -->
+      <div class="rounded-lg bg-white p-6 shadow-sm">
+        <h2 class="mb-4 text-xl font-bold text-gray-900">管理者の最近の活動</h2>
+        <div class="space-y-4">
+          {
+            recentAdminActivities.map((activity) => (
+              <div class="border-b border-gray-200 pb-4">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <span class="inline-block rounded bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800">
+                      {activity.type === 'event_management' && 'イベント管理'}
+                      {activity.type === 'user_management' && 'ユーザー管理'}
+                      {activity.type === 'system_settings' && 'システム設定'}
+                    </span>
+                    <h4 class="mt-1 font-medium text-gray-900">{activity.title}</h4>
+                    <p class="text-sm text-gray-600">{activity.adminName}</p>
+                  </div>
+                  <span class="text-sm text-gray-500">
+                    {activity.createdAt.toLocaleString('ja-JP')}
+                  </span>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- ユーザーの最近の活動 -->
+      <div class="rounded-lg bg-white p-6 shadow-sm">
+        <h2 class="mb-4 text-xl font-bold text-gray-900">ユーザーの最近の活動</h2>
+        <div class="space-y-4">
+          {
+            recentUserActivities.map((activity) => (
+              <div class="border-b border-gray-200 pb-4">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <span class="inline-block rounded bg-green-100 px-2 py-1 text-xs font-semibold text-green-800">
+                      コメント
+                    </span>
+                    <h4 class="mt-1 font-medium text-gray-900">{activity.content}</h4>
+                    <p class="text-sm text-gray-600">{activity.userName}</p>
+                  </div>
+                  <span class="text-sm text-gray-500">
+                    {activity.createdAt.toLocaleString('ja-JP')}
+                  </span>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
   </div>
 </AdminLayout>
