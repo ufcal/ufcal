@@ -23,6 +23,11 @@ class Auth {
       return null
     }
 
+    // ユーザーが無効化されている場合はログインを拒否
+    if (!userWithPassword.isEnabled) {
+      return null
+    }
+
     // セッション(ユーザ情報)作成
     const sessionData: UserSessionData = convertToUserSessionData(userWithPassword)
     const user = await Session.createUser(context, sessionData)

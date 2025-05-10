@@ -51,6 +51,18 @@ export const POST: APIRoute = async (context) => {
       )
     }
 
+    // ユーザーが無効化されている場合はログインを拒否
+    if (!userWithPassword.isEnabled) {
+      return new Response(
+        JSON.stringify({
+          message: 'このアカウントは無効化されています'
+        }),
+        {
+          status: 403
+        }
+      )
+    }
+
     // ユーザ認証
     const verified = await verify(password, userWithPassword.password)
     if (!verified) {
