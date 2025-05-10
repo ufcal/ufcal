@@ -19,6 +19,7 @@ model User {
   role                  String
   isGuest               Boolean   @default(false)
   isEnabled             Boolean   @default(true)
+  lastLoginAt           DateTime?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
   Events                Event[]
