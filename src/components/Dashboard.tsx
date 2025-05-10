@@ -280,55 +280,52 @@ export default function Dashboard() {
       </div>
 
       {/* 最近の活動セクション */}
-      <div className="mb-8">
-        <h2 className="mb-4 text-xl font-bold text-gray-900">最近の活動</h2>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {/* 管理者の最近の活動 */}
-          <div className="rounded-lg bg-white p-4 shadow-sm">
-            <h3 className="mb-4 text-lg font-semibold text-gray-700">管理者の最近の活動</h3>
-            <div className="space-y-4">
-              {recentAdminActivities.map((activity) => (
-                <div key={activity.id} className="flex items-start space-x-4">
-                  <div className="flex-shrink-0">
-                    <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-100">
-                      <span className="text-sm font-medium text-gray-600">
-                        {activity.adminName.charAt(0)}
-                      </span>
-                    </div>
+      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+        {/* 管理者の最近の活動 */}
+        <div className="rounded-lg bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-xl font-bold text-gray-900">管理者の最近の活動</h2>
+          <div className="space-y-4">
+            {recentAdminActivities.map((activity) => (
+              <div key={activity.id} className="border-b border-gray-200 pb-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <span className="inline-block rounded bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800">
+                      {activity.type === 'event_management' && 'イベント管理'}
+                      {activity.type === 'user_management' && 'ユーザ管理'}
+                      {activity.type === 'system_settings' && 'システム設定'}
+                    </span>
+                    <h4 className="mt-1 font-medium text-gray-900">{activity.title}</h4>
+                    <p className="text-sm text-gray-600">{activity.adminName}</p>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900">{activity.title}</p>
-                    <p className="text-xs text-gray-500">
-                      {activity.adminName} • {activity.createdAt.toLocaleString('ja-JP')}
-                    </p>
-                  </div>
+                  <span className="text-sm text-gray-500">
+                    {activity.createdAt.toLocaleString('ja-JP')}
+                  </span>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
+        </div>
 
-          {/* ユーザの最近の活動 */}
-          <div className="rounded-lg bg-white p-4 shadow-sm">
-            <h3 className="mb-4 text-lg font-semibold text-gray-700">ユーザの最近の活動</h3>
-            <div className="space-y-4">
-              {recentUserActivities.map((activity) => (
-                <div key={activity.id} className="flex items-start space-x-4">
-                  <div className="flex-shrink-0">
-                    <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-100">
-                      <span className="text-sm font-medium text-gray-600">
-                        {activity.userName.charAt(0)}
-                      </span>
-                    </div>
+        {/* ユーザの最近の活動 */}
+        <div className="rounded-lg bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-xl font-bold text-gray-900">ユーザの最近の活動</h2>
+          <div className="space-y-4">
+            {recentUserActivities.map((activity) => (
+              <div key={activity.id} className="border-b border-gray-200 pb-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <span className="inline-block rounded bg-green-100 px-2 py-1 text-xs font-semibold text-green-800">
+                      コメント
+                    </span>
+                    <h4 className="mt-1 font-medium text-gray-900">{activity.content}</h4>
+                    <p className="text-sm text-gray-600">{activity.userName}</p>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900">{activity.content}</p>
-                    <p className="text-xs text-gray-500">
-                      {activity.userName} • {activity.createdAt.toLocaleString('ja-JP')}
-                    </p>
-                  </div>
+                  <span className="text-sm text-gray-500">
+                    {activity.createdAt.toLocaleString('ja-JP')}
+                  </span>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
