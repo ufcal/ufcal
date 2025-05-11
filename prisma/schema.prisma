@@ -24,6 +24,7 @@ model User {
   updatedAt             DateTime  @updatedAt
   Events                Event[]
   Comments              Comment[]
+  Activities            UserActivity[]
 }
 
 model Event {
@@ -53,5 +54,17 @@ model Comment {
   user      User     @relation(fields: [userId], references: [id])
 
   @@index([eventId])
+  @@index([userId])
+}
+
+model UserActivity {
+  id          Int      @id @default(autoincrement())
+  type        String   // アクティビティの種類（LOGIN, EVENT_CREATE, COMMENT_CREATE など）
+  details     String?  @db.Text // アクティビティの詳細情報
+  metadata    Json?    // 追加のメタデータ（JSON形式で保存）
+  userId      Int      // アクティビティを実行したユーザー
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+
   @@index([userId])
 }
