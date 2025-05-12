@@ -1,57 +1,45 @@
-/**
- * ユーザーアクティビティの種類を定義
- */
-export enum UserActivityType {
-  // 認証関連
-  LOGIN = 'LOGIN', // ログイン
-  LOGOUT = 'LOGOUT', // ログアウト
-  PASSWORD_CHANGE = 'PASSWORD_CHANGE', // パスワード変更
-  PROFILE_UPDATE = 'PROFILE_UPDATE', // プロフィール更新
+import type { IUser } from './user'
 
-  // イベント関連
-  EVENT_CREATE = 'EVENT_CREATE', // イベント作成
-  EVENT_UPDATE = 'EVENT_UPDATE', // イベント更新
-  EVENT_DELETE = 'EVENT_DELETE', // イベント削除
-  EVENT_VIEW = 'EVENT_VIEW', // イベント閲覧
+// 管理者の活動タイプ
+export type AdminActivityType =
+  | 'ADMIN_EVENT_CREATE' // イベント作成
+  | 'ADMIN_EVENT_UPDATE' // イベント更新
+  | 'ADMIN_EVENT_DELETE' // イベント削除
+  | 'ADMIN_USER_CREATE' // ユーザー作成
+  | 'ADMIN_USER_UPDATE' // ユーザー更新
+  | 'ADMIN_USER_DELETE' // ユーザー削除
+  | 'ADMIN_SYSTEM_UPDATE' // システム設定更新
+  | 'ADMIN_ROLE_UPDATE' // 権限更新
 
-  // コメント関連
-  COMMENT_CREATE = 'COMMENT_CREATE', // コメント作成
-  COMMENT_UPDATE = 'COMMENT_UPDATE', // コメント更新
-  COMMENT_DELETE = 'COMMENT_DELETE', // コメント削除
+// ユーザーの活動タイプ
+export type UserActivityType =
+  | 'USER_COMMENT_CREATE' // コメント投稿
+  | 'USER_COMMENT_UPDATE' // コメント更新
+  | 'USER_COMMENT_DELETE' // コメント削除
+  | 'USER_PROFILE_UPDATE' // プロフィール更新
+  | 'USER_EVENT_JOIN' // イベント参加
+  | 'USER_EVENT_CANCEL' // イベントキャンセル
+  | 'USER_LOGIN' // ログイン
+  | 'USER_LOGOUT' // ログアウト
 
-  // 管理者関連
-  USER_ENABLE = 'USER_ENABLE', // ユーザー有効化
-  USER_DISABLE = 'USER_DISABLE', // ユーザー無効化
-  USER_DELETE = 'USER_DELETE' // ユーザー削除
+export type ActivityType = AdminActivityType | UserActivityType
+
+export interface ActivityLog {
+  id: string
+  type: ActivityType
+  title: string
+  description: string
+  userId: string
+  userName: string
+  createdAt: Date
+  metadata: Record<string, unknown>
 }
 
-/**
- * アクティビティのメタデータの型定義
- */
-export interface UserActivityMetadata {
-  // イベント関連のメタデータ
-  eventId?: number
-  eventTitle?: string
-
-  // コメント関連のメタデータ
-  commentId?: number
-  commentContent?: string
-
-  // ユーザー関連のメタデータ
-  targetUserId?: number
-  targetUserName?: string
-
-  // その他のメタデータ
-  ipAddress?: string
-  userAgent?: string
-  [key: string]: any // その他の追加メタデータ
-}
-
-/**
- * アクティビティの詳細情報の型定義
- */
-export interface UserActivityDetails {
-  type: UserActivityType
-  metadata?: UserActivityMetadata
+// アクティビティ作成時のデータ型
+export interface CreateActivityData {
+  type: ActivityType
+  title: string
   description?: string
+  user: IUser
+  metadata?: Record<string, unknown>
 }
