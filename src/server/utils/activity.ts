@@ -1,47 +1,32 @@
+import { ActivityDB } from '@/server/db'
 import type { ActivityLog, ActivityType, CreateActivityData } from '@/types/activity'
 import type { IUser } from '@/types/user'
-import ActivityDB from '../db/activity'
 
 export class Activity {
-  private static instance: Activity
-  private activityDB: ActivityDB
-
-  private constructor() {
-    this.activityDB = new ActivityDB()
-  }
-
-  public static getInstance(): Activity {
-    if (!Activity.instance) {
-      Activity.instance = new Activity()
-    }
-    return Activity.instance
-  }
-
-  public async logActivity(data: CreateActivityData): Promise<ActivityLog> {
+  public static async logActivity(data: CreateActivityData): Promise<boolean> {
     const log: ActivityLog = {
-      id: crypto.randomUUID().toString(),
       type: data.type,
-      title: data.title,
       description: data.description ?? '',
-      userId: data.user.id.toString(),
-      userName: data.user.name,
-      createdAt: new Date(),
+      userId: data.userId,
       metadata: data.metadata ?? {}
     }
 
-    await this.activityDB.createActivity(log)
-    return log
+    const result = await ActivityDB.createActivity(log)
+    if (result) {
+      return true
+    } else {
+      return false
+    }
   }
 
   // 管理者用ヘルパーメソッド
-  public async logAdminEventCreate(
+  public static async logAdminEventCreate(
     admin: IUser,
     eventId: string,
     eventTitle: string
-  ): Promise<ActivityLog> {
-    return this.logActivity({
+  ): Promise<boolean> {
+    return Activity.logActivity({
       type: 'ADMIN_EVENT_CREATE',
-      title: 'イベント作成',
       description: `イベント「${eventTitle}」を作成しました`,
       user: admin,
       metadata: {
@@ -51,33 +36,30 @@ export class Activity {
     })
   }
 
-  public async logAdminUserUpdate(
+  public static async logAdminUserUpdate(
     admin: IUser,
-    targetUserId: string,
+    userName: string,
     updatedFields: Record<string, unknown>
-  ): Promise<ActivityLog> {
-    return this.logActivity({
+  ): Promise<boolean> {
+    return Activity.logActivity({
       type: 'ADMIN_USER_UPDATE',
-      title: 'ユーザー情報更新',
-      description: 'ユーザー情報を更新しました',
+      description: `ユーザー「${userName}」の情報を更新しました`,
       user: admin,
       metadata: {
-        targetUserId,
         updatedFields
       }
     })
   }
 
   // ユーザー用ヘルパーメソッド
-  public async logUserComment(
+  public static async logUserComment(
     user: IUser,
     commentId: string,
     eventId: string,
     commentContent: string
-  ): Promise<ActivityLog> {
-    return this.logActivity({
+  ): Promise<boolean> {
+    return Activity.logActivity({
       type: 'USER_COMMENT_CREATE',
-      title: 'コメント投稿',
       description: 'イベントにコメントを投稿しました',
       user,
       metadata: {
@@ -88,13 +70,12 @@ export class Activity {
     })
   }
 
-  public async logUserProfileUpdate(
+  public static async logUserProfileUpdate(
     user: IUser,
     updatedFields: Record<string, unknown>
-  ): Promise<ActivityLog> {
-    return this.logActivity({
+  ): Promise<boolean> {
+    return Activity.logActivity({
       type: 'USER_PROFILE_UPDATE',
-      title: 'プロフィール更新',
       description: 'プロフィール情報を更新しました',
       user,
       metadata: {
@@ -103,39 +84,23 @@ export class Activity {
     })
   }
 
-  public async getRecentActivities(limit: number = 10): Promise<ActivityLog[]> {
-    return this.activityDB.getRecentActivities(limit)
+  public static async getRecentActivities(limit: number = 10): Promise<any[]> {
+    return ActivityDB.getRecentActivities(limit)
   }
 
-  public async getActivitiesByType(type: ActivityType): Promise<ActivityLog[]> {
-    return this.activityDB.getActivitiesByType(type)
+  public static async getActivitiesByType(type: ActivityType): Promise<any[]> {
+    return ActivityDB.getActivitiesByType(type)
   }
 
-  public async getActivitiesByUser(userId: string): Promise<ActivityLog[]> {
-    return this.activityDB.getActivitiesByUser(userId)
+  public static async getActivitiesByUser(userId: string): Promise<any[]> {
+    return ActivityDB.getActivitiesByUser(userId)
   }
 
-  public async getAdminActivities(limit: number = 10): Promise<ActivityLog[]> {
-    return this.activityDB.getAdminActivities(limit)
+  public static async getAdminActivities(limit: number = 10): Promise<any[]> {
+    return ActivityDB.getAdminActivities(limit)
   }
 
-  public async getUserActivities(limit: number = 10): Promise<ActivityLog[]> {
-    return this.activityDB.getUserActivities(limit)
-  }
-
-  public async createActivity(data: CreateActivityData): Promise<ActivityLog> {
-    const activityData: ActivityLog = {
-      id: crypto.randomUUID(),
-      type: data.type,
-      title: data.title,
-      description: data.description ?? '',
-      userId: data.user.id,
-      userName: data.user.name,
-      createdAt: new Date(),
-      metadata: data.metadata ?? {}
-    }
-
-    await this.activityDB.create(activityData)
-    return activityData
+  public static async getUserActivities(limit: number = 10): Promise<any[]> {
+    return ActivityDB.getUserActivities(limit)
   }
 }

@@ -25,21 +25,16 @@ export type UserActivityType =
 export type ActivityType = AdminActivityType | UserActivityType
 
 export interface ActivityLog {
-  id: string
   type: ActivityType
-  title: string
   description: string
-  userId: string
-  userName: string
-  createdAt: Date
+  userId: number
   metadata: Record<string, unknown>
 }
 
 // アクティビティ作成時のデータ型
 export interface CreateActivityData {
   type: ActivityType
-  title: string
   description?: string
-  user: IUser
+  userId: number
   metadata?: Record<string, unknown>
 }
