@@ -1,7 +1,6 @@
 # UFCal - イベントカレンダーシステム
 
-Astroフレームワークベースのカレンダーシステムです。
-ユーザログイン機能を持ち、カレンダーに表示するイベントを管理することができます。
+Astroフレームワークベースのカレンダーシステムです。ユーザーがログインし、カレンダーに表示するイベントを作成・管理できます。
 
 ![screencapture-localhost-3000-2024-08-16-11_55_49](https://github.com/user-attachments/assets/ad352e7d-3d34-4034-8a5f-21ca3eb21c8d)
 
@@ -11,28 +10,30 @@ Astroフレームワークベースのカレンダーシステムです。
 - カレンダー表示（月表示）
 - ユーザー認証（ログイン/ログアウト）
 - 管理者機能
+- コメント機能（イベントへのコメント追加、編集、削除）
+- ユーザ管理機能（ユーザの作成、編集、削除、ロール管理）
 - レスポンシブデザイン
 
 ## 技術スタック
 
-- **フロントエンド**
-  - Astro (SSR)
-  - React
-  - Tailwind CSS
-  - Flowbite
-  - FullCalendar
-  - Zod (バリデーション)
+### フロントエンド
+- Astro (SSR)
+- React
+- Tailwind CSS
+- Flowbite
+- FullCalendar
+- Zod (バリデーション)
 
-- **バックエンド**
-  - Node.js
-  - Prisma (ORM)
+### バックエンド
+- Node.js
+- Prisma (ORM)
   - MariaDB
   - Redis (セッション管理)
 
-- **開発ツール**
-  - TypeScript
-  - ESLint
-  - Prettier
+### 開発ツール
+- TypeScript
+- ESLint
+- Prettier
 
 ## 環境要件
 
@@ -43,29 +44,29 @@ Astroフレームワークベースのカレンダーシステムです。
 ## セットアップ
 
 1. リポジトリのクローン
-```bash
-git clone [repository-url]
-cd ufcal
-```
+   ```bash
+   git clone [repository-url]
+   cd ufcal
+   ```
 
 2. 依存関係のインストール
-```bash
-pnpm install
-pnpm dlx prisma generate
-```
+   ```bash
+   pnpm install
+   pnpm dlx prisma generate
+   ```
 
 3. 環境変数の設定
-`.env`ファイルを作成し、以下の内容を設定：
-```env
-DATABASE_URL=mysql://testuser:testuser@localhost:3306/ufcal-db
-SESSION_REDIS_URL=redis://localhost:6379/
-```
+   `.env`ファイルを作成し、以下の内容を設定：
+   ```env
+   DATABASE_URL=mysql://testuser:testuser@localhost:3306/ufcal-db
+   SESSION_REDIS_URL=redis://localhost:6379/
+   ```
 
 4. データベースのセットアップ
-```bash
-pnpm dlx prisma migrate dev --name init
-pnpm dlx prisma migrate reset
-```
+   ```bash
+   pnpm dlx prisma migrate dev --name init
+   pnpm dlx prisma migrate reset
+   ```
 
 ## 開発サーバーの起動
 
@@ -73,7 +74,7 @@ pnpm dlx prisma migrate reset
 pnpm dev
 ```
 
-開発サーバーは http://localhost:3000 で起動します。
+開発サーバーは [http://localhost:3000](http://localhost:3000) で起動します。
 
 ### テストユーザー
 - 管理者アカウント
@@ -83,17 +84,15 @@ pnpm dev
 ## ビルドとデプロイ
 
 1. プロダクションビルド
-```bash
-pnpm build
-```
+   ```bash
+   pnpm build
+   ```
 
 2. サーバーの起動
-```bash
-pnpm start
-```
+   ```bash
+   pnpm start
+   ```
 
 ## ライセンス
 
-MITライセンスに準じます。
-
-[MIT](./LICENSE)
+このプロジェクトは [MITライセンス](./LICENSE) の下で提供されています。
