@@ -14,18 +14,25 @@ import { z } from 'zod'
 const schema = z
   .object({
     title: z.string().trim().min(1, { message: 'イベント名は必須です' }),
-    eventDate: z.object({
-      startDate: z
-        .date({
-          invalid_type_error: '開始日の形式が正しくありません'
-        })
-        .nullable(),
-      endDate: z
-        .date({
-          invalid_type_error: '終了日の形式が正しくありません'
-        })
-        .nullable()
-    }),
+    eventDate: z
+      .object({
+        startDate: z
+          .date({
+            invalid_type_error: '開始日の形式が正しくありません',
+            required_error: '開始日は必須です'
+          })
+          .nullable(),
+        endDate: z
+          .date({
+            invalid_type_error: '終了日の形式が正しくありません',
+            required_error: '終了日は必須です'
+          })
+          .nullable()
+      })
+      .refine((data) => data.startDate !== null && data.endDate !== null, {
+        message: '日付は必須です',
+        path: ['startDate']
+      }),
     isTimeSettingEnabled: z.boolean(),
     eventTimeStart: z
       .string()
