@@ -239,7 +239,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
 
   return (
     <div className="relative">
-      <div className="mb-4">
+      <div>
         <button
           type="button"
           onClick={() => setCalendarVisible(!calendarVisible)}
