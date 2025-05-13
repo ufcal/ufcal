@@ -2,6 +2,7 @@ import Alert from '@/components/Alert'
 import Button from '@/components/base/Button'
 import config from '@/config/config.json'
 import { AdminEventFetch } from '@/fetch/admin'
+import { MemberCommentFetch } from '@/fetch/member'
 import { modalEventId, notifyEventUpdate, showEventModal } from '@/store/event'
 import React, { useEffect, useState } from 'react'
 
@@ -95,23 +96,8 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
   const [error, setError] = useState('')
   const [completed, setCompleted] = useState(false)
   const [newComment, setNewComment] = useState('')
+  const [comments, setComments] = useState<Comment[]>([])
   const commentsEnabled = config.site.comments.enabled
-  const [comments] = useState<Comment[]>([
-    {
-      id: '1',
-      author: '山田太郎',
-      content: 'とても興味深いイベントですね！参加が楽しみです。',
-      createdAt: '2024-03-20 10:30',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=1'
-    },
-    {
-      id: '2',
-      author: '佐藤花子',
-      content: '前回のイベントも素晴らしかったです。今回も期待しています！',
-      createdAt: '2024-03-20 11:15',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=2'
-    }
-  ])
 
   useEffect(() => {
     if (isOpen && event) {
@@ -150,10 +136,43 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
     }
   }
 
-  const handleSubmitComment = (e: React.FormEvent) => {
+  const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault()
-    // ここでコメントの送信処理を実装
-    setNewComment('')
+    setSuccess('')
+    setError('')
+
+    if (!newComment.trim()) {
+      setError('コメントを入力してください')
+      return
+    }
+
+    try {
+      const response = await MemberCommentFetch.addComment({
+        eventId: event.id,
+        content: newComment.trim()
+      })
+
+      if (response.ok) {
+        const commentData = await response.json()
+        setComments((prevComments) => [
+          ...prevComments,
+          {
+            id: commentData.id,
+            author: userAuth.name,
+            content: commentData.content,
+            createdAt: new Date().toLocaleString('ja-JP'),
+            avatar: userAuth.avatar
+          }
+        ])
+        setNewComment('')
+        setSuccess('コメントを投稿しました')
+      } else {
+        const errorData = await response.json()
+        setError(`コメントの投稿に失敗しました: ${errorData.message}`)
+      }
+    } catch (error) {
+      setError('通信エラーが発生しました')
+    }
   }
 
   return (
