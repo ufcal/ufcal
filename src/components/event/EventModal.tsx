@@ -57,9 +57,18 @@ const schema = z
   .refine(
     (data) => {
       if (data.isTimeSettingEnabled) {
-        // 開始時刻は必須
-        if (!data.eventTimeStart) return false
-
+        return Boolean(data.eventTimeStart)
+      }
+      return true
+    },
+    {
+      message: '開始時刻は必須です',
+      path: ['eventTimeStart']
+    }
+  )
+  .refine(
+    (data) => {
+      if (data.isTimeSettingEnabled) {
         // 開始日と終了日が同じ場合、終了時刻は任意
         if (data.eventDate.startDate?.getTime() === data.eventDate.endDate?.getTime()) {
           return true
@@ -71,8 +80,8 @@ const schema = z
       return true
     },
     {
-      message: '開始時刻は必須です',
-      path: ['eventTimeStart']
+      message: '終了時刻は必須です',
+      path: ['eventTimeEnd']
     }
   )
 
