@@ -104,8 +104,34 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
       setSuccess('')
       setError('')
       setCompleted(false)
+      fetchComments()
     }
   }, [isOpen, event])
+
+  const fetchComments = async () => {
+    try {
+      const response = await fetch(`/api/member/comment?eventId=${event.id}`)
+      if (response.ok) {
+        const data = await response.json()
+        setComments(
+          data.map((comment: any) => ({
+            id: comment.id,
+            author: comment.user.name,
+            content: comment.content,
+            createdAt: new Date(comment.createdAt).toLocaleString('ja-JP'),
+            avatar: comment.user.avatar
+              ? `${config.upload.avatar.url}/${comment.user.avatar}`
+              : null
+          }))
+        )
+      } else {
+        const errorData = await response.json()
+        setError(`コメントの取得に失敗しました: ${errorData.message}`)
+      }
+    } catch (error) {
+      setError('通信エラーが発生しました')
+    }
+  }
 
   if (!isOpen || !event) return null
 
@@ -153,19 +179,9 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
       })
 
       if (response.ok) {
-        const commentData = await response.json()
-        setComments((prevComments) => [
-          ...prevComments,
-          {
-            id: commentData.id,
-            author: userAuth.name,
-            content: commentData.content,
-            createdAt: new Date().toLocaleString('ja-JP'),
-            avatar: userAuth.avatar
-          }
-        ])
         setNewComment('')
         setSuccess('コメントを投稿しました')
+        await fetchComments()
       } else {
         const errorData = await response.json()
         setError(`コメントの投稿に失敗しました: ${errorData.message}`)
@@ -296,14 +312,20 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
               {/* コメント一覧 */}
               <div className="space-y-4">
                 {comments.map((comment) => (
-                  <div key={comment.id} className="rounded-lg bg-white p-4 shadow-sm">
+                  <div key={comment.id} className="rounded-lg border border-gray-200 bg-white p-4">
                     <div className="flex items-start space-x-3">
-                      {comment.avatar && (
+                      {comment.avatar ? (
                         <img
                           src={comment.avatar}
                           alt={comment.author}
-                          className="h-10 w-10 rounded-full"
+                          className="h-10 w-10 rounded-full object-cover"
                         />
+                      ) : (
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100">
+                          <span className="text-sm font-medium text-gray-600">
+                            {comment.author.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
                       )}
                       <div className="flex-1 space-y-1">
                         <div className="flex items-center justify-between">
@@ -319,7 +341,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
 
               {/* コメント入力フォーム */}
               <form onSubmit={handleSubmitComment} className="space-y-3">
-                <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+                <div className="rounded-lg border border-gray-200 bg-white p-4">
                   <textarea
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
