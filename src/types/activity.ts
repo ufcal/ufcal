@@ -1,5 +1,3 @@
-import type { IUser } from './user'
-
 // 管理者の活動タイプ
 export type AdminActivityType =
   | 'ADMIN_EVENT_CREATE' // イベント作成
