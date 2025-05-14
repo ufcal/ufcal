@@ -133,8 +133,26 @@ export default function Calendar() {
         dayMaxEvents={true} // 日付枠内に表示できるイベント数を制限
         events={events?.map((event: EventResponse) => ({
           ...event,
-          title: event.commentCount ? `${event.title} (${event.commentCount})` : event.title
+          title: event.title // コメント数は eventContent で処理
         }))} // APIから取得したイベントを使用
+        eventContent={(eventInfo) => {
+          const event = eventInfo.event
+          const extendedProps = event.extendedProps as EventResponse
+          const commentCount = extendedProps?.commentCount || 0
+
+          return (
+            <div className="p-1">
+              <div className="flex items-center justify-between">
+                <div className="mr-1 truncate text-sm font-medium">{event.title}</div>
+                {commentCount > 0 && (
+                  <span className="inline-flex flex-shrink-0 items-center rounded-full bg-black px-1.5 py-0.5 text-xs font-medium text-white">
+                    {commentCount}
+                  </span>
+                )}
+              </div>
+            </div>
+          )
+        }}
         dayCellContent={renderDayCellContent}
         eventDisplay={'block'} // イベントをブロック要素として表示
         eventClick={handleEventClick}
