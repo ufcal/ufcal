@@ -211,8 +211,8 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black/50">
       <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 shadow-2xl">
-        {/* ヘッダー */}
-        <div className="relative px-6 pt-6">
+        {/* ヘッダー - 固定 */}
+        <div className="sticky top-0 z-10 bg-gradient-to-br from-white to-gray-50 px-6 pt-6">
           <div className="absolute top-6 right-6">
             <button
               onClick={onClose}
@@ -233,8 +233,8 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
           <h2 className="mb-3 text-3xl font-bold text-gray-900">{event.title}</h2>
         </div>
 
-        {/* コンテンツ */}
-        <div className="px-6 pt-0 pb-4">
+        {/* コンテンツ - スクロール可能 */}
+        <div className="max-h-[calc(90vh-120px)] overflow-y-auto px-6 pt-0 pb-4">
           {success && <Alert message={success} type="success" />}
           {error && <Alert message={error} type="error" />}
 

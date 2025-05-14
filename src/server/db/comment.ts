@@ -1,4 +1,3 @@
-import type { Comment } from '@prisma/client'
 import BaseDB from './base'
 
 interface AddCommentData {
@@ -7,7 +6,36 @@ interface AddCommentData {
   creatorId: number
 }
 
+interface Comment {
+  id: number
+  content: string
+  eventId: number
+  creatorId: number
+  createdAt: Date
+  updatedAt: Date
+  creator: {
+    id: number
+    name: string
+    avatar: string | null
+  }
+}
+
 class CommentDB extends BaseDB {
+  async getCommentById(id: number): Promise<Comment | null> {
+    try {
+      const comment = await BaseDB.prisma.comment.findUnique({
+        where: { id },
+        include: {
+          creator: true
+        }
+      })
+      return comment
+    } catch (err) {
+      console.error('コメントの取得に失敗しました:', err)
+      return null
+    }
+  }
+
   async getComments(eventId: number): Promise<Comment[]> {
     try {
       const comments = await BaseDB.prisma.comment.findMany({
@@ -37,7 +65,7 @@ class CommentDB extends BaseDB {
           eventId: eventId
         },
         orderBy: {
-          createdAt: 'desc'
+          id: 'asc'
         },
         include: {
           creator: true
@@ -65,6 +93,21 @@ class CommentDB extends BaseDB {
       return comment
     } catch (err) {
       console.error('コメントの登録に失敗しました:', err)
+      return null
+    }
+  }
+
+  async deleteComment(id: number): Promise<Comment | null> {
+    try {
+      const comment = await BaseDB.prisma.comment.delete({
+        where: { id },
+        include: {
+          creator: true
+        }
+      })
+      return comment
+    } catch (err) {
+      console.error('コメントの削除に失敗しました:', err)
       return null
     }
   }
