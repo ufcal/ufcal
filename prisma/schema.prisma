@@ -47,14 +47,11 @@ model Comment {
   id        Int      @id @default(autoincrement())
   content   String   @db.Text
   eventId   Int
-  userId    Int
+  creatorId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   event     Event    @relation(fields: [eventId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
-
-  @@index([eventId])
-  @@index([userId])
+  creator   User     @relation(fields: [creatorId], references: [id])
 }
 
 model Activity {
@@ -66,6 +63,4 @@ model Activity {
   userId      Int      // アクティビティを実行したユーザー
   createdAt   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id])
-
-  @@index([userId])
 }

@@ -4,7 +4,7 @@ import BaseDB from './base'
 interface AddCommentData {
   content: string
   eventId: number
-  userId: number
+  creatorId: number
 }
 
 class CommentDB extends BaseDB {
@@ -20,7 +20,7 @@ class CommentDB extends BaseDB {
           }
         ],
         include: {
-          user: true
+          creator: true
         }
       })
       return comments
@@ -40,7 +40,7 @@ class CommentDB extends BaseDB {
           createdAt: 'desc'
         },
         include: {
-          user: true
+          creator: true
         }
       })
       return comments
@@ -56,10 +56,10 @@ class CommentDB extends BaseDB {
         data: {
           content: data.content,
           eventId: data.eventId,
-          userId: data.userId
+          creatorId: data.creatorId
         },
         include: {
-          user: true
+          creator: true
         }
       })
       return comment

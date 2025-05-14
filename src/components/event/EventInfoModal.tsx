@@ -12,6 +12,7 @@ interface Comment {
   content: string
   createdAt: string
   avatar?: string
+  userId: number
 }
 
 interface EventInfoModalProps {
@@ -98,6 +99,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
   const [newComment, setNewComment] = useState('')
   const [comments, setComments] = useState<Comment[]>([])
   const commentsEnabled = config.site.comments.enabled
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     if (isOpen && event) {
@@ -110,26 +112,24 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
 
   const fetchComments = async () => {
     try {
-      const response = await fetch(`/api/member/comment?eventId=${event.id}`)
+      const response = await MemberCommentFetch.getComments(event.id)
       if (response.ok) {
         const data = await response.json()
         setComments(
           data.map((comment: any) => ({
             id: comment.id,
-            author: comment.user.name,
+            author: comment.creator.name,
             content: comment.content,
-            createdAt: new Date(comment.createdAt).toLocaleString('ja-JP'),
-            avatar: comment.user.avatar
-              ? `${config.upload.avatar.url}/${comment.user.avatar}`
-              : null
+            createdAt: comment.createdAt,
+            avatar: comment.creator.avatar
+              ? `${config.upload.avatar.url}/${comment.creator.avatar}`
+              : undefined,
+            userId: comment.creator.id
           }))
         )
-      } else {
-        const errorData = await response.json()
-        setError(`コメントの取得に失敗しました: ${errorData.message}`)
       }
-    } catch (error) {
-      setError('通信エラーが発生しました')
+    } catch (err) {
+      console.error('コメントの取得に失敗しました:', err)
     }
   }
 
@@ -164,30 +164,47 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
 
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSuccess('')
-    setError('')
+    if (!newComment.trim()) return
 
-    if (!newComment.trim()) {
-      setError('コメントを入力してください')
-      return
-    }
+    setIsSubmitting(true)
+    setError('')
+    setSuccess('')
 
     try {
       const response = await MemberCommentFetch.addComment({
         eventId: event.id,
-        content: newComment.trim()
+        content: newComment
       })
 
       if (response.ok) {
         setNewComment('')
         setSuccess('コメントを投稿しました')
-        await fetchComments()
+        fetchComments()
       } else {
-        const errorData = await response.json()
-        setError(`コメントの投稿に失敗しました: ${errorData.message}`)
+        const data = await response.json()
+        setError(data.message || 'コメントの投稿に失敗しました')
       }
-    } catch (error) {
-      setError('通信エラーが発生しました')
+    } catch (err) {
+      setError('コメントの投稿に失敗しました')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleDeleteComment = async (commentId: string) => {
+    if (!confirm('このコメントを削除してもよろしいですか？')) return
+
+    try {
+      const response = await MemberCommentFetch.deleteComment(commentId)
+      if (response.ok) {
+        setSuccess('コメントを削除しました')
+        fetchComments()
+      } else {
+        const data = await response.json()
+        setError(data.message || 'コメントの削除に失敗しました')
+      }
+    } catch (err) {
+      setError('コメントの削除に失敗しました')
     }
   }
 
@@ -239,7 +256,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
                 </svg>
               </div>
               <div>
-                <div className="text-sm font-medium text-gray-500">開催日時</div>
+                <div className="font-medium text-gray-500">開催日時</div>
                 <div className="flex items-center gap-2">
                   <span className="text-gray-900">{formatEventDateTime(event)}</span>
                 </div>
@@ -281,7 +298,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
                       href={event.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center rounded-lg bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                      className="inline-flex items-center rounded-lg bg-gray-50 px-4 py-2 font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
                     >
                       <svg
                         className="mr-2 h-4 w-4"
@@ -314,26 +331,29 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
                 {comments.map((comment) => (
                   <div key={comment.id} className="rounded-lg border border-gray-200 bg-white p-4">
                     <div className="flex items-start space-x-3">
-                      {comment.avatar ? (
-                        <img
-                          src={comment.avatar}
-                          alt={comment.author}
-                          className="h-10 w-10 rounded-full object-cover"
-                        />
-                      ) : (
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100">
-                          <span className="text-sm font-medium text-gray-600">
-                            {comment.author.charAt(0).toUpperCase()}
-                          </span>
-                        </div>
-                      )}
+                      <img
+                        src={
+                          comment.avatar ||
+                          `${config.upload.avatar.url}/${config.upload.avatar.default}`
+                        }
+                        alt={comment.author}
+                        className="h-10 w-10 rounded-full object-cover"
+                      />
                       <div className="flex-1 space-y-1">
                         <div className="flex items-center justify-between">
-                          <h4 className="text-sm font-medium text-gray-900">{comment.author}</h4>
-                          <span className="text-xs text-gray-500">{comment.createdAt}</span>
+                          <h4 className="font-medium text-gray-900">{comment.author}</h4>
+                          <span className="text-gray-500">{comment.createdAt}</span>
                         </div>
-                        <p className="text-sm text-gray-600">{comment.content}</p>
+                        <p className="text-gray-600">{comment.content}</p>
                       </div>
+                      {userAuth?.id === comment.userId && (
+                        <button
+                          onClick={() => handleDeleteComment(comment.id)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          削除
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -348,14 +368,15 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
                     placeholder="コメントを入力..."
                     className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900"
                     rows={3}
+                    disabled={isSubmitting}
                   />
                   <div className="mt-3 flex justify-end">
-                    <button
+                    <Button
                       type="submit"
-                      className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
-                    >
-                      コメントを投稿
-                    </button>
+                      variant="primary"
+                      text="コメントを投稿"
+                      disabled={isSubmitting || !newComment.trim()}
+                    />
                   </div>
                 </div>
               </form>
