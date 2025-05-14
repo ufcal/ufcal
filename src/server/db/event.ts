@@ -28,6 +28,7 @@ interface PublicEvent {
   end: Date
   isAllDay: boolean
   categoryId: number
+  commentCount: number
 }
 
 class EventDB extends BaseDB {
@@ -72,7 +73,12 @@ class EventDB extends BaseDB {
           start: true,
           end: true,
           isAllDay: true,
-          categoryId: true
+          categoryId: true,
+          _count: {
+            select: {
+              Comments: true
+            }
+          }
         },
         where: {
           OR: [
@@ -110,7 +116,15 @@ class EventDB extends BaseDB {
           }
         ]
       })
-      return events
+      return events.map((event: any) => ({
+        id: event.id,
+        title: event.title,
+        start: event.start,
+        end: event.end,
+        isAllDay: event.isAllDay,
+        categoryId: event.categoryId,
+        commentCount: event._count.Comments
+      }))
     } catch (err) {
       console.error(err)
       return []

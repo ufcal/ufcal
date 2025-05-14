@@ -4,6 +4,7 @@ import EventFetch from '@/fetch/event'
 import useWatch from '@/lib/watchState.tsx'
 import { isEventUpdated } from '@/store/event'
 import { userStore } from '@/store/user'
+import type { EventResponse } from '@/types/event'
 import type { EventClickArg } from '@fullcalendar/core'
 import jaLocale from '@fullcalendar/core/locales/ja'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -38,6 +39,13 @@ export default function Calendar() {
       : null,
     fetcher
   )
+
+  // デバッグ用：イベントデータの確認
+  React.useEffect(() => {
+    if (events) {
+      console.log('Events data:', events)
+    }
+  }, [events])
 
   // イベント情報のモーダルを初期化
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -123,7 +131,10 @@ export default function Calendar() {
         }}
         initialView="dayGridMonth"
         dayMaxEvents={true} // 日付枠内に表示できるイベント数を制限
-        events={events} // APIから取得したイベントを使用
+        events={events?.map((event: EventResponse) => ({
+          ...event,
+          title: event.commentCount ? `${event.title} (${event.commentCount})` : event.title
+        }))} // APIから取得したイベントを使用
         dayCellContent={renderDayCellContent}
         eventDisplay={'block'} // イベントをブロック要素として表示
         eventClick={handleEventClick}

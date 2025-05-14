@@ -6,6 +6,7 @@ export interface EventResponse {
   end: string
   allDay: boolean
   color: string
+  commentCount?: number
 }
 
 // カレンダーの詳細画面に表示するイベント

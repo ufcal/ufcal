@@ -59,6 +59,9 @@ export const GET: APIRoute = async ({ request }) => {
         mappedEvent.color = 'black'
       }
 
+      // コメント数を追加
+      mappedEvent.commentCount = event.commentCount
+
       return mappedEvent
     })
 
