@@ -286,7 +286,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
                 <h3 className="text-gray-900">イベント内容</h3>
               </div>
 
-              <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
+              <div className="rounded-lg border border-gray-200 bg-white p-4">
                 {event.description && (
                   <div className="prose prose-gray max-w-none">
                     <div className="whitespace-pre-line text-gray-600">{event.description}</div>
