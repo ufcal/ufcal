@@ -133,8 +133,8 @@ export default function Calendar() {
         dayMaxEvents={true} // 日付枠内に表示できるイベント数を制限
         events={events?.map((event: EventResponse) => ({
           ...event,
-          title: event.title // コメント数は eventContent で処理
-        }))} // APIから取得したイベントを使用
+          title: event.title
+        }))}
         eventContent={(eventInfo) => {
           const event = eventInfo.event
           const extendedProps = event.extendedProps as EventResponse
@@ -142,11 +142,19 @@ export default function Calendar() {
           const isCommentsEnabled = config.site.comments.enabled
 
           return (
-            <div className="p-1">
-              <div className="flex items-center justify-between">
-                <div className="mr-1 truncate text-sm font-medium">{event.title}</div>
+            <div className="fc-event-main-frame p-0.5">
+              <div className="flex w-full items-center justify-between">
+                <div className="flex items-center truncate">
+                  {/* 時間（左寄せ、太字） */}
+                  {!event.allDay && <div className="mr-1 font-bold">{eventInfo.timeText}</div>}
+
+                  {/* タイトル（左寄せ、時間の後ろ） */}
+                  <div className="truncate">{event.title}</div>
+                </div>
+
+                {/* コメント数バッジ（右寄せ） */}
                 {isCommentsEnabled && commentCount > 0 && (
-                  <span className="inline-flex flex-shrink-0 items-center rounded-full bg-black px-1.5 py-0.5 text-xs font-medium text-white">
+                  <span className="ml-1 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-black text-xs font-medium text-white">
                     {commentCount}
                   </span>
                 )}
@@ -159,7 +167,7 @@ export default function Calendar() {
         eventClick={handleEventClick}
         datesSet={getCalendarInfo} // カレンダーが切り替わるときに呼び出される
         locale={jaLocale} // 日本語化
-        //displayEventTime={false} // イベントの時間を非表示
+        //displayEventTime={true} // イベントの時間を表示
         eventTimeFormat={{
           // 時刻フォーマット'14:30'
           hour: '2-digit',
