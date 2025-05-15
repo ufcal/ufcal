@@ -2,6 +2,7 @@ import Alert from '@/components/Alert'
 import Button from '@/components/base/Button'
 import config from '@/config/config.json'
 import { AdminEventFetch } from '@/fetch/admin'
+import CommentFetch from '@/fetch/comment'
 import { MemberCommentFetch } from '@/fetch/member'
 import { modalEventId, notifyEventUpdate, showEventModal } from '@/store/event'
 import React, { useEffect, useState } from 'react'
@@ -112,7 +113,13 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
 
   const fetchComments = async () => {
     try {
-      const response = await MemberCommentFetch.getComments(event.id)
+      let response
+      if (userAuth) {
+        response = await MemberCommentFetch.getComments(event.id)
+      } else {
+        response = await CommentFetch.getComments(event.id)
+      }
+
       if (response.ok) {
         const data = await response.json()
         setComments(
