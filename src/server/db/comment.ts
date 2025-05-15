@@ -26,7 +26,13 @@ class CommentDB extends BaseDB {
       const comment = await BaseDB.prisma.comment.findUnique({
         where: { id },
         include: {
-          creator: true
+          creator: {
+            select: {
+              id: true,
+              name: true,
+              avatar: true
+            }
+          }
         }
       })
       return comment
@@ -48,7 +54,13 @@ class CommentDB extends BaseDB {
           }
         ],
         include: {
-          creator: true
+          creator: {
+            select: {
+              id: true,
+              name: true,
+              avatar: true
+            }
+          }
         }
       })
       return comments
@@ -68,7 +80,13 @@ class CommentDB extends BaseDB {
           id: 'asc'
         },
         include: {
-          creator: true
+          creator: {
+            select: {
+              id: true,
+              name: true,
+              avatar: true
+            }
+          }
         }
       })
       return comments
@@ -87,7 +105,13 @@ class CommentDB extends BaseDB {
           creatorId: data.creatorId
         },
         include: {
-          creator: true
+          creator: {
+            select: {
+              id: true,
+              name: true,
+              avatar: true
+            }
+          }
         }
       })
       return comment
@@ -102,7 +126,13 @@ class CommentDB extends BaseDB {
       const comment = await BaseDB.prisma.comment.delete({
         where: { id },
         include: {
-          creator: true
+          creator: {
+            select: {
+              id: true,
+              name: true,
+              avatar: true
+            }
+          }
         }
       })
       return comment

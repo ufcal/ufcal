@@ -93,6 +93,43 @@ const formatEventDateTime = (event: { start: string; end: string; allDay: boolea
   }
 }
 
+// 日時をフォーマットする関数
+const formatDateTime = (dateString: string) => {
+  const date = new Date(dateString)
+  const now = new Date()
+
+  // 日付のみの比較用に時刻をリセット
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  const yesterday = new Date(today)
+  yesterday.setDate(yesterday.getDate() - 1)
+
+  // 今日の投稿
+  if (targetDate.getTime() === today.getTime()) {
+    return `今日 ${new Intl.DateTimeFormat('ja-JP', {
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(date)}`
+  }
+
+  // 昨日の投稿
+  if (targetDate.getTime() === yesterday.getTime()) {
+    return `昨日 ${new Intl.DateTimeFormat('ja-JP', {
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(date)}`
+  }
+
+  // それ以外の投稿
+  return new Intl.DateTimeFormat('ja-JP', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).format(date)
+}
+
 const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose, userAuth }) => {
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
@@ -349,7 +386,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
                       <div className="flex-1 space-y-1">
                         <div className="flex items-center justify-between">
                           <h4 className="font-medium text-gray-900">{comment.author}</h4>
-                          <span className="text-gray-500">{comment.createdAt}</span>
+                          <span className="text-gray-500">{formatDateTime(comment.createdAt)}</span>
                         </div>
                         <p className="text-gray-600">{comment.content}</p>
                       </div>
