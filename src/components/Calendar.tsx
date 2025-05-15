@@ -139,12 +139,13 @@ export default function Calendar() {
           const event = eventInfo.event
           const extendedProps = event.extendedProps as EventResponse
           const commentCount = extendedProps?.commentCount || 0
+          const isCommentsEnabled = config.site.comments.enabled
 
           return (
             <div className="p-1">
               <div className="flex items-center justify-between">
                 <div className="mr-1 truncate text-sm font-medium">{event.title}</div>
-                {commentCount > 0 && (
+                {isCommentsEnabled && commentCount > 0 && (
                   <span className="inline-flex flex-shrink-0 items-center rounded-full bg-black px-1.5 py-0.5 text-xs font-medium text-white">
                     {commentCount}
                   </span>
