@@ -122,17 +122,6 @@ class CommentDB extends BaseDB {
       })
 
       // コメント投稿のActivityを作成
-      /*await Activity.logActivity({
-        type: 'USER_COMMENT_CREATE',
-        title: 'コメント投稿',
-        description: data.content,
-        userId: data.creatorId,
-        metadata: {
-          commentId: comment.id,
-          eventId: data.eventId,
-          eventTitle: comment.event.title
-        }
-      })*/
       await Activity.logUserComment({
         userId: data.creatorId,
         userName: comment.creator.name,

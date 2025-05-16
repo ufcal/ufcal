@@ -52,9 +52,11 @@ export default function Dashboard() {
       case 'ADMIN_ROLE_UPDATE':
         return 'システム設定'
       case 'USER_COMMENT_CREATE':
+        return 'コメント作成'
       case 'USER_COMMENT_UPDATE':
+        return 'コメント更新'
       case 'USER_COMMENT_DELETE':
-        return 'コメント'
+        return 'コメント削除'
       case 'USER_PROFILE_UPDATE':
         return 'プロフィール'
       case 'USER_EVENT_JOIN':
@@ -276,7 +278,7 @@ export default function Dashboard() {
 
           {/* ユーザーの最近の活動 */}
           <div className="rounded-lg bg-white p-6 shadow-sm">
-            <h3 className="mb-4 text-lg font-semibold text-gray-900">ユーザーの最近の活動</h3>
+            <h3 className="mb-4 text-lg font-semibold text-gray-900">ユーザの最近の活動</h3>
             <div className="space-y-4">
               {recentUserActivities.map((activity) => (
                 <div key={activity.id} className="border-b border-gray-200 pb-4 last:border-0">
