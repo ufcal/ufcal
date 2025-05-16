@@ -123,7 +123,6 @@ class CommentDB extends BaseDB {
 
       // コメント投稿のActivityを作成
       await Activity.logUserComment(userId, {
-        //userId: data.creatorId,
         creatorId: comment.creator.id,
         creatorName: comment.creator.name,
         commentContent: data.content,
@@ -139,7 +138,7 @@ class CommentDB extends BaseDB {
     }
   }
 
-  async deleteComment(id: number): Promise<Comment | null> {
+  async deleteComment(userId: number, id: number): Promise<Comment | null> {
     try {
       const comment = await BaseDB.prisma.comment.delete({
         where: { id },
@@ -164,12 +163,14 @@ class CommentDB extends BaseDB {
         type: 'USER_COMMENT_DELETE',
         title: 'コメント削除',
         description: comment.content,
-        userId: comment.creatorId,
         metadata: {
+          creatorId: comment.creator.id,
+          creatorName: comment.creator.name,
           commentId: comment.id,
           eventId: comment.eventId,
           eventTitle: comment.event.title
-        }
+        },
+        userId: userId // アクティビティを実行したユーザ
       })
 
       return comment

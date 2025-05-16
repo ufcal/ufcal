@@ -36,7 +36,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
       })
     }
 
-    const deletedComment = await CommentDB.deleteComment(Number(commentId))
+    const deletedComment = await CommentDB.deleteComment(locals.user.id, Number(commentId))
     if (!deletedComment) {
       return new Response(JSON.stringify({ message: 'コメントの削除に失敗しました' }), {
         status: 500,
