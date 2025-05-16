@@ -49,7 +49,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       })
     }
 
-    const comment = await CommentDB.addComment({
+    const comment = await CommentDB.addComment(locals.user.id, {
       content,
       eventId: Number(eventId),
       creatorId: locals.user.id

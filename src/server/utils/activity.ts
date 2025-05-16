@@ -2,12 +2,13 @@ import { ActivityDB } from '@/server/db'
 import type {
   ActivityLog,
   ActivityType,
-  CreateActivityData,
+  //CreateActivityData,
   UserCommentActivityData
 } from '@/types/activity'
 
 export class Activity {
-  public static async logActivity(data: CreateActivityData): Promise<boolean> {
+  //public static async logActivity(data: CreateActivityData): Promise<boolean> {
+  public static async logActivity(data: ActivityLog): Promise<boolean> {
     if (!data.userId) {
       console.error('userId is required')
       return false
@@ -17,8 +18,8 @@ export class Activity {
       type: data.type,
       title: data.title,
       description: data.description ?? '',
-      userId: data.userId,
-      metadata: data.metadata ?? {}
+      metadata: data.metadata ?? {},
+      userId: data.userId // アクティビティを実行したユーザ
     }
 
     const result = await ActivityDB.createActivity(log)
@@ -64,18 +65,23 @@ export class Activity {
   }
 
   // ユーザー用ヘルパーメソッド
-  public static async logUserComment(data: UserCommentActivityData): Promise<boolean> {
+  public static async logUserComment(
+    userId: number,
+    data: UserCommentActivityData
+  ): Promise<boolean> {
     return Activity.logActivity({
       type: 'USER_COMMENT_CREATE',
       title: 'コメント投稿',
       description: data.commentContent,
-      userId: data.userId,
       metadata: {
-        userName: data.userName,
+        // コメントの情報
+        creatorId: data.creatorId,
+        creatorName: data.creatorName,
         commentId: data.commentId,
         eventId: data.eventId,
         eventTitle: data.eventTitle
-      }
+      },
+      userId: userId // アクティビティを実行したユーザ
     })
   }
 

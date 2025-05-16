@@ -97,7 +97,7 @@ class CommentDB extends BaseDB {
     }
   }
 
-  async addComment(data: AddCommentData): Promise<Comment | null> {
+  async addComment(userId: number, data: AddCommentData): Promise<Comment | null> {
     try {
       const comment = await BaseDB.prisma.comment.create({
         data: {
@@ -122,9 +122,10 @@ class CommentDB extends BaseDB {
       })
 
       // コメント投稿のActivityを作成
-      await Activity.logUserComment({
-        userId: data.creatorId,
-        userName: comment.creator.name,
+      await Activity.logUserComment(userId, {
+        //userId: data.creatorId,
+        creatorId: comment.creator.id,
+        creatorName: comment.creator.name,
         commentContent: data.content,
         commentId: comment.id,
         eventId: data.eventId,

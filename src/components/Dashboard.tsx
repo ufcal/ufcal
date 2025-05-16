@@ -295,7 +295,7 @@ export default function Dashboard() {
                         <>
                           <p className="mt-1 text-sm text-gray-600">{activity.description}</p>
                           <p className="text-sm font-medium text-gray-900">
-                            投稿者: {activity.metadata?.userName || '不明'}
+                            投稿者: {activity.metadata?.creatorName || '不明'}
                           </p>
                         </>
                       ) : (
