@@ -21,5 +21,11 @@
     "rootUrl": "/api",
     "adminUrl": "/api/admin",
     "memberUrl": "/api/member"
+  },
+  "dashboard": {
+    "recentActivities": {
+      "admin": 5,
+      "user": 5
+    }
   }
 }

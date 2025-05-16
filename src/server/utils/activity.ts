@@ -71,6 +71,7 @@ export class Activity {
       description: data.commentContent,
       userId: data.userId,
       metadata: {
+        userName: data.userName,
         commentId: data.commentId,
         eventId: data.eventId,
         eventTitle: data.eventTitle

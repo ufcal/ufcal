@@ -1,8 +1,9 @@
-import type { UserActivity, UserActivity, UserStats } from '@/types/dashboard'
+import type { ActivityType } from '@/types/activity'
+import type { AdminStats, RecentActivity, UserStats } from '@/types/dashboard'
 import BaseDB from './base'
 
 class DashboardDB extends BaseDB {
-  async getRecentUserActivities(limit: number = 10): Promise<UserActivity[]> {
+  async getRecentUserActivities(limit: number = 10): Promise<RecentActivity[]> {
     try {
       const activities = await BaseDB.prisma.activity.findMany({
         where: {
@@ -25,8 +26,11 @@ class DashboardDB extends BaseDB {
 
       return activities.map((activity) => ({
         id: activity.id.toString(),
-        content: activity.description || '',
-        userName: activity.user.name,
+        type: activity.type as ActivityType,
+        title: activity.title,
+        description: activity.description || '',
+        userId: activity.userId,
+        metadata: activity.metadata as Record<string, unknown>,
         createdAt: activity.createdAt
       }))
     } catch (err) {
@@ -35,38 +39,202 @@ class DashboardDB extends BaseDB {
     }
   }
 
+  // ダッシュボードの統計情報を取得
   async getDashboardStats() {
     try {
+      // ユーザー統計情報の取得
       const [totalUsers, activeUsers, newRegistrations, totalComments] = await Promise.all([
+        // 総ユーザー数
         BaseDB.prisma.user.count(),
+        // アクティブユーザー数（30日以内にログイン）
         BaseDB.prisma.user.count({
           where: {
             lastLoginAt: {
-              gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) // 30日前
+              gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
             }
           }
         }),
+        // 新規登録ユーザー数（今月）
         BaseDB.prisma.user.count({
           where: {
             createdAt: {
-              gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1) // 今月の1日
+              gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
             }
           }
         }),
+        // 今月のコメント数
         BaseDB.prisma.comment.count({
           where: {
             createdAt: {
-              gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1) // 今月の1日
+              gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
             }
           }
         })
       ])
 
+      // 管理者統計情報の取得
+      const [eventManagementCount, userManagementCount, systemSettingsCount] = await Promise.all([
+        // イベント管理関連の活動数
+        BaseDB.prisma.activity.count({
+          where: {
+            type: {
+              in: ['ADMIN_EVENT_CREATE', 'ADMIN_EVENT_UPDATE', 'ADMIN_EVENT_DELETE']
+            },
+            createdAt: {
+              gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+            }
+          }
+        }),
+        // ユーザー管理関連の活動数
+        BaseDB.prisma.activity.count({
+          where: {
+            type: {
+              in: ['ADMIN_USER_CREATE', 'ADMIN_USER_UPDATE', 'ADMIN_USER_DELETE']
+            },
+            createdAt: {
+              gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+            }
+          }
+        }),
+        // システム設定関連の活動数
+        BaseDB.prisma.activity.count({
+          where: {
+            type: {
+              in: ['ADMIN_SYSTEM_UPDATE', 'ADMIN_ROLE_UPDATE']
+            },
+            createdAt: {
+              gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+            }
+          }
+        })
+      ])
+
+      // 前月の統計情報を取得してトレンドを計算
+      const [prevEventManagementCount, prevUserManagementCount, prevSystemSettingsCount] =
+        await Promise.all([
+          BaseDB.prisma.activity.count({
+            where: {
+              type: {
+                in: ['ADMIN_EVENT_CREATE', 'ADMIN_EVENT_UPDATE', 'ADMIN_EVENT_DELETE']
+              },
+              createdAt: {
+                gte: new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1),
+                lt: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+              }
+            }
+          }),
+          BaseDB.prisma.activity.count({
+            where: {
+              type: {
+                in: ['ADMIN_USER_CREATE', 'ADMIN_USER_UPDATE', 'ADMIN_USER_DELETE']
+              },
+              createdAt: {
+                gte: new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1),
+                lt: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+              }
+            }
+          }),
+          BaseDB.prisma.activity.count({
+            where: {
+              type: {
+                in: ['ADMIN_SYSTEM_UPDATE', 'ADMIN_ROLE_UPDATE']
+              },
+              createdAt: {
+                gte: new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1),
+                lt: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+              }
+            }
+          })
+        ])
+
+      // 最近の活動を取得
+      const [recentAdminActivities, recentUserActivities] = await Promise.all([
+        // 管理者の最近の活動
+        BaseDB.prisma.activity.findMany({
+          where: {
+            type: {
+              startsWith: 'ADMIN_'
+            }
+          },
+          orderBy: {
+            createdAt: 'desc'
+          },
+          take: 10,
+          include: {
+            user: {
+              select: {
+                name: true
+              }
+            }
+          }
+        }),
+        // ユーザーの最近の活動
+        BaseDB.prisma.activity.findMany({
+          where: {
+            type: {
+              startsWith: 'USER_'
+            }
+          },
+          orderBy: {
+            createdAt: 'desc'
+          },
+          take: 10,
+          include: {
+            user: {
+              select: {
+                name: true
+              }
+            }
+          }
+        })
+      ])
+
+      // トレンドの計算
+      const calculateTrend = (current: number, previous: number): string => {
+        if (previous === 0) return current > 0 ? '+100%' : '0%'
+        const change = ((current - previous) / previous) * 100
+        return `${change >= 0 ? '+' : ''}${Math.round(change)}%`
+      }
+
       return {
-        totalUsers,
-        activeUsers,
-        newRegistrations,
-        totalComments
+        userStats: {
+          totalUsers,
+          activeUsers,
+          newRegistrations,
+          totalComments
+        },
+        adminStats: {
+          eventManagement: {
+            count: eventManagementCount,
+            trend: calculateTrend(eventManagementCount, prevEventManagementCount)
+          },
+          userManagement: {
+            count: userManagementCount,
+            trend: calculateTrend(userManagementCount, prevUserManagementCount)
+          },
+          systemSettings: {
+            count: systemSettingsCount,
+            trend: calculateTrend(systemSettingsCount, prevSystemSettingsCount)
+          }
+        },
+        recentAdminActivities: recentAdminActivities.map((activity) => ({
+          id: activity.id.toString(),
+          type: activity.type as ActivityType,
+          title: activity.title,
+          description: activity.description || '',
+          userId: activity.userId,
+          metadata: activity.metadata as Record<string, unknown>,
+          createdAt: activity.createdAt
+        })),
+        recentUserActivities: recentUserActivities.map((activity) => ({
+          id: activity.id.toString(),
+          type: activity.type as ActivityType,
+          title: activity.title,
+          description: activity.description || '',
+          userId: activity.userId,
+          metadata: activity.metadata as Record<string, unknown>,
+          createdAt: activity.createdAt
+        }))
       }
     } catch (err) {
       console.error('ダッシュボード統計の取得に失敗しました:', err)

@@ -135,6 +135,7 @@ class CommentDB extends BaseDB {
       })*/
       await Activity.logUserComment({
         userId: data.creatorId,
+        userName: comment.creator.name,
         commentContent: data.content,
         commentId: comment.id,
         eventId: data.eventId,

@@ -42,6 +42,7 @@ export interface CreateActivityData {
 // コメント投稿時のアクティビティデータ型
 export interface UserCommentActivityData {
   userId: number
+  userName: string
   commentContent: string
   commentId: number
   eventId: number

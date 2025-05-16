@@ -1,89 +1,13 @@
+import config from '@/config/config.json'
 import AdminDashboardFetch from '@/fetch/admin/dashboard'
-import type { UserActivity, UserStats } from '@/types/dashboard'
+import type { AdminStats, RecentActivity, UserStats } from '@/types/dashboard'
 import { useEffect, useState } from 'react'
-
-interface AdminStats {
-  eventManagement: {
-    count: number
-    trend: string
-  }
-  userManagement: {
-    count: number
-    trend: string
-  }
-  systemSettings: {
-    count: number
-    trend: string
-  }
-}
-
-interface AdminActivity {
-  id: string
-  type: 'event_management' | 'user_management' | 'system_settings'
-  title: string
-  adminName: string
-  createdAt: Date
-}
 
 export default function Dashboard() {
   const [userStats, setUserStats] = useState<UserStats | null>(null)
-  const [adminStats, setAdminStats] = useState<AdminStats>({
-    eventManagement: {
-      count: 15,
-      trend: '+5'
-    },
-    userManagement: {
-      count: 23,
-      trend: '+8'
-    },
-    systemSettings: {
-      count: 3,
-      trend: '+1'
-    }
-  })
-  const [recentAdminActivities, setRecentAdminActivities] = useState<AdminActivity[]>([
-    {
-      id: '1',
-      type: 'event_management',
-      title: '2024年度新入生歓迎会の作成',
-      adminName: '山田太郎',
-      createdAt: new Date('2024-03-15T14:30:00')
-    },
-    {
-      id: '2',
-      type: 'user_management',
-      title: 'ユーザ権限の更新',
-      adminName: '佐藤花子',
-      createdAt: new Date('2024-03-15T13:15:00')
-    },
-    {
-      id: '3',
-      type: 'system_settings',
-      title: 'メール通知設定の更新',
-      adminName: '山田太郎',
-      createdAt: new Date('2024-03-15T10:00:00')
-    }
-  ])
-  const [recentUserActivities, setRecentUserActivities] = useState<UserActivity[]>([
-    {
-      id: '1',
-      content: '新入生歓迎会の詳細について質問があります',
-      userName: '鈴木一郎',
-      createdAt: new Date('2024-03-15T15:45:00')
-    },
-    {
-      id: '2',
-      content: '部活動説明会の日程を確認しました',
-      userName: '田中誠',
-      createdAt: new Date('2024-03-15T15:30:00')
-    },
-    {
-      id: '3',
-      content: '新入生歓迎会に参加します！',
-      userName: '佐々木美咲',
-      createdAt: new Date('2024-03-15T15:00:00')
-    }
-  ])
+  const [adminStats, setAdminStats] = useState<AdminStats | null>(null)
+  const [recentAdminActivities, setRecentAdminActivities] = useState<RecentActivity[]>([])
+  const [recentUserActivities, setRecentUserActivities] = useState<RecentActivity[]>([])
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -94,6 +18,13 @@ export default function Dashboard() {
         }
         const data = await response.json()
         setUserStats(data.userStats)
+        setAdminStats(data.adminStats)
+        setRecentAdminActivities(
+          data.recentActivities.admin.slice(0, config.dashboard.recentActivities.admin)
+        )
+        setRecentUserActivities(
+          data.recentActivities.user.slice(0, config.dashboard.recentActivities.user)
+        )
       } catch (error) {
         console.error('ダッシュボードデータの取得に失敗しました:', error)
       }
@@ -102,8 +33,48 @@ export default function Dashboard() {
     fetchDashboardData()
   }, [])
 
-  if (!userStats) {
+  if (!userStats || !adminStats) {
     return <div className="p-4">データを読み込み中...</div>
+  }
+
+  // 活動タイプに応じたラベルを取得
+  const getActivityTypeLabel = (type: string): string => {
+    switch (type) {
+      case 'ADMIN_EVENT_CREATE':
+      case 'ADMIN_EVENT_UPDATE':
+      case 'ADMIN_EVENT_DELETE':
+        return 'イベント管理'
+      case 'ADMIN_USER_CREATE':
+      case 'ADMIN_USER_UPDATE':
+      case 'ADMIN_USER_DELETE':
+        return 'ユーザ管理'
+      case 'ADMIN_SYSTEM_UPDATE':
+      case 'ADMIN_ROLE_UPDATE':
+        return 'システム設定'
+      case 'USER_COMMENT_CREATE':
+      case 'USER_COMMENT_UPDATE':
+      case 'USER_COMMENT_DELETE':
+        return 'コメント'
+      case 'USER_PROFILE_UPDATE':
+        return 'プロフィール'
+      case 'USER_EVENT_JOIN':
+        return 'イベント参加'
+      case 'USER_EVENT_CANCEL':
+        return 'イベントキャンセル'
+      default:
+        return 'その他'
+    }
+  }
+
+  // 活動タイプに応じた色を取得
+  const getActivityTypeColor = (type: string): string => {
+    if (type.startsWith('ADMIN_EVENT_')) return 'blue'
+    if (type.startsWith('ADMIN_USER_')) return 'green'
+    if (type.startsWith('ADMIN_SYSTEM_') || type.startsWith('ADMIN_ROLE_')) return 'purple'
+    if (type.startsWith('USER_COMMENT_')) return 'orange'
+    if (type.startsWith('USER_PROFILE_')) return 'indigo'
+    if (type.startsWith('USER_EVENT_')) return 'pink'
+    return 'gray'
   }
 
   return (
@@ -273,52 +244,72 @@ export default function Dashboard() {
       </div>
 
       {/* 最近の活動セクション */}
-      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-        {/* 管理者の最近の活動 */}
-        <div className="rounded-lg bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-xl font-bold text-gray-900">管理者の最近の活動</h2>
-          <div className="space-y-4">
-            {recentAdminActivities.map((activity) => (
-              <div key={activity.id} className="border-b border-gray-200 pb-4">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <span className="inline-block rounded bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800">
-                      {activity.type === 'event_management' && 'イベント管理'}
-                      {activity.type === 'user_management' && 'ユーザ管理'}
-                      {activity.type === 'system_settings' && 'システム設定'}
+      <div className="mb-8">
+        <h2 className="mb-4 text-xl font-bold text-gray-900">最近の活動</h2>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {/* 管理者の最近の活動 */}
+          <div className="rounded-lg bg-white p-6 shadow-sm">
+            <h3 className="mb-4 text-lg font-semibold text-gray-900">管理者の最近の活動</h3>
+            <div className="space-y-4">
+              {recentAdminActivities.map((activity) => (
+                <div key={activity.id} className="border-b border-gray-200 pb-4 last:border-0">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <span
+                        className={`inline-block rounded px-2 py-1 text-xs font-semibold text-${getActivityTypeColor(
+                          activity.type
+                        )}-800 bg-${getActivityTypeColor(activity.type)}-100`}
+                      >
+                        {getActivityTypeLabel(activity.type)}
+                      </span>
+                      <h4 className="mt-1 font-medium text-gray-900">{activity.title}</h4>
+                      <p className="text-sm text-gray-600">{activity.description}</p>
+                    </div>
+                    <span className="text-sm text-gray-500">
+                      {new Date(activity.createdAt).toLocaleString('ja-JP')}
                     </span>
-                    <h4 className="mt-1 font-medium text-gray-900">{activity.title}</h4>
-                    <p className="text-sm text-gray-600">{activity.adminName}</p>
                   </div>
-                  <span className="text-sm text-gray-500">
-                    {activity.createdAt.toLocaleString('ja-JP')}
-                  </span>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* ユーザの最近の活動 */}
-        <div className="rounded-lg bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-xl font-bold text-gray-900">ユーザの最近の活動</h2>
-          <div className="space-y-4">
-            {recentUserActivities.map((activity) => (
-              <div key={activity.id} className="border-b border-gray-200 pb-4">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <span className="inline-block rounded bg-green-100 px-2 py-1 text-xs font-semibold text-green-800">
-                      コメント
+          {/* ユーザーの最近の活動 */}
+          <div className="rounded-lg bg-white p-6 shadow-sm">
+            <h3 className="mb-4 text-lg font-semibold text-gray-900">ユーザーの最近の活動</h3>
+            <div className="space-y-4">
+              {recentUserActivities.map((activity) => (
+                <div key={activity.id} className="border-b border-gray-200 pb-4 last:border-0">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <span
+                        className={`inline-block rounded px-2 py-1 text-xs font-semibold text-${getActivityTypeColor(
+                          activity.type
+                        )}-800 bg-${getActivityTypeColor(activity.type)}-100`}
+                      >
+                        {getActivityTypeLabel(activity.type)}
+                      </span>
+                      {activity.type.startsWith('USER_COMMENT_') ? (
+                        <>
+                          <p className="mt-1 text-sm text-gray-600">{activity.description}</p>
+                          <p className="text-sm font-medium text-gray-900">
+                            投稿者: {activity.metadata?.userName || '不明'}
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <h4 className="mt-1 font-medium text-gray-900">{activity.title}</h4>
+                          <p className="text-sm text-gray-600">{activity.description}</p>
+                        </>
+                      )}
+                    </div>
+                    <span className="text-sm text-gray-500">
+                      {new Date(activity.createdAt).toLocaleString('ja-JP')}
                     </span>
-                    <h4 className="mt-1 font-medium text-gray-900">{activity.content}</h4>
-                    <p className="text-sm text-gray-600">{activity.userName}</p>
                   </div>
-                  <span className="text-sm text-gray-500">
-                    {activity.createdAt.toLocaleString('ja-JP')}
-                  </span>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>

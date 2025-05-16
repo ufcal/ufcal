@@ -2,7 +2,7 @@ import { DashboardDB } from '@/server/db'
 import type { DashboardResponse } from '@/types/dashboard'
 import type { APIRoute } from 'astro'
 
-export const GET: APIRoute = async ({ request }) => {
+export const GET: APIRoute = async () => {
   try {
     // ダッシュボードデータの取得
     const stats = await DashboardDB.getDashboardStats()
@@ -32,8 +32,7 @@ export const GET: APIRoute = async ({ request }) => {
     return new Response(JSON.stringify(response), {
       status: 200,
       headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'max-age=300' // 5分間のキャッシュ
+        'Content-Type': 'application/json'
       }
     })
   } catch (error) {
