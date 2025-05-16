@@ -1,5 +1,6 @@
 import type { ActivityType } from './activity'
 
+// ユーザー統計情報
 export interface UserStats {
   totalUsers: number
   activeUsers: number
@@ -7,6 +8,7 @@ export interface UserStats {
   totalComments: number
 }
 
+// 管理者統計情報
 export interface AdminStats {
   eventManagement: {
     count: number
@@ -22,6 +24,7 @@ export interface AdminStats {
   }
 }
 
+// 最近の活動情報
 export interface RecentActivity {
   id: string
   type: ActivityType
@@ -32,6 +35,7 @@ export interface RecentActivity {
   createdAt: Date
 }
 
+// ダッシュボードAPIのレスポンス型
 export interface DashboardResponse {
   userStats: UserStats
   adminStats: AdminStats
@@ -40,14 +44,4 @@ export interface DashboardResponse {
     user: RecentActivity[]
   }
   timestamp: string
-}
-
-export interface DashboardErrorResponse {
-  error: string
-  code:
-    | 'DASHBOARD_DATA_NOT_FOUND'
-    | 'UNAUTHORIZED'
-    | 'RATE_LIMIT_EXCEEDED'
-    | 'INTERNAL_SERVER_ERROR'
-  details?: string
 }
