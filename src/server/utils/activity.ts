@@ -1,11 +1,21 @@
 import { ActivityDB } from '@/server/db'
-import type { ActivityLog, ActivityType, CreateActivityData } from '@/types/activity'
-import type { IUser } from '@/types/user'
+import type {
+  ActivityLog,
+  ActivityType,
+  CreateActivityData,
+  UserCommentActivityData
+} from '@/types/activity'
 
 export class Activity {
   public static async logActivity(data: CreateActivityData): Promise<boolean> {
+    if (!data.userId) {
+      console.error('userId is required')
+      return false
+    }
+
     const log: ActivityLog = {
       type: data.type,
+      title: data.title,
       description: data.description ?? '',
       userId: data.userId,
       metadata: data.metadata ?? {}
@@ -21,14 +31,15 @@ export class Activity {
 
   // 管理者用ヘルパーメソッド
   public static async logAdminEventCreate(
-    admin: IUser,
-    eventId: string,
+    userId: number,
+    eventId: number,
     eventTitle: string
   ): Promise<boolean> {
     return Activity.logActivity({
       type: 'ADMIN_EVENT_CREATE',
+      title: 'イベント作成',
       description: `イベント「${eventTitle}」を作成しました`,
-      user: admin,
+      userId,
       metadata: {
         eventId,
         eventTitle
@@ -37,14 +48,15 @@ export class Activity {
   }
 
   public static async logAdminUserUpdate(
-    admin: IUser,
+    userId: number,
     userName: string,
     updatedFields: Record<string, unknown>
   ): Promise<boolean> {
     return Activity.logActivity({
       type: 'ADMIN_USER_UPDATE',
+      title: 'ユーザー情報更新',
       description: `ユーザー「${userName}」の情報を更新しました`,
-      user: admin,
+      userId,
       metadata: {
         updatedFields
       }
@@ -52,32 +64,29 @@ export class Activity {
   }
 
   // ユーザー用ヘルパーメソッド
-  public static async logUserComment(
-    user: IUser,
-    commentId: string,
-    eventId: string,
-    commentContent: string
-  ): Promise<boolean> {
+  public static async logUserComment(data: UserCommentActivityData): Promise<boolean> {
     return Activity.logActivity({
       type: 'USER_COMMENT_CREATE',
-      description: 'イベントにコメントを投稿しました',
-      user,
+      title: 'コメント投稿',
+      description: data.commentContent,
+      userId: data.userId,
       metadata: {
-        commentId,
-        eventId,
-        commentContent
+        commentId: data.commentId,
+        eventId: data.eventId,
+        eventTitle: data.eventTitle
       }
     })
   }
 
   public static async logUserProfileUpdate(
-    user: IUser,
+    userId: number,
     updatedFields: Record<string, unknown>
   ): Promise<boolean> {
     return Activity.logActivity({
       type: 'USER_PROFILE_UPDATE',
+      title: 'プロフィール更新',
       description: 'プロフィール情報を更新しました',
-      user,
+      userId,
       metadata: {
         updatedFields
       }

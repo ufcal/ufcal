@@ -1,5 +1,5 @@
 import AdminDashboardFetch from '@/fetch/admin/dashboard'
-import type { UserStats } from '@/types/dashboard'
+import type { UserActivity, UserStats } from '@/types/dashboard'
 import { useEffect, useState } from 'react'
 
 interface AdminStats {
@@ -22,13 +22,6 @@ interface AdminActivity {
   type: 'event_management' | 'user_management' | 'system_settings'
   title: string
   adminName: string
-  createdAt: Date
-}
-
-interface UserActivity {
-  id: string
-  content: string
-  userName: string
   createdAt: Date
 }
 
@@ -198,7 +191,7 @@ export default function Dashboard() {
               </div>
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-700">コメント数</h3>
-                <p className="text-2xl font-bold text-orange-600">{userStats.comments}</p>
+                <p className="text-2xl font-bold text-orange-600">{userStats.totalComments}</p>
                 <p className="text-sm text-gray-500">今月</p>
               </div>
             </div>

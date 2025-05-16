@@ -10,5 +10,4 @@ class AdminDashboardFetch {
     }
   }
 }
-
 export default new AdminDashboardFetch()

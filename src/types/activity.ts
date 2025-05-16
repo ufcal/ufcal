@@ -24,15 +24,26 @@ export type ActivityType = AdminActivityType | UserActivityType
 
 export interface ActivityLog {
   type: ActivityType
+  title: string
   description: string
   userId: number
-  metadata: Record<string, unknown>
+  metadata?: Record<string, unknown>
 }
 
 // アクティビティ作成時のデータ型
 export interface CreateActivityData {
   type: ActivityType
+  title: string
   description?: string
   userId: number
   metadata?: Record<string, unknown>
+}
+
+// コメント投稿時のアクティビティデータ型
+export interface UserCommentActivityData {
+  userId: number
+  commentContent: string
+  commentId: number
+  eventId: number
+  eventTitle: string
 }

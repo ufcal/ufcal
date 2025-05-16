@@ -1,3 +1,4 @@
+import { Activity } from '@/server/utils/activity'
 import BaseDB from './base'
 
 interface AddCommentData {
@@ -111,9 +112,35 @@ class CommentDB extends BaseDB {
               name: true,
               avatar: true
             }
+          },
+          event: {
+            select: {
+              title: true
+            }
           }
         }
       })
+
+      // コメント投稿のActivityを作成
+      /*await Activity.logActivity({
+        type: 'USER_COMMENT_CREATE',
+        title: 'コメント投稿',
+        description: data.content,
+        userId: data.creatorId,
+        metadata: {
+          commentId: comment.id,
+          eventId: data.eventId,
+          eventTitle: comment.event.title
+        }
+      })*/
+      await Activity.logUserComment({
+        userId: data.creatorId,
+        commentContent: data.content,
+        commentId: comment.id,
+        eventId: data.eventId,
+        eventTitle: comment.event.title
+      })
+
       return comment
     } catch (err) {
       console.error('コメントの登録に失敗しました:', err)
@@ -132,9 +159,28 @@ class CommentDB extends BaseDB {
               name: true,
               avatar: true
             }
+          },
+          event: {
+            select: {
+              title: true
+            }
           }
         }
       })
+
+      // コメント削除のActivityを作成
+      await Activity.logActivity({
+        type: 'USER_COMMENT_DELETE',
+        title: 'コメント削除',
+        description: comment.content,
+        userId: comment.creatorId,
+        metadata: {
+          commentId: comment.id,
+          eventId: comment.eventId,
+          eventTitle: comment.event.title
+        }
+      })
+
       return comment
     } catch (err) {
       console.error('コメントの削除に失敗しました:', err)
