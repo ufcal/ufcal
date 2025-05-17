@@ -264,8 +264,7 @@ export default function Dashboard() {
                       >
                         {getActivityTypeLabel(activity.type)}
                       </span>
-                      <h4 className="mt-1 font-medium text-gray-900">{activity.title}</h4>
-                      <p className="text-sm text-gray-600">{activity.description}</p>
+                      <p className="mt-1 text-sm text-gray-600">{activity.description}</p>
                     </div>
                     <span className="text-sm text-gray-500">
                       {new Date(activity.createdAt).toLocaleString('ja-JP')}
