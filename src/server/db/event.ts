@@ -1,3 +1,4 @@
+import { Activity } from '@/server/utils/activity'
 import type { Event } from '@prisma/client'
 import BaseDB from './base'
 
@@ -149,6 +150,13 @@ class EventDB extends BaseDB {
           }
         }
       })
+
+      // イベント作成のActivityを作成
+      await Activity.logEventCreate(data.creatorId, {
+        eventId: event.id,
+        eventTitle: event.title
+      })
+
       return event
     } catch (err) {
       console.error(err)
@@ -162,6 +170,14 @@ class EventDB extends BaseDB {
         where: { id },
         data: data
       })
+
+      // イベント更新のActivityを作成
+      await Activity.logEventUpdate(event.creatorId, {
+        eventId: event.id,
+        eventTitle: event.title,
+        updatedFields: data
+      })
+
       return event
     } catch (err) {
       console.error(err)
@@ -174,6 +190,13 @@ class EventDB extends BaseDB {
       const event = await BaseDB.prisma.event.delete({
         where: { id }
       })
+
+      // イベント削除のActivityを作成
+      await Activity.logEventDelete(event.creatorId, {
+        eventId: event.id,
+        eventTitle: event.title
+      })
+
       return event
     } catch (err) {
       console.error(err)

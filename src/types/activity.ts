@@ -50,3 +50,10 @@ export interface UserCommentActivityData {
   eventId: number
   eventTitle: string
 }
+
+// イベント操作時のアクティビティデータ型
+export interface EventActivityData {
+  eventId: number
+  eventTitle: string
+  updatedFields: Record<string, unknown>
+}

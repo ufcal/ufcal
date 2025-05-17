@@ -2,6 +2,7 @@ import ActivityDB from '@/server/db/activity'
 import type {
   ActivityLog,
   ActivityType,
+  EventActivityData,
   //CreateActivityData,
   UserCommentActivityData
 } from '@/types/activity'
@@ -118,5 +119,46 @@ export class Activity {
 
   public static async getUserActivities(limit: number = 10): Promise<any[]> {
     return ActivityDB.getUserActivities(limit)
+  }
+
+  // イベント操作のログメソッド
+  public static async logEventCreate(userId: number, data: EventActivityData): Promise<boolean> {
+    return Activity.logActivity({
+      type: 'ADMIN_EVENT_CREATE',
+      title: 'イベント作成',
+      description: `イベント「${data.eventTitle}」を作成しました`,
+      userId,
+      metadata: {
+        eventId: data.eventId,
+        eventTitle: data.eventTitle
+      }
+    })
+  }
+
+  public static async logEventUpdate(userId: number, data: EventActivityData): Promise<boolean> {
+    return Activity.logActivity({
+      type: 'ADMIN_EVENT_UPDATE',
+      title: 'イベント更新',
+      description: `イベント「${data.eventTitle}」を更新しました`,
+      userId,
+      metadata: {
+        eventId: data.eventId,
+        eventTitle: data.eventTitle,
+        updatedFields: data.updatedFields
+      }
+    })
+  }
+
+  public static async logEventDelete(userId: number, data: EventActivityData): Promise<boolean> {
+    return Activity.logActivity({
+      type: 'ADMIN_EVENT_DELETE',
+      title: 'イベント削除',
+      description: `イベント「${data.eventTitle}」を削除しました`,
+      userId,
+      metadata: {
+        eventId: data.eventId,
+        eventTitle: data.eventTitle
+      }
+    })
   }
 }
