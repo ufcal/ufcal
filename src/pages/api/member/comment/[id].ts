@@ -27,7 +27,10 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
     }
 
     // コメントの作成者または管理者のみが削除可能
-    if (comment.creatorId !== locals.user.id && locals.user.role !== 'ADMIN') {
+    if (
+      comment.creatorId !== locals.user.id &&
+      !['ADMIN', 'MODERATOR'].includes(locals.user.role)
+    ) {
       return new Response(JSON.stringify({ message: 'このコメントを削除する権限がありません' }), {
         status: 403,
         headers: {
@@ -52,8 +55,9 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
         'Content-Type': 'application/json'
       }
     })
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : '予期せぬエラーが発生しました'
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json'
