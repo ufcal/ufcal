@@ -366,7 +366,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
           )}
 
           {/* コメントセクション */}
-          {commentsEnabled && (
+          {commentsEnabled && (userAuth || comments.length > 0) && (
             <div className="mt-10 space-y-6">
               <h3 className="text-lg font-semibold text-gray-900">コメント</h3>
 
