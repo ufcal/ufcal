@@ -105,7 +105,7 @@ export default function Dashboard() {
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-700">総ユーザ数</h3>
                 <p className="text-2xl font-bold text-blue-600">{userStats.totalUsers}</p>
-                <p className="text-sm text-gray-500">前月比 +12%</p>
+                <p className="text-gray-500">前月比 +12%</p>
               </div>
             </div>
           </div>
@@ -125,7 +125,7 @@ export default function Dashboard() {
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-700">アクティブユーザ</h3>
                 <p className="text-2xl font-bold text-green-600">{userStats.activeUsers}</p>
-                <p className="text-sm text-gray-500">直近30日間</p>
+                <p className="text-gray-500">直近30日間</p>
               </div>
             </div>
           </div>
@@ -145,7 +145,7 @@ export default function Dashboard() {
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-700">新規登録</h3>
                 <p className="text-2xl font-bold text-purple-600">{userStats.newRegistrations}</p>
-                <p className="text-sm text-gray-500">今月</p>
+                <p className="text-gray-500">今月</p>
               </div>
             </div>
           </div>
@@ -165,7 +165,7 @@ export default function Dashboard() {
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-700">コメント数</h3>
                 <p className="text-2xl font-bold text-orange-600">{userStats.totalComments}</p>
-                <p className="text-sm text-gray-500">今月</p>
+                <p className="text-gray-500">今月</p>
               </div>
             </div>
           </div>
@@ -194,7 +194,7 @@ export default function Dashboard() {
                 <p className="text-2xl font-bold text-blue-600">
                   {adminStats.eventManagement.count}
                 </p>
-                <p className="text-sm text-gray-500">前月比 {adminStats.eventManagement.trend}</p>
+                <p className="text-gray-500">前月比 {adminStats.eventManagement.trend}</p>
               </div>
             </div>
           </div>
@@ -216,7 +216,7 @@ export default function Dashboard() {
                 <p className="text-2xl font-bold text-green-600">
                   {adminStats.userManagement.count}
                 </p>
-                <p className="text-sm text-gray-500">前月比 {adminStats.userManagement.trend}</p>
+                <p className="text-gray-500">前月比 {adminStats.userManagement.trend}</p>
               </div>
             </div>
           </div>
@@ -238,7 +238,7 @@ export default function Dashboard() {
                 <p className="text-2xl font-bold text-purple-600">
                   {adminStats.systemSettings.count}
                 </p>
-                <p className="text-sm text-gray-500">前月比 {adminStats.systemSettings.trend}</p>
+                <p className="text-gray-500">前月比 {adminStats.systemSettings.trend}</p>
               </div>
             </div>
           </div>
@@ -257,16 +257,19 @@ export default function Dashboard() {
                 <div key={activity.id} className="border-b border-gray-200 pb-4 last:border-0">
                   <div className="flex items-start justify-between">
                     <div>
-                      <span
-                        className={`inline-block rounded px-2 py-1 text-xs font-semibold text-${getActivityTypeColor(
-                          activity.type
-                        )}-800 bg-${getActivityTypeColor(activity.type)}-100`}
-                      >
-                        {getActivityTypeLabel(activity.type)}
-                      </span>
-                      <p className="mt-1 text-sm text-gray-600">{activity.description}</p>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`inline-block rounded px-2 py-1 text-sm font-semibold text-${getActivityTypeColor(
+                            activity.type
+                          )}-800 bg-${getActivityTypeColor(activity.type)}-100`}
+                        >
+                          {getActivityTypeLabel(activity.type)}
+                        </span>
+                        <span className="text-gray-500">{activity.userName || '不明'}</span>
+                      </div>
+                      <p className="mt-1 text-gray-600">{activity.description}</p>
                     </div>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-gray-500">
                       {new Date(activity.createdAt).toLocaleString('ja-JP')}
                     </span>
                   </div>
@@ -283,28 +286,30 @@ export default function Dashboard() {
                 <div key={activity.id} className="border-b border-gray-200 pb-4 last:border-0">
                   <div className="flex items-start justify-between">
                     <div>
-                      <span
-                        className={`inline-block rounded px-2 py-1 text-xs font-semibold text-${getActivityTypeColor(
-                          activity.type
-                        )}-800 bg-${getActivityTypeColor(activity.type)}-100`}
-                      >
-                        {getActivityTypeLabel(activity.type)}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`inline-block rounded px-2 py-1 text-sm font-semibold text-${getActivityTypeColor(
+                            activity.type
+                          )}-800 bg-${getActivityTypeColor(activity.type)}-100`}
+                        >
+                          {getActivityTypeLabel(activity.type)}
+                        </span>
+                        <span className="text-gray-500">{activity.userName || '不明'}</span>
+                      </div>
                       {activity.type.startsWith('USER_COMMENT_') ? (
                         <>
-                          <p className="mt-1 text-sm text-gray-600">{activity.description}</p>
-                          <p className="text-sm font-medium text-gray-900">
+                          <p className="mt-1 text-gray-600">{activity.description}</p>
+                          <p className="font-medium text-gray-900">
                             投稿者: {activity.metadata?.creatorName || '不明'}
                           </p>
                         </>
                       ) : (
                         <>
-                          <h4 className="mt-1 font-medium text-gray-900">{activity.title}</h4>
-                          <p className="text-sm text-gray-600">{activity.description}</p>
+                          <p className="mt-1 text-gray-600">{activity.description}</p>
                         </>
                       )}
                     </div>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-gray-500">
                       {new Date(activity.createdAt).toLocaleString('ja-JP')}
                     </span>
                   </div>

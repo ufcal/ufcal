@@ -19,6 +19,7 @@ export const GET: APIRoute = async () => {
       )
     }
 
+    console.log(stats.recentUserActivities)
     const response: DashboardResponse = {
       userStats: stats.userStats,
       adminStats: stats.adminStats,

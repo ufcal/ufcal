@@ -3,7 +3,7 @@ import type { AdminStats, RecentActivity, UserStats } from '@/types/dashboard'
 import BaseDB from './base'
 
 class DashboardDB extends BaseDB {
-  async getRecentUserActivities(limit: number = 10): Promise<RecentActivity[]> {
+  /*async getRecentUserActivities(limit: number = 10): Promise<RecentActivity[]> {
     try {
       const activities = await BaseDB.prisma.activity.findMany({
         where: {
@@ -30,6 +30,7 @@ class DashboardDB extends BaseDB {
         title: activity.title,
         description: activity.description || '',
         userId: activity.userId,
+        userName: activity.user.name,
         metadata: activity.metadata as Record<string, unknown>,
         createdAt: activity.createdAt
       }))
@@ -37,7 +38,7 @@ class DashboardDB extends BaseDB {
       console.error('ユーザ活動の取得に失敗しました:', err)
       return []
     }
-  }
+  }*/
 
   // ダッシュボードの統計情報を取得
   async getDashboardStats() {
@@ -223,6 +224,7 @@ class DashboardDB extends BaseDB {
           title: activity.title,
           description: activity.description || '',
           userId: activity.userId,
+          userName: activity.user.name,
           metadata: activity.metadata as Record<string, unknown>,
           createdAt: activity.createdAt
         })),
@@ -232,6 +234,7 @@ class DashboardDB extends BaseDB {
           title: activity.title,
           description: activity.description || '',
           userId: activity.userId,
+          userName: activity.user.name,
           metadata: activity.metadata as Record<string, unknown>,
           createdAt: activity.createdAt
         }))

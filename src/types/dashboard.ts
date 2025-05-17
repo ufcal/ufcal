@@ -31,7 +31,8 @@ export interface RecentActivity {
   title: string
   description: string
   userId: number
-  metadata?: Record<string, unknown>
+  userName: string
+  metadata: Record<string, unknown>
   createdAt: Date
 }
 
