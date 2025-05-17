@@ -34,16 +34,6 @@ class ActivityDB extends BaseDB {
       })
 
       return activities
-      /*return activities.map((activity) => ({
-        id: activity.id.toString(),
-        type: activity.type as any,
-        title: activity.title,
-        description: activity.description || '',
-        userId: activity.userId.toString(),
-        userName: activity.user.name,
-        createdAt: activity.createdAt,
-        metadata: activity.metadata as Record<string, unknown>
-      }))*/
     } catch (err) {
       console.error(err)
       return []
@@ -66,17 +56,6 @@ class ActivityDB extends BaseDB {
       })
 
       return activities
-      /*
-      return activities.map((activity) => ({
-        id: activity.id.toString(),
-        type: activity.type as any,
-        title: activity.title,
-        description: activity.description || '',
-        userId: activity.userId.toString(),
-        userName: activity.user.name,
-        createdAt: activity.createdAt,
-        metadata: activity.metadata as Record<string, unknown>
-      }))*/
     } catch (err) {
       console.error(err)
       return []
@@ -99,17 +78,6 @@ class ActivityDB extends BaseDB {
       })
 
       return activities
-      /*
-      return activities.map((activity) => ({
-        id: activity.id.toString(),
-        type: activity.type as any,
-        title: activity.title,
-        description: activity.description || '',
-        userId: activity.userId.toString(),
-        userName: activity.user.name,
-        createdAt: activity.createdAt,
-        metadata: activity.metadata as Record<string, unknown>
-      }))*/
     } catch (err) {
       console.error(err)
       return []
@@ -133,17 +101,6 @@ class ActivityDB extends BaseDB {
         }
       })
       return activities
-      /*
-      return activities.map((activity) => ({
-        id: activity.id.toString(),
-        type: activity.type as any,
-        title: activity.title,
-        description: activity.description || '',
-        userId: activity.userId.toString(),
-        userName: activity.user.name,
-        createdAt: activity.createdAt,
-        metadata: activity.metadata as Record<string, unknown>
-      }))*/
     } catch (err) {
       console.error(err)
       return []
@@ -168,17 +125,6 @@ class ActivityDB extends BaseDB {
       })
 
       return activities
-      /*
-      return activities.map((activity) => ({
-        id: activity.id.toString(),
-        type: activity.type as any,
-        title: activity.title,
-        description: activity.description || '',
-        userId: activity.userId.toString(),
-        userName: activity.user.name,
-        createdAt: activity.createdAt,
-        metadata: activity.metadata as Record<string, unknown>
-      }))*/
     } catch (err) {
       console.error(err)
       return []

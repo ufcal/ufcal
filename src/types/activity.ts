@@ -26,7 +26,8 @@ export interface ActivityLog {
   type: ActivityType
   title: string
   description: string
-  metadata?: Record<string, unknown>
+  //metadata?: Record<string, unknown>
+  metadata: Record<string, unknown>
   userId: number // アクティビティを実行したユーザ
 }
 
