@@ -403,27 +403,29 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
                 ))}
               </div>
 
-              {/* コメント入力フォーム */}
-              <form onSubmit={handleSubmitComment} className="space-y-3">
-                <div className="rounded-lg border border-gray-200 bg-white p-4">
-                  <textarea
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="コメントを入力..."
-                    className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900"
-                    rows={3}
-                    disabled={isSubmitting}
-                  />
-                  <div className="mt-3 flex justify-end">
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      text="コメントを投稿"
-                      disabled={isSubmitting || !newComment.trim()}
+              {/* コメント入力フォーム - ログインユーザーのみ表示 */}
+              {userAuth && (
+                <form onSubmit={handleSubmitComment} className="space-y-3">
+                  <div className="rounded-lg border border-gray-200 bg-white p-4">
+                    <textarea
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      placeholder="コメントを入力..."
+                      className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900"
+                      rows={3}
+                      disabled={isSubmitting}
                     />
+                    <div className="mt-3 flex justify-end">
+                      <Button
+                        type="submit"
+                        variant="primary"
+                        text="コメントを投稿"
+                        disabled={isSubmitting || !newComment.trim()}
+                      />
+                    </div>
                   </div>
-                </div>
-              </form>
+                </form>
+              )}
             </div>
           )}
 
