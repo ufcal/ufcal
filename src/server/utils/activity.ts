@@ -1,4 +1,4 @@
-import { ActivityDB } from '@/server/db'
+import ActivityDB from '@/server/db/activity'
 import type {
   ActivityLog,
   ActivityType,
