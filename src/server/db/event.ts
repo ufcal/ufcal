@@ -167,6 +167,27 @@ class EventDB extends BaseDB {
 
   async updateEvent(id: number, data: UpdateEventData): Promise<Event | null> {
     try {
+      // 更新前のイベントデータを取得
+      const currentEvent = await BaseDB.prisma.event.findUnique({
+        where: { id }
+      })
+
+      if (!currentEvent) {
+        return null
+      }
+
+      // 変更されたフィールドを特定
+      const updatedFields: Record<string, unknown> = {}
+      if (data.title !== currentEvent.title) updatedFields.title = data.title
+      if (data.start.getTime() !== currentEvent.start.getTime()) updatedFields.start = data.start
+      if (data.end.getTime() !== currentEvent.end.getTime()) updatedFields.end = data.end
+      if (data.isAllDay !== currentEvent.isAllDay) updatedFields.isAllDay = data.isAllDay
+      if (data.categoryId !== currentEvent.categoryId) updatedFields.categoryId = data.categoryId
+      if (data.description !== currentEvent.description)
+        updatedFields.description = data.description
+      if (data.url !== currentEvent.url) updatedFields.url = data.url
+
+      // イベントを更新
       const event = await BaseDB.prisma.event.update({
         where: { id },
         data: data
@@ -176,7 +197,8 @@ class EventDB extends BaseDB {
       await Activity.logEventUpdate(event.creatorId, {
         eventId: event.id,
         eventTitle: event.title,
-        updatedFields: data
+        eventDate: event.start,
+        updatedFields
       })
 
       return event
@@ -188,17 +210,40 @@ class EventDB extends BaseDB {
 
   async deleteEvent(id: number): Promise<Event | null> {
     try {
-      const event = await BaseDB.prisma.event.delete({
+      // イベントを取得
+      const event = await BaseDB.prisma.event.findUnique({
+        where: { id },
+        include: {
+          Comments: true
+        }
+      })
+
+      if (!event) {
+        return null
+      }
+
+      // 関連するコメントを削除
+      if (event.Comments.length > 0) {
+        await BaseDB.prisma.comment.deleteMany({
+          where: {
+            eventId: id
+          }
+        })
+      }
+
+      // イベントを削除
+      const deletedEvent = await BaseDB.prisma.event.delete({
         where: { id }
       })
 
       // イベント削除のActivityを作成
       await Activity.logEventDelete(event.creatorId, {
         eventId: event.id,
-        eventTitle: event.title
+        eventTitle: event.title,
+        eventDate: event.start
       })
 
-      return event
+      return deletedEvent
     } catch (err) {
       console.error(err)
       return null

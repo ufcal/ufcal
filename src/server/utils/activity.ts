@@ -113,10 +113,11 @@ export class Activity {
   }
 
   public static async logEventUpdate(userId: number, data: EventActivityData): Promise<boolean> {
+    const eventDate = new Date(data.eventDate).toLocaleDateString('ja-JP')
     return Activity.logActivity({
       type: 'ADMIN_EVENT_UPDATE',
       title: 'イベント更新',
-      description: `イベント「${data.eventTitle}」を更新しました`,
+      description: `イベント「${data.eventTitle}」(${eventDate})を更新しました`,
       userId,
       metadata: {
         eventId: data.eventId,
@@ -127,10 +128,11 @@ export class Activity {
   }
 
   public static async logEventDelete(userId: number, data: EventActivityData): Promise<boolean> {
+    const eventDate = new Date(data.eventDate).toLocaleDateString('ja-JP')
     return Activity.logActivity({
       type: 'ADMIN_EVENT_DELETE',
       title: 'イベント削除',
-      description: `イベント「${data.eventTitle}」を削除しました`,
+      description: `イベント「${data.eventTitle}」(${eventDate})を削除しました`,
       userId,
       metadata: {
         eventId: data.eventId,
