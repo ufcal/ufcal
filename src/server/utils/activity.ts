@@ -107,7 +107,8 @@ export class Activity {
       userId,
       metadata: {
         eventId: data.eventId,
-        eventTitle: data.eventTitle
+        eventTitle: data.eventTitle,
+        updatedFields: data.updatedFields
       }
     })
   }

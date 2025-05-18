@@ -151,11 +151,23 @@ class EventDB extends BaseDB {
         }
       })
 
+      // イベント作成時の初期値を格納
+      const updatedFields = {
+        title: data.title,
+        start: data.start,
+        end: data.end,
+        isAllDay: data.isAllDay,
+        categoryId: data.categoryId,
+        description: data.description,
+        url: data.url
+      }
+
       // イベント作成のActivityを作成
       await Activity.logEventCreate(data.creatorId, {
         eventId: event.id,
         eventTitle: event.title,
-        eventDate: event.start
+        eventDate: event.start,
+        updatedFields
       })
 
       return event
