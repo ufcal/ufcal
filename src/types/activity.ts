@@ -42,7 +42,7 @@ export interface CreateActivityData {
 }*/
 
 // コメント投稿時のアクティビティデータ型
-export interface UserCommentActivityData {
+export interface CommentActivityData {
   creatorId: number
   creatorName: string
   commentContent: string
@@ -55,5 +55,6 @@ export interface UserCommentActivityData {
 export interface EventActivityData {
   eventId: number
   eventTitle: string
-  updatedFields: Record<string, unknown>
+  eventDate: Date
+  updatedFields?: Record<string, unknown>
 }

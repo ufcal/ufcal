@@ -154,7 +154,8 @@ class EventDB extends BaseDB {
       // イベント作成のActivityを作成
       await Activity.logEventCreate(data.creatorId, {
         eventId: event.id,
-        eventTitle: event.title
+        eventTitle: event.title,
+        eventDate: event.start
       })
 
       return event

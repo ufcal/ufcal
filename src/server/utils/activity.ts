@@ -2,13 +2,11 @@ import ActivityDB from '@/server/db/activity'
 import type {
   ActivityLog,
   ActivityType,
-  EventActivityData,
-  //CreateActivityData,
-  UserCommentActivityData
+  CommentActivityData,
+  EventActivityData
 } from '@/types/activity'
 
 export class Activity {
-  //public static async logActivity(data: CreateActivityData): Promise<boolean> {
   public static async logActivity(data: ActivityLog): Promise<boolean> {
     if (!data.userId) {
       console.error('userId is required')
@@ -31,6 +29,7 @@ export class Activity {
     }
   }
 
+  /*
   // 管理者用ヘルパーメソッド
   public static async logAdminEventCreate(
     userId: number,
@@ -47,7 +46,7 @@ export class Activity {
         eventTitle
       }
     })
-  }
+  }*/
 
   public static async logAdminUserUpdate(
     userId: number,
@@ -66,10 +65,7 @@ export class Activity {
   }
 
   // ユーザー用ヘルパーメソッド
-  public static async logUserComment(
-    userId: number,
-    data: UserCommentActivityData
-  ): Promise<boolean> {
+  public static async logUserComment(userId: number, data: CommentActivityData): Promise<boolean> {
     return Activity.logActivity({
       type: 'USER_COMMENT_CREATE',
       title: 'コメント投稿',
@@ -101,32 +97,13 @@ export class Activity {
     })
   }
 
-  public static async getRecentActivities(limit: number = 10): Promise<any[]> {
-    return ActivityDB.getRecentActivities(limit)
-  }
-
-  public static async getActivitiesByType(type: ActivityType): Promise<any[]> {
-    return ActivityDB.getActivitiesByType(type)
-  }
-
-  public static async getActivitiesByUser(userId: string): Promise<any[]> {
-    return ActivityDB.getActivitiesByUser(userId)
-  }
-
-  public static async getAdminActivities(limit: number = 10): Promise<any[]> {
-    return ActivityDB.getAdminActivities(limit)
-  }
-
-  public static async getUserActivities(limit: number = 10): Promise<any[]> {
-    return ActivityDB.getUserActivities(limit)
-  }
-
   // イベント操作のログメソッド
   public static async logEventCreate(userId: number, data: EventActivityData): Promise<boolean> {
+    const eventDate = new Date(data.eventDate).toLocaleDateString('ja-JP')
     return Activity.logActivity({
       type: 'ADMIN_EVENT_CREATE',
       title: 'イベント作成',
-      description: `イベント「${data.eventTitle}」を作成しました`,
+      description: `イベント「${data.eventTitle}」(${eventDate})を作成しました`,
       userId,
       metadata: {
         eventId: data.eventId,
@@ -160,5 +137,25 @@ export class Activity {
         eventTitle: data.eventTitle
       }
     })
+  }
+
+  public static async getRecentActivities(limit: number = 10): Promise<any[]> {
+    return ActivityDB.getRecentActivities(limit)
+  }
+
+  public static async getActivitiesByType(type: ActivityType): Promise<any[]> {
+    return ActivityDB.getActivitiesByType(type)
+  }
+
+  public static async getActivitiesByUser(userId: string): Promise<any[]> {
+    return ActivityDB.getActivitiesByUser(userId)
+  }
+
+  public static async getAdminActivities(limit: number = 10): Promise<any[]> {
+    return ActivityDB.getAdminActivities(limit)
+  }
+
+  public static async getUserActivities(limit: number = 10): Promise<any[]> {
+    return ActivityDB.getUserActivities(limit)
   }
 }
