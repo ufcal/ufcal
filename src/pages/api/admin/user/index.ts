@@ -15,7 +15,7 @@ export const GET: APIRoute = async () => {
   })
 }
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const body = await request.json()
     const { email, name, password, role } = body as UserAdminRequest
@@ -60,7 +60,7 @@ export const POST: APIRoute = async ({ request }) => {
     // パスワードのハッシュ化
     const hashedPassword = await hash(password)
 
-    const user = await UserDB.addUser({
+    const user = await UserDB.addUser(locals.user.id, {
       email: email,
       name: name,
       password: hashedPassword,

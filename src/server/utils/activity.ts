@@ -128,17 +128,17 @@ export class Activity {
   public static async logUserCreate(
     userId: number,
     targetUserId: number,
-    userName: string,
+    targetUserName: string,
     updatedFields: Record<string, unknown>
   ): Promise<boolean> {
     return Activity.logActivity({
       type: 'ADMIN_USER_CREATE',
       title: 'ユーザー作成',
-      description: `ユーザー「${userName}」を作成しました`,
+      description: `ユーザー「${targetUserName}」を作成しました`,
       userId,
       metadata: {
         targetUserId,
-        userName,
+        targetUserName,
         updatedFields
       }
     })
@@ -147,32 +147,34 @@ export class Activity {
   public static async logUserDelete(
     userId: number,
     targetUserId: number,
-    userName: string
+    targetUserName: string
   ): Promise<boolean> {
     return Activity.logActivity({
       type: 'ADMIN_USER_DELETE',
       title: 'ユーザー削除',
-      description: `ユーザー「${userName}」を削除しました`,
+      description: `ユーザー「${targetUserName}」を削除しました`,
       userId,
       metadata: {
         targetUserId,
-        userName
+        targetUserName
       }
     })
   }
 
   public static async logUserUpdate(
     userId: number,
-    userName: string,
+    targetUserId: number,
+    targetUserName: string,
     updatedFields: Record<string, unknown>
   ): Promise<boolean> {
     return Activity.logActivity({
       type: 'ADMIN_USER_UPDATE',
       title: 'ユーザー更新',
-      description: `ユーザー「${userName}」の情報を更新しました`,
+      description: `ユーザー「${targetUserName}」の情報を更新しました`,
       userId,
       metadata: {
-        userName,
+        targetUserId,
+        targetUserName,
         updatedFields
       }
     })

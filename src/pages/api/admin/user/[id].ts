@@ -18,7 +18,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
       })
     }
 
-    const result = await UserDB.deleteUser(id)
+    const result = await UserDB.deleteUser(locals.user.id, id)
     if (result) {
       return new Response(JSON.stringify({ message: 'データを削除しました' }), {
         status: 200,
@@ -86,7 +86,7 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
     }
 
     // パスワード以外のユーザ情報の更新
-    const user = await UserDB.updateUser(id, {
+    const user = await UserDB.updateUser(locals.user.id, id, {
       name: body.name,
       email: body.email,
       role: body.role,

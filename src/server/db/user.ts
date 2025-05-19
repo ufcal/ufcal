@@ -124,12 +124,15 @@ class UserDB extends BaseDB {
   }
 
   // ユーザー作成用メソッド
-  async addUser(data: {
-    name: string
-    email: string
-    password: string
-    role: string
-  }): Promise<User | null> {
+  async addUser(
+    userId: number,
+    data: {
+      name: string
+      email: string
+      password: string
+      role: string
+    }
+  ): Promise<User | null> {
     try {
       // ユーザーの作成
       const user = await BaseDB.prisma.user.create({
@@ -138,7 +141,7 @@ class UserDB extends BaseDB {
 
       // ユーザー作成のアクティビティログを記録
       await Activity.logUserCreate(
-        user.id, // 作成者ID（この場合は自分自身）
+        userId, // ユーザを作成したユーザーID
         user.id,
         user.name,
         {
@@ -170,7 +173,7 @@ class UserDB extends BaseDB {
     }
   }
 
-  async deleteUser(id: number): Promise<User | null> {
+  async deleteUser(userId: number, id: number): Promise<User | null> {
     try {
       // 削除前にユーザー情報を取得
       const user = await BaseDB.prisma.user.findUnique({
@@ -188,7 +191,7 @@ class UserDB extends BaseDB {
 
       // ユーザー削除のアクティビティログを記録
       await Activity.logUserDelete(
-        id, // 削除を実行したユーザーID
+        userId, // 削除を実行したユーザーID
         deletedUser.id,
         deletedUser.name
       )
@@ -202,6 +205,7 @@ class UserDB extends BaseDB {
 
   // ユーザー更新用メソッド
   async updateUser(
+    userId: number,
     id: number,
     data: {
       name: string
@@ -240,7 +244,8 @@ class UserDB extends BaseDB {
 
       // ユーザー更新のアクティビティログを記録
       await Activity.logUserUpdate(
-        id, // 更新を実行したユーザーID
+        userId, // 更新を実行したユーザーID
+        user.id,
         user.name,
         updatedFields
       )
