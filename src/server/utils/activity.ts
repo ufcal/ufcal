@@ -30,24 +30,6 @@ export class Activity {
   }
 
   /*
-  // 管理者用ヘルパーメソッド
-  public static async logAdminEventCreate(
-    userId: number,
-    eventId: number,
-    eventTitle: string
-  ): Promise<boolean> {
-    return Activity.logActivity({
-      type: 'ADMIN_EVENT_CREATE',
-      title: 'イベント作成',
-      description: `イベント「${eventTitle}」を作成しました`,
-      userId,
-      metadata: {
-        eventId,
-        eventTitle
-      }
-    })
-  }*/
-
   public static async logAdminUserUpdate(
     userId: number,
     userName: string,
@@ -62,7 +44,7 @@ export class Activity {
         updatedFields
       }
     })
-  }
+  }*/
 
   // ユーザー用ヘルパーメソッド
   public static async logUserComment(userId: number, data: CommentActivityData): Promise<boolean> {
@@ -138,6 +120,60 @@ export class Activity {
       metadata: {
         eventId: data.eventId,
         eventTitle: data.eventTitle
+      }
+    })
+  }
+
+  // ユーザー操作のログメソッド
+  public static async logUserCreate(
+    userId: number,
+    targetUserId: number,
+    userName: string,
+    updatedFields: Record<string, unknown>
+  ): Promise<boolean> {
+    return Activity.logActivity({
+      type: 'ADMIN_USER_CREATE',
+      title: 'ユーザー作成',
+      description: `ユーザー「${userName}」を作成しました`,
+      userId,
+      metadata: {
+        targetUserId,
+        userName,
+        updatedFields
+      }
+    })
+  }
+
+  public static async logUserDelete(
+    userId: number,
+    targetUserId: number,
+    userName: string
+  ): Promise<boolean> {
+    return Activity.logActivity({
+      type: 'ADMIN_USER_DELETE',
+      title: 'ユーザー削除',
+      description: `ユーザー「${userName}」を削除しました`,
+      userId,
+      metadata: {
+        targetUserId,
+        userName
+      }
+    })
+  }
+
+  public static async logUserUpdate(
+    userId: number,
+    userName: string,
+    updatedFields: Record<string, unknown>
+  ): Promise<boolean> {
+    return Activity.logActivity({
+      type: 'ADMIN_USER_UPDATE',
+      title: 'ユーザー更新',
+      description: `ユーザー「${userName}」の情報を更新しました`,
+      userId,
+      metadata: {
+        userName,
+        updatedFields
       }
     })
   }

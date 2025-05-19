@@ -1,3 +1,4 @@
+import { Activity } from '@/server/utils/activity'
 import type { User } from '@prisma/client'
 import BaseDB from './base'
 
@@ -135,6 +136,19 @@ class UserDB extends BaseDB {
         data
       })
 
+      // ユーザー作成のアクティビティログを記録
+      await Activity.logUserCreate(
+        user.id, // 作成者ID（この場合は自分自身）
+        user.id,
+        user.name,
+        {
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          isEnabled: user.isEnabled
+        }
+      )
+
       return user
     } catch (err) {
       console.error('ユーザー作成エラー:', err)
@@ -158,10 +172,28 @@ class UserDB extends BaseDB {
 
   async deleteUser(id: number): Promise<User | null> {
     try {
-      const user = await BaseDB.prisma.user.delete({
+      // 削除前にユーザー情報を取得
+      const user = await BaseDB.prisma.user.findUnique({
         where: { id }
       })
-      return user
+
+      if (!user) {
+        return null
+      }
+
+      // ユーザーを削除
+      const deletedUser = await BaseDB.prisma.user.delete({
+        where: { id }
+      })
+
+      // ユーザー削除のアクティビティログを記録
+      await Activity.logUserDelete(
+        id, // 削除を実行したユーザーID
+        deletedUser.id,
+        deletedUser.name
+      )
+
+      return deletedUser
     } catch (err) {
       console.error(err)
       return null
@@ -179,6 +211,23 @@ class UserDB extends BaseDB {
     }
   ): Promise<User | null> {
     try {
+      // 更新前のユーザー情報を取得
+      const currentUser = await BaseDB.prisma.user.findUnique({
+        where: { id }
+      })
+
+      if (!currentUser) {
+        return null
+      }
+
+      // 変更されたフィールドを特定
+      const updatedFields: Record<string, unknown> = {}
+      if (data.name !== currentUser.name) updatedFields.name = data.name
+      if (data.email !== currentUser.email) updatedFields.email = data.email
+      if (data.role !== currentUser.role) updatedFields.role = data.role
+      if (data.isEnabled !== currentUser.isEnabled) updatedFields.isEnabled = data.isEnabled
+
+      // ユーザーを更新
       const user = await BaseDB.prisma.user.update({
         where: { id },
         data: {
@@ -188,6 +237,14 @@ class UserDB extends BaseDB {
           isEnabled: data.isEnabled
         }
       })
+
+      // ユーザー更新のアクティビティログを記録
+      await Activity.logUserUpdate(
+        id, // 更新を実行したユーザーID
+        user.name,
+        updatedFields
+      )
+
       return user
     } catch (err) {
       console.error(err)

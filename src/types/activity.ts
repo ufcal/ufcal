@@ -31,16 +31,6 @@ export interface ActivityLog {
   userId: number // アクティビティを実行したユーザ
 }
 
-/*
-// アクティビティ作成時のデータ型
-export interface CreateActivityData {
-  type: ActivityType
-  title: string
-  description?: string
-  metadata?: Record<string, unknown>
-  userId: number // アクティビティを実行したユーザ
-}*/
-
 // コメント投稿時のアクティビティデータ型
 export interface CommentActivityData {
   creatorId: number
