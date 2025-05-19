@@ -180,6 +180,16 @@ export class Activity {
     })
   }
 
+  // パスワード変更のログメソッド
+  public static async logPasswordUpdate(userId: number): Promise<boolean> {
+    return Activity.logActivity({
+      type: 'USER_PASSWORD_UPDATE',
+      title: 'パスワード変更',
+      description: 'パスワードを変更しました',
+      userId
+    })
+  }
+
   public static async getRecentActivities(limit: number = 10): Promise<any[]> {
     return ActivityDB.getRecentActivities(limit)
   }

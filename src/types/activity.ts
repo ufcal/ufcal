@@ -15,6 +15,7 @@ export type UserActivityType =
   | 'USER_COMMENT_UPDATE' // コメント更新
   | 'USER_COMMENT_DELETE' // コメント削除
   | 'USER_PROFILE_UPDATE' // プロフィール更新
+  | 'USER_PASSWORD_UPDATE' // パスワード変更
   | 'USER_EVENT_JOIN' // イベント参加
   | 'USER_EVENT_CANCEL' // イベントキャンセル
   | 'USER_LOGIN' // ログイン
@@ -26,8 +27,8 @@ export interface ActivityLog {
   type: ActivityType
   title: string
   description: string
-  //metadata?: Record<string, unknown>
-  metadata: Record<string, unknown>
+  metadata?: Record<string, unknown>
+  //metadata: Record<string, unknown>
   userId: number // アクティビティを実行したユーザ
 }
 

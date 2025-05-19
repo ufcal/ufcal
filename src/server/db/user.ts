@@ -116,6 +116,8 @@ class UserDB extends BaseDB {
         where: { id },
         data: { password: hashedPassword }
       })
+      // パスワード変更のアクティビティログを記録
+      await Activity.logPasswordUpdate(id)
       return true
     } catch (err) {
       console.error(err)
