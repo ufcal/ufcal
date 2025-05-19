@@ -84,10 +84,30 @@ class UserDB extends BaseDB {
     data: { name: string; email: string; biography: string | null; avatar?: string }
   ): Promise<User | null> {
     try {
+      // 更新前のユーザー情報を取得
+      const currentUser = await BaseDB.prisma.user.findUnique({
+        where: { id }
+      })
+
+      if (!currentUser) {
+        return null
+      }
+
+      // 変更されたフィールドを特定
+      const updatedFields: Record<string, unknown> = {}
+      if (data.name !== currentUser.name) updatedFields.name = data.name
+      if (data.email !== currentUser.email) updatedFields.email = data.email
+      if (data.biography !== currentUser.biography) updatedFields.biography = data.biography
+      if (data.avatar !== currentUser.avatar) updatedFields.avatar = data.avatar
+
       const user = await BaseDB.prisma.user.update({
         where: { id },
         data
       })
+
+      // プロフィール更新のアクティビティログを記録
+      await Activity.logUserProfileUpdate(id, updatedFields)
+
       return user
     } catch (err) {
       console.error(err)

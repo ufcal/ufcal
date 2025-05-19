@@ -29,23 +29,6 @@ export class Activity {
     }
   }
 
-  /*
-  public static async logAdminUserUpdate(
-    userId: number,
-    userName: string,
-    updatedFields: Record<string, unknown>
-  ): Promise<boolean> {
-    return Activity.logActivity({
-      type: 'ADMIN_USER_UPDATE',
-      title: 'ユーザー情報更新',
-      description: `ユーザー「${userName}」の情報を更新しました`,
-      userId,
-      metadata: {
-        updatedFields
-      }
-    })
-  }*/
-
   // ユーザー用ヘルパーメソッド
   public static async logUserComment(userId: number, data: CommentActivityData): Promise<boolean> {
     return Activity.logActivity({
