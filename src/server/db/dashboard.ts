@@ -43,11 +43,11 @@ class DashboardDB extends BaseDB {
   // ダッシュボードの統計情報を取得
   async getDashboardStats() {
     try {
-      // ユーザー統計情報の取得
+      // ユーザ統計情報の取得
       const [totalUsers, activeUsers, newRegistrations, totalComments] = await Promise.all([
-        // 総ユーザー数
+        // 総ユーザ数
         BaseDB.prisma.user.count(),
-        // アクティブユーザー数（30日以内にログイン）
+        // アクティブユーザ数（30日以内にログイン）
         BaseDB.prisma.user.count({
           where: {
             lastLoginAt: {
@@ -55,7 +55,7 @@ class DashboardDB extends BaseDB {
             }
           }
         }),
-        // 新規登録ユーザー数（今月）
+        // 新規登録ユーザ数（今月）
         BaseDB.prisma.user.count({
           where: {
             createdAt: {
@@ -86,7 +86,7 @@ class DashboardDB extends BaseDB {
             }
           }
         }),
-        // ユーザー管理関連の活動数
+        // ユーザ管理関連の活動数
         BaseDB.prisma.activity.count({
           where: {
             type: {
@@ -169,7 +169,7 @@ class DashboardDB extends BaseDB {
             }
           }
         }),
-        // ユーザーの最近の活動
+        // ユーザの最近の活動
         BaseDB.prisma.activity.findMany({
           where: {
             type: {

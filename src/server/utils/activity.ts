@@ -29,7 +29,7 @@ export class Activity {
     }
   }
 
-  // ユーザー用ヘルパーメソッド
+  // ユーザ用ヘルパーメソッド
   public static async logUserComment(userId: number, data: CommentActivityData): Promise<boolean> {
     return Activity.logActivity({
       type: 'USER_COMMENT_CREATE',
@@ -108,7 +108,7 @@ export class Activity {
     })
   }
 
-  // ユーザー操作のログメソッド
+  // ユーザ操作のログメソッド
   public static async logUserCreate(
     userId: number,
     targetUserId: number,
@@ -117,8 +117,8 @@ export class Activity {
   ): Promise<boolean> {
     return Activity.logActivity({
       type: 'ADMIN_USER_CREATE',
-      title: 'ユーザー作成',
-      description: `ユーザー「${targetUserName}」を作成しました`,
+      title: 'ユーザ作成',
+      description: `ユーザ「${targetUserName}」を作成しました`,
       userId,
       metadata: {
         targetUserId,
@@ -135,8 +135,8 @@ export class Activity {
   ): Promise<boolean> {
     return Activity.logActivity({
       type: 'ADMIN_USER_DELETE',
-      title: 'ユーザー削除',
-      description: `ユーザー「${targetUserName}」を削除しました`,
+      title: 'ユーザ削除',
+      description: `ユーザ「${targetUserName}」を削除しました`,
       userId,
       metadata: {
         targetUserId,
@@ -153,8 +153,8 @@ export class Activity {
   ): Promise<boolean> {
     return Activity.logActivity({
       type: 'ADMIN_USER_UPDATE',
-      title: 'ユーザー更新',
-      description: `ユーザー「${targetUserName}」の情報を更新しました`,
+      title: 'ユーザ更新',
+      description: `ユーザ「${targetUserName}」の情報を更新しました`,
       userId,
       metadata: {
         targetUserId,

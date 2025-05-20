@@ -23,7 +23,7 @@ class Auth {
       return null
     }
 
-    // ユーザーが無効化されている場合はログインを拒否
+    // ユーザが無効化されている場合はログインを拒否
     if (!userWithPassword.isEnabled) {
       return null
     }
