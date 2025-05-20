@@ -1,4 +1,4 @@
-import type { ButtonAttr } from '@/types/component.ts'
+import type { ButtonAttr } from '@/types/component'
 import { Icon } from '@iconify/react'
 import { twMerge } from 'tailwind-merge'
 

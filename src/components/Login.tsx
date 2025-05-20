@@ -1,6 +1,6 @@
 import Alert from '@/components/Alert'
 import Button from '@/components/base/Button'
-import AuthFetch from '@/fetch/auth.ts'
+import AuthFetch from '@/fetch/auth'
 import { type FormEventHandler, useState } from 'react'
 
 export default function Login() {

@@ -1,4 +1,4 @@
-import Button from '@/components/base/Button.tsx'
+import Button from '@/components/base/Button'
 import config from '@/config/config.json'
 import { type IUser } from '@/types/user'
 import { useState } from 'react'

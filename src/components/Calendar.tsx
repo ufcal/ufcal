@@ -1,7 +1,7 @@
 import EventInfoModal from '@/components/event/EventInfoModal'
 import config from '@/config/config.json'
 import EventFetch from '@/fetch/event'
-import useWatch from '@/lib/watchState.tsx'
+import useWatch from '@/lib/watchState'
 import { isEventUpdated } from '@/store/event'
 import { userStore } from '@/store/user'
 import type { EventResponse } from '@/types/event'

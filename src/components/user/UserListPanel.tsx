@@ -1,4 +1,4 @@
-import Button from '@/components/base/Button.tsx'
+import Button from '@/components/base/Button'
 import AdminUserFetch from '@/fetch/admin/user'
 import { type IUser } from '@/types/user'
 import { useEffect, useState } from 'react'

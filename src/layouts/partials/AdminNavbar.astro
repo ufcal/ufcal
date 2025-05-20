@@ -99,7 +99,7 @@ const avatarUrl = user?.avatar ? `${config.upload.avatar.url}/${user.avatar}` : 
   </div>
 </nav>
 <script>
-  import AuthFetch from '@/fetch/auth.ts'
+  import AuthFetch from '@/fetch/auth'
 
   const button = document.querySelector('#logout')
   button?.addEventListener('click', async () => {

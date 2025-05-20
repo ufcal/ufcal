@@ -1,5 +1,5 @@
 import { colors } from '@/config/master/category'
-import { EventDB } from '@/server/db/index.ts'
+import { EventDB } from '@/server/db'
 import { type EventResponse } from '@/types/event'
 import type { APIRoute } from 'astro'
 
