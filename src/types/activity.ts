@@ -3,13 +3,13 @@ export type AdminActivityType =
   | 'ADMIN_EVENT_CREATE' // イベント作成
   | 'ADMIN_EVENT_UPDATE' // イベント更新
   | 'ADMIN_EVENT_DELETE' // イベント削除
-  | 'ADMIN_USER_CREATE' // ユーザー作成
-  | 'ADMIN_USER_UPDATE' // ユーザー更新
-  | 'ADMIN_USER_DELETE' // ユーザー削除
+  | 'ADMIN_USER_CREATE' // ユーザ作成
+  | 'ADMIN_USER_UPDATE' // ユーザ更新
+  | 'ADMIN_USER_DELETE' // ユーザ削除
   | 'ADMIN_SYSTEM_UPDATE' // システム設定更新
   | 'ADMIN_ROLE_UPDATE' // 権限更新
 
-// ユーザーの活動タイプ
+// ユーザの活動タイプ
 export type UserActivityType =
   | 'USER_COMMENT_CREATE' // コメント投稿
   | 'USER_COMMENT_UPDATE' // コメント更新

@@ -1,6 +1,6 @@
 import type { ActivityType } from './activity'
 
-// ユーザー統計情報
+// ユーザ統計情報
 export interface UserStats {
   totalUsers: number
   activeUsers: number

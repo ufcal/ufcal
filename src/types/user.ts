@@ -46,19 +46,6 @@ export const convertToUserSessionData = (user: User): UserSessionData => {
   return userSessinData
 }
 
-// 管理画面で表示するユーザー情報
-/*
-export interface UserAdminResponse {
-  id: number
-  email: string
-  name: string
-  password: string
-  role: UserRole
-  avatar: string | null
-  biography: string | null
-  active: boolean
-}*/
-
 // 管理画面から登録するユーザ情報
 export interface UserAdminRequest {
   email: string
@@ -68,7 +55,7 @@ export interface UserAdminRequest {
   isEnabled: boolean
 }
 
-// 管理機能用ユーザー情報
+// 管理機能用ユーザ情報
 export interface IUser {
   id: number
   email: string
