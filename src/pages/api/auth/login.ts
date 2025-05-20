@@ -51,7 +51,7 @@ export const POST: APIRoute = async (context) => {
       )
     }
 
-    // ユーザーが無効化されている場合はログインを拒否
+    // ユーザが無効化されている場合はログインを拒否
     if (!userWithPassword.isEnabled) {
       return new Response(
         JSON.stringify({

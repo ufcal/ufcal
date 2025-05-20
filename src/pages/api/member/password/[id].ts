@@ -19,10 +19,10 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
   const body = await request.json()
   const { currentPassword, newPassword } = body
 
-  // ユーザー取得
+  // ユーザ取得
   const userWithPassword = await UserDB.getUserById(userId)
   if (!userWithPassword) {
-    return new Response(JSON.stringify({ message: 'ユーザーが見つかりません' }), { status: 404 })
+    return new Response(JSON.stringify({ message: 'ユーザが見つかりません' }), { status: 404 })
   }
 
   // 現在のパスワード検証
