@@ -95,10 +95,28 @@ class UserDB extends BaseDB {
 
       // 変更されたフィールドを特定
       const updatedFields: Record<string, unknown> = {}
-      if (data.name !== currentUser.name) updatedFields.name = data.name
-      if (data.email !== currentUser.email) updatedFields.email = data.email
-      if (data.biography !== currentUser.biography) updatedFields.biography = data.biography
-      if (data.avatar !== currentUser.avatar) updatedFields.avatar = data.avatar
+      const changedFields: string[] = []
+      if (data.name !== currentUser.name) {
+        updatedFields.name = data.name
+        changedFields.push(`名前: ${currentUser.name} → ${data.name}`)
+      }
+      if (data.email !== currentUser.email) {
+        updatedFields.email = data.email
+        changedFields.push(`メールアドレス: ${currentUser.email} → ${data.email}`)
+      }
+      if (data.biography !== currentUser.biography) {
+        updatedFields.biography = data.biography
+        changedFields.push(
+          `自己紹介: ${currentUser.biography || 'なし'} → ${data.biography || 'なし'}`
+        )
+      }
+      // アバターの変更チェックを改善
+      const currentAvatar = currentUser.avatar || 'なし'
+      const newAvatar = data.avatar || 'なし'
+      if (currentAvatar !== newAvatar) {
+        updatedFields.avatar = data.avatar
+        changedFields.push(`アバター: ${currentAvatar} → ${newAvatar}`)
+      }
 
       const user = await BaseDB.prisma.user.update({
         where: { id },
@@ -106,7 +124,11 @@ class UserDB extends BaseDB {
       })
 
       // プロフィール更新のアクティビティログを記録
-      await Activity.logUserProfileUpdate(id, updatedFields)
+      await Activity.logUserProfileUpdate(
+        id,
+        updatedFields,
+        `以下の項目を更新しました:\n${changedFields.join('\n')}`
+      )
 
       return user
     } catch (err) {

@@ -49,12 +49,13 @@ export class Activity {
 
   public static async logUserProfileUpdate(
     userId: number,
-    updatedFields: Record<string, unknown>
+    updatedFields: Record<string, unknown>,
+    detailMessage?: string
   ): Promise<boolean> {
     return Activity.logActivity({
       type: 'USER_PROFILE_UPDATE',
       title: 'プロフィール更新',
-      description: 'プロフィール情報を更新しました',
+      description: detailMessage || 'プロフィール情報を更新しました',
       userId,
       metadata: {
         updatedFields
