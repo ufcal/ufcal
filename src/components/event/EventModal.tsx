@@ -42,7 +42,7 @@ const schema = z
       .string()
       .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, { message: '終了時間はhh:mm形式で入力してください' })
       .or(z.literal('')),
-    category: z.number({ message: 'カテゴリーは必須です' }),
+    category: z.string(),
     description: z.string().trim().optional().or(z.literal('')),
     url: z
       .string()
@@ -120,7 +120,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
       isTimeSettingEnabled: false, // 時間設定を初期状態では無効に
       eventTimeStart: '', // 時間設定が無効な場合の初期値
       eventTimeEnd: '', // 時間設定が無効な場合の初期値
-      category: 0, // カテゴリーデフォルト値
+      category: '', // カテゴリーデフォルト値
       description: '',
       url: ''
     }
@@ -183,7 +183,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
             isTimeSettingEnabled: !eventData.allDay, // 終日イベントかどうか
             eventTimeStart: eventTimeStart,
             eventTimeEnd: eventTimeEnd,
-            category: eventData.categoryId,
+            category: eventData.categoryId || '',
             url: eventData.url
           })
         } catch (e) {

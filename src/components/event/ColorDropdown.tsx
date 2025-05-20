@@ -3,21 +3,23 @@ import React, { useState } from 'react'
 
 interface ColorDropdownProps {
   id: string
-  selectedIndex: number
-  onChange: (value: number) => void
+  selectedIndex: string
+  onChange: (value: string) => void
 }
 
 const ColorDropdown: React.FC<ColorDropdownProps> = ({ id, selectedIndex, onChange }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
-  const handleSelect = (index: number) => {
-    onChange(index)
+  const handleSelect = (value: string) => {
+    onChange(value)
     setIsOpen(false)
   }
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen)
   }
+
+  const selectedColor = colors.find((color) => color.value === selectedIndex)
 
   return (
     <>
@@ -27,14 +29,12 @@ const ColorDropdown: React.FC<ColorDropdownProps> = ({ id, selectedIndex, onChan
           id={id}
           className="flex w-full cursor-pointer items-center justify-between rounded-lg px-3 py-2.5 text-left"
           style={{
-            backgroundColor: selectedIndex !== null ? colors[selectedIndex]!.color : 'white',
-            color: selectedIndex !== null ? 'white' : 'black'
+            backgroundColor: selectedColor?.color || 'white',
+            color: selectedColor ? 'white' : 'black'
           }}
           onClick={toggleDropdown}
         >
-          <span>
-            {selectedIndex !== null ? colors[selectedIndex]!.name : '-- Select a color --'}
-          </span>
+          <span>{selectedColor?.name || '-- Select a color --'}</span>
           <svg
             className={`h-5 w-5 transition-transform ${isOpen ? 'rotate-180' : ''}`}
             xmlns="http://www.w3.org/2000/svg"
@@ -50,12 +50,12 @@ const ColorDropdown: React.FC<ColorDropdownProps> = ({ id, selectedIndex, onChan
         </button>
         {isOpen && (
           <div className="absolute top-full z-10 mt-1 w-full rounded-md bg-white shadow-lg">
-            {colors.map((color, idx) => (
+            {colors.map((color) => (
               <div
-                key={color.color}
+                key={color.value}
                 className="cursor-pointer px-3 py-2.5 hover:bg-gray-200"
-                style={{ backgroundColor: color.color, color: 'white' }} // テキストを白色に設定
-                onClick={() => handleSelect(idx)}
+                style={{ backgroundColor: color.color, color: 'white' }}
+                onClick={() => handleSelect(color.value)}
               >
                 {color.name}
               </div>

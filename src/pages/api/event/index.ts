@@ -53,11 +53,8 @@ export const GET: APIRoute = async ({ request }) => {
       }
 
       // カテゴリーカラーを取得
-      if (colors[event.categoryId]) {
-        mappedEvent.color = colors[event.categoryId]!.color
-      } else {
-        mappedEvent.color = 'black'
-      }
+      const categoryColor = colors.find((color) => color.value === event.categoryId)
+      mappedEvent.color = categoryColor?.color || 'black'
 
       // コメント数を追加
       mappedEvent.commentCount = event.commentCount

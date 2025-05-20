@@ -39,7 +39,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     // 開始日時<終了日時のチェック
     // 通常イベントの場合は開始日時、終了日時が同じ場合を登録可能とする(開始日時終了日時が同じで、開始時間のみのパターン)
-    //if (startDate >= endDate) {
     if ((allDay && startDate >= endDate) || (!allDay && startDate > endDate)) {
       if (allDay) {
         errMessage = '開始日は終了日より前でなければなりません'

@@ -33,7 +33,7 @@ export interface EventAdminRequest {
   allDay: boolean
   start: string
   end: string
-  category: number
+  category: string
   description: string
   url: string
 }
