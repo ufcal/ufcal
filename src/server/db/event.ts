@@ -7,7 +7,7 @@ interface AddEventData {
   start: Date
   end: Date
   isAllDay: boolean
-  categoryId: number
+  categoryId: string
   description: string | null
   url: string | null
   creatorId: number
@@ -17,7 +17,7 @@ interface UpdateEventData {
   start: Date
   end: Date
   isAllDay: boolean
-  categoryId: number
+  categoryId: string
   description: string | null
   url: string | null
 }
@@ -28,7 +28,7 @@ interface PublicEvent {
   start: Date
   end: Date
   isAllDay: boolean
-  categoryId: number
+  categoryId: string
   commentCount: number
 }
 

@@ -38,7 +38,7 @@ model Event {
   start       DateTime
   end         DateTime
   isAllDay    Boolean   @default(false)
-  category    String    @default("")
+  categoryId  String    @default("")
   creatorId   Int
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
