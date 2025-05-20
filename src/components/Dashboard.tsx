@@ -255,8 +255,8 @@ export default function Dashboard() {
             <div className="space-y-4">
               {recentAdminActivities.map((activity) => (
                 <div key={activity.id} className="border-b border-gray-200 pb-4 last:border-0">
-                  <div className="flex items-start justify-between">
-                    <div>
+                  <div className="flex flex-col">
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span
                           className={`inline-block rounded px-2 py-1 text-sm font-semibold text-${getActivityTypeColor(
@@ -267,11 +267,11 @@ export default function Dashboard() {
                         </span>
                         <span className="text-gray-500">{activity.userName || '不明'}</span>
                       </div>
-                      <p className="mt-1 text-gray-600">{activity.description}</p>
+                      <span className="text-gray-500">
+                        {new Date(activity.createdAt).toLocaleString('ja-JP')}
+                      </span>
                     </div>
-                    <span className="text-gray-500">
-                      {new Date(activity.createdAt).toLocaleString('ja-JP')}
-                    </span>
+                    <p className="mt-2 text-gray-600">{activity.description}</p>
                   </div>
                 </div>
               ))}
@@ -284,8 +284,8 @@ export default function Dashboard() {
             <div className="space-y-4">
               {recentUserActivities.map((activity) => (
                 <div key={activity.id} className="border-b border-gray-200 pb-4 last:border-0">
-                  <div className="flex items-start justify-between">
-                    <div>
+                  <div className="flex flex-col">
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span
                           className={`inline-block rounded px-2 py-1 text-sm font-semibold text-${getActivityTypeColor(
@@ -296,22 +296,20 @@ export default function Dashboard() {
                         </span>
                         <span className="text-gray-500">{activity.userName || '不明'}</span>
                       </div>
-                      {activity.type.startsWith('USER_COMMENT_') ? (
-                        <>
-                          <p className="mt-1 text-gray-600">{activity.description}</p>
-                          <p className="font-medium text-gray-900">
-                            投稿者: {activity.metadata?.creatorName || '不明'}
-                          </p>
-                        </>
-                      ) : (
-                        <>
-                          <p className="mt-1 text-gray-600">{activity.description}</p>
-                        </>
-                      )}
+                      <span className="text-gray-500">
+                        {new Date(activity.createdAt).toLocaleString('ja-JP')}
+                      </span>
                     </div>
-                    <span className="text-gray-500">
-                      {new Date(activity.createdAt).toLocaleString('ja-JP')}
-                    </span>
+                    {activity.type.startsWith('USER_COMMENT_') ? (
+                      <>
+                        <p className="mt-2 text-gray-600">{activity.description}</p>
+                        <p className="mt-1 font-medium text-gray-900">
+                          投稿者: {activity.metadata?.creatorName || '不明'}
+                        </p>
+                      </>
+                    ) : (
+                      <p className="mt-2 text-gray-600">{activity.description}</p>
+                    )}
                   </div>
                 </div>
               ))}
