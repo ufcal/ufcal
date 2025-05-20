@@ -63,7 +63,7 @@ model Activity {
   title       String
   description String?  @db.Text // アクティビティの詳細情報
   metadata    Json?    // 追加のメタデータ（JSON形式で保存）
-  userId      Int      // アクティビティを実行したユーザー
+  userId      Int      // アクティビティを実行したユーザ
   createdAt   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id])
 }
