@@ -172,7 +172,7 @@ export default function UserListPanel() {
               setUsers(updatedUsers)
               //setShowAddModal(false)
             } catch (err) {
-              setError('ユーザー一覧の更新に失敗しました')
+              setError('ユーザ一覧の更新に失敗しました')
               console.error('Users fetch error:', err)
             }
           }}

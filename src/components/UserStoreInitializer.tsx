@@ -7,7 +7,7 @@ interface UserStoreInitializerProps {
 
 const UserStoreInitializer: React.FC<UserStoreInitializerProps> = ({ userAuth }) => {
   useEffect(() => {
-    // ユーザー認証情報をストアに設定
+    // ユーザ認証情報をストアに設定
     userStore.set(userAuth)
   }, [userAuth])
 

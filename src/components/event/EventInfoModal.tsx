@@ -403,7 +403,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
                 ))}
               </div>
 
-              {/* コメント入力フォーム - ログインユーザーのみ表示 */}
+              {/* コメント入力フォーム - ログインユーザのみ表示 */}
               {userAuth && (
                 <form onSubmit={handleSubmitComment} className="space-y-3">
                   <div className="rounded-lg border border-gray-200 bg-white p-4">

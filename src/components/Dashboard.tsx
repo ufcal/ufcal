@@ -278,7 +278,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* ユーザーの最近の活動 */}
+          {/* ユーザの最近の活動 */}
           <div className="rounded-lg bg-white p-6 shadow-sm">
             <h3 className="mb-4 text-lg font-semibold text-gray-900">ユーザの最近の活動</h3>
             <div className="space-y-4">
