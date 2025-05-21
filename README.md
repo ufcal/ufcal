@@ -2,7 +2,7 @@
 
 Astroフレームワークベースのカレンダーシステムです。ユーザがログインし、カレンダーに表示するイベントを作成・管理できます。
 
-![screencapture-localhost-3000-2024-08-16-11_55_49](https://github.com/user-attachments/assets/ad352e7d-3d34-4034-8a5f-21ca3eb21c8d)
+![Image](https://github.com/user-attachments/assets/585de96f-9e01-4441-b363-8df0f8bdf9d6)
 
 ## 主な機能
 
