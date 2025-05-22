@@ -12,8 +12,22 @@ const redisSession = new RedisSession({ client: redis, ttl: config.SESSION_EXPIR
 // 保護されたルートへのアクセス制御を行う関数
 const isAuthorizedForProtectedRoute = (pathname: string, userRole: string): boolean => {
   // admin関連のパスに対する権限チェック
-  if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
+  /*if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
     return userRole === 'ADMIN' || userRole === 'MODERATOR'
+  }
+  return true*/
+
+  if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
+    if (userRole === 'ADMIN' || userRole === 'MODERATOR') {
+      return true
+    } else if (userRole === 'EDITOR') {
+      if (config.EDITOR_ENABLED_ROUTES.includes(pathname)) {
+        // EDITORロールがアクセスできるURLをチェック
+        return true
+      } else {
+        return false
+      }
+    }
   }
   return true
 }
