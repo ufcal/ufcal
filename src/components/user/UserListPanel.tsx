@@ -6,18 +6,6 @@ import UserAddModal from './UserAddModal'
 import { UserDeleteModal } from './UserDeleteModal'
 import { UserEditModal } from './UserEditModal'
 import UserList from './UserListMain'
-/*
-type User = {
-  id: number
-  email: string
-  name: string
-  role: string
-  createdAt: Date
-  isGuest?: boolean
-  status?: 'active' | 'inactive'
-  biography?: string
-  position?: string
-}*/
 
 export default function UserListPanel() {
   const [users, setUsers] = useState<IUser[]>([])

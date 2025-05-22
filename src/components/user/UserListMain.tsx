@@ -134,7 +134,7 @@ export default function UserList({ users, onEdit, onDelete }: UserListProps) {
       </div>
 
       {/* フッタ（ページネーション）を常に表示 */}
-      <div className="sticky right-0 bottom-0 w-full items-center border-t border-gray-200 bg-white p-4 sm:flex sm:justify-between">
+      <div className="sticky right-0 bottom-0 w-full items-center border-t border-b border-gray-300 bg-white p-4 sm:flex sm:justify-between">
         <div className="mb-4 flex items-center sm:mb-0">
           <div className="flex items-center">
             <button

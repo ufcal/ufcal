@@ -249,35 +249,6 @@ export default function Dashboard() {
       <div className="mb-8">
         <h2 className="mb-4 text-xl font-bold text-gray-900">最近の活動</h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {/* 管理者の最近の活動 */}
-          <div className="rounded-lg bg-white p-6 shadow-sm">
-            <h3 className="mb-4 text-lg font-semibold text-gray-900">管理者の最近の活動</h3>
-            <div className="space-y-4">
-              {recentAdminActivities.map((activity) => (
-                <div key={activity.id} className="border-b border-gray-200 pb-4 last:border-0">
-                  <div className="flex flex-col">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`inline-block rounded px-2 py-1 text-sm font-semibold text-${getActivityTypeColor(
-                            activity.type
-                          )}-800 bg-${getActivityTypeColor(activity.type)}-100`}
-                        >
-                          {getActivityTypeLabel(activity.type)}
-                        </span>
-                        <span className="text-gray-500">{activity.userName || '不明'}</span>
-                      </div>
-                      <span className="text-gray-500">
-                        {new Date(activity.createdAt).toLocaleString('ja-JP')}
-                      </span>
-                    </div>
-                    <p className="mt-2 text-gray-600">{activity.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* ユーザの最近の活動 */}
           <div className="rounded-lg bg-white p-6 shadow-sm">
             <h3 className="mb-4 text-lg font-semibold text-gray-900">ユーザの最近の活動</h3>
@@ -310,6 +281,35 @@ export default function Dashboard() {
                     ) : (
                       <p className="mt-2 text-gray-600">{activity.description}</p>
                     )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 管理者の最近の活動 */}
+          <div className="rounded-lg bg-white p-6 shadow-sm">
+            <h3 className="mb-4 text-lg font-semibold text-gray-900">管理者の最近の活動</h3>
+            <div className="space-y-4">
+              {recentAdminActivities.map((activity) => (
+                <div key={activity.id} className="border-b border-gray-200 pb-4 last:border-0">
+                  <div className="flex flex-col">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`inline-block rounded px-2 py-1 text-sm font-semibold text-${getActivityTypeColor(
+                            activity.type
+                          )}-800 bg-${getActivityTypeColor(activity.type)}-100`}
+                        >
+                          {getActivityTypeLabel(activity.type)}
+                        </span>
+                        <span className="text-gray-500">{activity.userName || '不明'}</span>
+                      </div>
+                      <span className="text-gray-500">
+                        {new Date(activity.createdAt).toLocaleString('ja-JP')}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-gray-600">{activity.description}</p>
                   </div>
                 </div>
               ))}
