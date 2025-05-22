@@ -263,13 +263,12 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
       } else if (response.status === 401) {
         setError('アクセス権がありません。再度ログインしてください。')
       } else {
-        // # テスト中
-        alert(response.status)
         const resBody = await response.json()
         if (resBody && resBody.message) {
-          alert(resBody.message)
+          setError(resBody.message)
+        } else {
+          setError('サーバでエラーが発生しました')
         }
-        setError('サーバでエラーが発生しました')
       }
     } catch (e) {
       setError('通信エラーが発生しました')
