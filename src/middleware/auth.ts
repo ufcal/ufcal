@@ -27,6 +27,8 @@ const isAuthorizedForProtectedRoute = (pathname: string, userRole: string): bool
       } else {
         return false
       }
+    } else {
+      return false
     }
   }
   return true
