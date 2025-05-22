@@ -152,14 +152,18 @@ class UserDB extends BaseDB {
   }
 
   // パスワード更新用メソッド
-  async updatePassword(id: number, hashedPassword: string): Promise<boolean> {
+  async updatePassword(
+    userId: number,
+    targetUserId: number,
+    hashedPassword: string
+  ): Promise<boolean> {
     try {
       await BaseDB.prisma.user.update({
-        where: { id },
+        where: { id: targetUserId },
         data: { password: hashedPassword }
       })
       // パスワード変更のアクティビティログを記録
-      await Activity.logPasswordUpdate(id)
+      await Activity.logPasswordUpdate(userId, targetUserId)
       return true
     } catch (err) {
       console.error(err)

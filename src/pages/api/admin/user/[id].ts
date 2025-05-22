@@ -74,7 +74,7 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
     // パスワードが指定されている場合は更新
     if (body.password) {
       const hashedPassword = await hash(body.password)
-      const passwordUpdated = await UserDB.updatePassword(id, hashedPassword)
+      const passwordUpdated = await UserDB.updatePassword(locals.user.id, id, hashedPassword)
       if (!passwordUpdated) {
         return new Response(JSON.stringify({ message: 'パスワードの更新に失敗しました' }), {
           status: 400,

@@ -35,7 +35,7 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
 
   // 新しいパスワードをハッシュ化して更新
   const hashed = await hash(newPassword)
-  const updated = await UserDB.updatePassword(userId, hashed)
+  const updated = await UserDB.updatePassword(locals.user.id, userId, hashed)
   if (!updated) {
     return new Response(JSON.stringify({ message: '更新に失敗しました' }), { status: 500 })
   }
