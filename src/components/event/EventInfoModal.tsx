@@ -430,7 +430,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
           )}
 
           {/* 管理者用ボタン */}
-          {userAuth && userAuth.role === 'ADMIN' && (
+          {userAuth && ['ADMIN', 'MODERATOR', 'EDITOR'].includes(userAuth.role) && (
             <div className="mt-6 flex items-center justify-between">
               <div className="flex items-center space-x-3 sm:space-x-4">
                 {!completed && (

@@ -21,12 +21,14 @@ const isAuthorizedForProtectedRoute = (pathname: string, userRole: string): bool
     if (userRole === 'ADMIN' || userRole === 'MODERATOR') {
       return true
     } else if (userRole === 'EDITOR') {
-      if (config.EDITOR_ENABLED_ROUTES.includes(pathname)) {
+      /*if (config.EDITOR_ENABLED_ROUTES.includes(pathname)) {
         // EDITORロールがアクセスできるURLをチェック
         return true
       } else {
         return false
-      }
+      }*/
+      // EDITORロールがアクセスできるURLをチェック
+      return config.EDITOR_ENABLED_ROUTES.some((route) => pathname.startsWith(route))
     } else {
       return false
     }
