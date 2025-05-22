@@ -158,12 +158,12 @@ class UserDB extends BaseDB {
     hashedPassword: string
   ): Promise<boolean> {
     try {
-      await BaseDB.prisma.user.update({
+      const targetUser = await BaseDB.prisma.user.update({
         where: { id: targetUserId },
         data: { password: hashedPassword }
       })
       // パスワード変更のアクティビティログを記録
-      await Activity.logPasswordUpdate(userId, targetUserId)
+      await Activity.logPasswordUpdate(userId, targetUserId, targetUser.name)
       return true
     } catch (err) {
       console.error(err)

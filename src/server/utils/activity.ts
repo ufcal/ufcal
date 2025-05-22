@@ -165,14 +165,22 @@ export class Activity {
   }
 
   // パスワード変更のログメソッド
-  public static async logPasswordUpdate(userId: number, targetUserId: number): Promise<boolean> {
+  public static async logPasswordUpdate(
+    userId: number,
+    targetUserId: number,
+    targetUserName: string
+  ): Promise<boolean> {
     return Activity.logActivity({
       type: 'USER_PASSWORD_UPDATE',
       title: 'パスワード変更',
-      description: 'パスワードを変更しました',
+      description:
+        userId === targetUserId
+          ? 'パスワードを変更しました'
+          : `ユーザ「${targetUserName}」のパスワードを変更しました`,
       userId,
       metadata: {
-        targetUserId
+        targetUserId,
+        targetUserName
       }
     })
   }
