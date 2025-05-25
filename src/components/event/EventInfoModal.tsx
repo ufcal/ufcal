@@ -6,6 +6,9 @@ import CommentFetch from '@/fetch/comment'
 import { MemberCommentFetch } from '@/fetch/member'
 import { modalEventId, notifyEventUpdate, showEventModal } from '@/store/event'
 import React, { useEffect, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import rehypeRaw from 'rehype-raw'
+import rehypeSanitize from 'rehype-sanitize'
 
 interface Comment {
   id: string
@@ -333,7 +336,9 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
               <div className="rounded-lg border border-gray-200 bg-white p-4">
                 {event.description && (
                   <div className="prose prose-gray max-w-none">
-                    <div className="whitespace-pre-line text-gray-600">{event.description}</div>
+                    <ReactMarkdown rehypePlugins={[rehypeRaw, rehypeSanitize]}>
+                      {event.description}
+                    </ReactMarkdown>
                   </div>
                 )}
                 {event.url && (
