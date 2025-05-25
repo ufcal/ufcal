@@ -40,13 +40,6 @@ export default function Calendar() {
     fetcher
   )
 
-  // デバッグ用：イベントデータの確認
-  React.useEffect(() => {
-    if (events) {
-      console.log('Events data:', events)
-    }
-  }, [events])
-
   // イベント情報のモーダルを初期化
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState<any>(null)
