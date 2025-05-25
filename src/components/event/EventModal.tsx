@@ -502,7 +502,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                       </svg>
                       <div className="absolute bottom-full left-0 mb-2 hidden w-[300px] transform rounded-lg bg-gray-900 p-3 text-sm text-white opacity-0 transition-opacity group-hover:block group-hover:opacity-100">
                         <div className="mb-2 border-b border-gray-700 pb-2 font-medium">
-                          表記サンプル
+                          表記サンプル(Markdown記法)
                         </div>
                         <div className="space-y-2 whitespace-pre-wrap">
                           <div>
