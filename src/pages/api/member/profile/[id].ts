@@ -148,40 +148,8 @@ export const PUT: APIRoute = async (context) => {
       }
 
       // データベースの更新
-      try {
-        const updatedUser = await UserDB.updateUserProfile(userId, updateData)
-        if (!updatedUser) {
-          return new Response(JSON.stringify({ message: 'Database update failed' }), {
-            status: 500,
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-        }
-        // セッション(ユーザ情報)更新
-        const sessionData: UserSessionData = convertToUserSessionData(updatedUser)
-        await Session.updateUser(context, sessionData)
-
-        return new Response(
-          JSON.stringify({
-            message: 'Profile updated successfully',
-            user: {
-              id: updatedUser.id,
-              name: updatedUser.name,
-              email: updatedUser.email,
-              avatar: updatedUser.avatar,
-              biography: updatedUser.biography
-            }
-          }),
-          {
-            status: 200,
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        )
-      } catch (err) {
-        console.error(err)
+      const updatedUser = await UserDB.updateUserProfile(userId, updateData)
+      if (!updatedUser) {
         return new Response(JSON.stringify({ message: 'Database update failed' }), {
           status: 500,
           headers: {
@@ -189,7 +157,30 @@ export const PUT: APIRoute = async (context) => {
           }
         })
       }
+      // セッション(ユーザ情報)更新
+      const sessionData: UserSessionData = convertToUserSessionData(updatedUser)
+      await Session.updateUser(context, sessionData)
+
+      return new Response(
+        JSON.stringify({
+          message: 'Profile updated successfully',
+          user: {
+            id: updatedUser.id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            avatar: updatedUser.avatar,
+            biography: updatedUser.biography
+          }
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
     } catch (err) {
+      // バリデーションエラーを返す
       if (err instanceof z.ZodError) {
         const errors = Object.fromEntries(err.errors.map((error) => [error.path[0], error.message]))
         return new Response(
