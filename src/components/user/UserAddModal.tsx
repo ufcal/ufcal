@@ -3,6 +3,7 @@ import Button from '@/components/base/Button'
 import { AdminUserFetch } from '@/fetch/admin'
 import { type IUser, type UserRole } from '@/types/user'
 import { generate } from 'generate-password-ts'
+import type { FC } from 'react'
 import { useState } from 'react'
 //export type UserRole = 'ADMIN' | 'MODERATOR' | 'EDITOR' | 'MEMBER'
 
@@ -12,7 +13,7 @@ interface UserAddModalProps {
   onUserAdded: (user: IUser) => void
 }
 
-export default function UserAddModal({ open, onClose, onUserAdded }: UserAddModalProps) {
+const UserAddModal: FC<UserAddModalProps> = ({ open, onClose, onUserAdded }) => {
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -290,3 +291,5 @@ export default function UserAddModal({ open, onClose, onUserAdded }: UserAddModa
     </div>
   )
 }
+
+export default UserAddModal

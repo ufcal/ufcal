@@ -4,6 +4,7 @@ import config from '@/config/config.json'
 import { AdminUserFetch } from '@/fetch/admin'
 import { type IUser, type UserRole } from '@/types/user'
 import { generate } from 'generate-password-ts'
+import type { FC } from 'react'
 import { useState } from 'react'
 
 type UserEditModalProps = {
@@ -13,7 +14,7 @@ type UserEditModalProps = {
   onUserUpdated: (user: IUser) => void
 }
 
-export function UserEditModal({ open, user, onClose, onUserUpdated }: UserEditModalProps) {
+const UserEditModal: FC<UserEditModalProps> = ({ open, user, onClose, onUserUpdated }) => {
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -358,3 +359,5 @@ export function UserEditModal({ open, user, onClose, onUserUpdated }: UserEditMo
     </div>
   )
 }
+
+export default UserEditModal

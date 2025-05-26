@@ -1,6 +1,7 @@
 import Button from '@/components/base/Button'
 import config from '@/config/config.json'
 import { type IUser } from '@/types/user'
+import type { FC } from 'react'
 import { useState } from 'react'
 
 /*
@@ -20,7 +21,7 @@ type UserListProps = {
   onDelete: (user: IUser) => void
 }
 
-export default function UserList({ users, onEdit, onDelete }: UserListProps) {
+const UserList: FC<UserListProps> = ({ users, onEdit, onDelete }) => {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
   const totalPages = Math.ceil(users.length / itemsPerPage)
@@ -193,3 +194,5 @@ export default function UserList({ users, onEdit, onDelete }: UserListProps) {
     </div>
   )
 }
+
+export default UserList

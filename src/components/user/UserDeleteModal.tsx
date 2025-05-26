@@ -3,21 +3,8 @@ import Button from '@/components/base/Button'
 import config from '@/config/config.json'
 import { AdminUserFetch } from '@/fetch/admin'
 import { type IUser } from '@/types/user'
+import type { FC } from 'react'
 import { useState } from 'react'
-
-/*
-type UserRole = 'ADMIN' | 'MODERATOR' | 'EDITOR' | 'MEMBER'
-
-type User = {
-  id: number
-  email: string
-  name: string
-  role: UserRole
-  createdAt: Date
-  isEnabled?: boolean
-  avatar?: string
-  biography?: string
-}*/
 
 type UserDeleteModalProps = {
   open: boolean
@@ -26,7 +13,7 @@ type UserDeleteModalProps = {
   onUserDeleted: (userId: number) => void
 }
 
-export function UserDeleteModal({ open, user, onClose, onUserDeleted }: UserDeleteModalProps) {
+const UserDeleteModal: FC<UserDeleteModalProps> = ({ open, user, onClose, onUserDeleted }) => {
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -178,3 +165,5 @@ export function UserDeleteModal({ open, user, onClose, onUserDeleted }: UserDele
     </div>
   )
 }
+
+export default UserDeleteModal

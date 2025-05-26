@@ -1,13 +1,14 @@
 import Button from '@/components/base/Button'
 import AdminUserFetch from '@/fetch/admin/user'
 import { type IUser } from '@/types/user'
+import type { FC } from 'react'
 import { useEffect, useState } from 'react'
 import UserAddModal from './UserAddModal'
-import { UserDeleteModal } from './UserDeleteModal'
-import { UserEditModal } from './UserEditModal'
+import UserDeleteModal from './UserDeleteModal'
+import UserEditModal from './UserEditModal'
 import UserList from './UserListMain'
 
-export default function UserListPanel() {
+const UserListPanel: FC = () => {
   const [users, setUsers] = useState<IUser[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -201,3 +202,5 @@ export default function UserListPanel() {
     </>
   )
 }
+
+export default UserListPanel
