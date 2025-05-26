@@ -173,7 +173,21 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
       const response = await MemberProfileFetch.updateProfile(userid, formDataToSend)
       const data = await response.json()
 
-      if (!response.ok) {
+      if (response.ok) {
+        // アップロード完了した画像の一時URLを解放
+        if (tempImageUrl) {
+          setTempImageUrl(null)
+        }
+
+        // プロフィール再取得でサーバー側の画像を即時反映
+        await fetchProfile()
+        setSuccess('プロフィールを更新しました')
+
+        // 2秒後にページをリロードし、ナビゲーションバーのユーザ情報を更新
+        setTimeout(() => {
+          window.location.reload()
+        }, 2000)
+      } else {
         if (response.status === 422) {
           // バリデーションエラーの場合、サーバーからのエラーメッセージを表示
           setError(data.message || '入力内容に問題があります')
@@ -181,24 +195,11 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
           if (data.errors) {
             setValidationErrors(data.errors)
           }
-          return
+        } else {
+          setError(data.message || 'プロフィールの更新に失敗しました')
         }
-        throw new Error(data.message || 'プロフィールの更新に失敗しました')
+        //throw new Error(data.message || 'プロフィールの更新に失敗しました')
       }
-
-      // アップロード完了した画像の一時URLを解放
-      if (tempImageUrl) {
-        setTempImageUrl(null)
-      }
-
-      // プロフィール再取得でサーバー側の画像を即時反映
-      await fetchProfile()
-      setSuccess('プロフィールを更新しました')
-
-      // 2秒後にページをリロードし、ナビゲーションバーのユーザ情報を更新
-      setTimeout(() => {
-        window.location.reload()
-      }, 2000)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'プロフィールの更新に失敗しました')
     }
