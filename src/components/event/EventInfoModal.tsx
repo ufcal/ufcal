@@ -335,7 +335,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
 
               <div className="rounded-lg border border-gray-200 bg-white p-4">
                 {event.description && (
-                  <div className="prose prose-gray prose-p:my-2 prose-h1:text-lg prose-h2:text-lg prose-h2:mb-2 prose-h3:text-base prose-li:my-0.5 prose-ul:mt-2 prose-ol:mt-2 max-w-none">
+                  <div className="prose prose-gray prose-p:my-2 prose-h1:text-lg prose-h2:text-lg prose-h2:mb-1 prose-h2:mt-1 prose-h3:text-base prose-li:my-0.5 prose-ul:mt-1 prose-ul:mb-2 prose-ol:mt-1 prose-ol:mb-2 max-w-none">
                     <ReactMarkdown rehypePlugins={[rehypeRaw, rehypeSanitize]}>
                       {event.description}
                     </ReactMarkdown>
