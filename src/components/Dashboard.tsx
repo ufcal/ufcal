@@ -3,7 +3,7 @@ import AdminDashboardFetch from '@/fetch/admin/dashboard'
 import type { AdminStats, RecentActivity, UserStats } from '@/types/dashboard'
 import { useEffect, useState } from 'react'
 
-export default function Dashboard() {
+const Dashboard: React.FC = () => {
   const [userStats, setUserStats] = useState<UserStats | null>(null)
   const [adminStats, setAdminStats] = useState<AdminStats | null>(null)
   const [recentAdminActivities, setRecentAdminActivities] = useState<RecentActivity[]>([])
@@ -320,3 +320,5 @@ export default function Dashboard() {
     </div>
   )
 }
+
+export default Dashboard

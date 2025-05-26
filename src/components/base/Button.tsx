@@ -76,4 +76,5 @@ const Component = ({
     </a>
   )
 }
+
 export default Component

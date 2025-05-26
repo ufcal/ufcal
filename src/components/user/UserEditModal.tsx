@@ -6,20 +6,6 @@ import { type IUser, type UserRole } from '@/types/user'
 import { generate } from 'generate-password-ts'
 import { useState } from 'react'
 
-/*
-type UserRole = 'ADMIN' | 'MODERATOR' | 'EDITOR' | 'MEMBER'
-
-type User = {
-  id: number
-  email: string
-  name: string
-  role: UserRole
-  createdAt: Date
-  isEnabled?: boolean
-  avatar?: string
-  biography?: string
-}*/
-
 type UserEditModalProps = {
   open: boolean
   user: IUser

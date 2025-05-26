@@ -3,7 +3,7 @@ import Button from '@/components/base/Button'
 import AuthFetch from '@/fetch/auth'
 import { type FormEventHandler, useState } from 'react'
 
-export default function Login() {
+const Login: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
@@ -117,3 +117,5 @@ export default function Login() {
     </div>
   )
 }
+
+export default Login

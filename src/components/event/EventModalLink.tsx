@@ -4,7 +4,7 @@ import { useStore } from '@nanostores/react'
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 
-export default function EventModalLink() {
+const EventModalLink: React.FC = () => {
   const isModalVisible = useStore(showEventModal)
 
   const handleClick = () => {
@@ -49,3 +49,5 @@ export default function EventModalLink() {
     </>
   )
 }
+
+export default EventModalLink

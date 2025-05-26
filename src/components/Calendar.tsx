@@ -20,7 +20,7 @@ interface DateRange {
 
 const fetcher = (url: string): Promise<any> => fetch(url).then((res) => res.json())
 
-export default function Calendar() {
+const Calendar: React.FC = () => {
   const $userStore = useStore(userStore)
   const calendarRef = useRef<FullCalendar>(null)
   const $isEventUpdated = useStore(isEventUpdated) // イベント情報の更新を監視
@@ -101,7 +101,6 @@ export default function Calendar() {
       const eventData = await response.json()
 
       setUserAuth($userStore)
-      //setSelectedEvent(clickInfo.event)
       setSelectedEvent(eventData)
       setIsModalOpen(true)
     } catch (e) {
@@ -160,7 +159,6 @@ export default function Calendar() {
         eventClick={handleEventClick}
         datesSet={getCalendarInfo} // カレンダーが切り替わるときに呼び出される
         locale={jaLocale} // 日本語化
-        //displayEventTime={true} // イベントの時間を表示
         eventTimeFormat={{
           // 時刻フォーマット'14:30'
           hour: '2-digit',
@@ -170,7 +168,6 @@ export default function Calendar() {
         businessHours={true} // 土日をグレーアウト
         fixedWeekCount={false} // 週数を固定しない⇒月の週数が変わる
         height={'90vh'} // カレンダーの高さを制限
-        //contentHeight={'auto'} // カレンダーのコンテンツの高さを自動調整
         eventClassNames="cursor-pointer" // イベントにカーソルポインターを適用
       />
       <EventInfoModal
@@ -182,3 +179,5 @@ export default function Calendar() {
     </div>
   )
 }
+
+export default Calendar
