@@ -175,11 +175,12 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
 
       if (!response.ok) {
         if (response.status === 422) {
-          // 422エラーの場合、サーバーからのエラーメッセージを表示
+          // バリデーションエラーの場合、サーバーからのエラーメッセージを表示
           setError(data.message || '入力内容に問題があります')
-          return
-        } else if (response.status === 400 && data.errors) {
-          setValidationErrors(data.errors)
+
+          if (data.errors) {
+            setValidationErrors(data.errors)
+          }
           return
         }
         throw new Error(data.message || 'プロフィールの更新に失敗しました')

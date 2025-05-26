@@ -185,11 +185,11 @@ export const PUT: APIRoute = async (context) => {
         const errors = Object.fromEntries(err.errors.map((error) => [error.path[0], error.message]))
         return new Response(
           JSON.stringify({
-            message: 'Validation failed',
+            message: '入力内容に問題があります',
             errors
           }),
           {
-            status: 400,
+            status: 422,
             headers: { 'Content-Type': 'application/json' }
           }
         )

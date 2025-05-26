@@ -72,7 +72,7 @@ const Calendar: React.FC = () => {
     }
 
     // 月ビュー以外は何もしない
-    if (dayCellContent.view.type !== 'dayGridMonth') return
+    if (dayCellContent.view.type !== 'dayGridMonth') return null
 
     const dateStr = dayCellContent.date.toLocaleDateString('sv-SE')
     const holidayName = holidays[dateStr]
