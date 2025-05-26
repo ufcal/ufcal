@@ -1,4 +1,4 @@
-import Alert from '@/components/Alert'
+import Alert from '@/components/base/Alert'
 import Button from '@/components/base/Button'
 import { AdminUserFetch } from '@/fetch/admin'
 import { type IUser, type UserRole } from '@/types/user'

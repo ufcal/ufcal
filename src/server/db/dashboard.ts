@@ -1,45 +1,7 @@
 import type { ActivityType } from '@/types/activity'
-import type { AdminStats, RecentActivity, UserStats } from '@/types/dashboard'
 import BaseDB from './base'
 
 class DashboardDB extends BaseDB {
-  /*async getRecentUserActivities(limit: number = 10): Promise<RecentActivity[]> {
-    try {
-      const activities = await BaseDB.prisma.activity.findMany({
-        where: {
-          type: {
-            startsWith: 'USER_COMMENT_'
-          }
-        },
-        orderBy: {
-          createdAt: 'desc'
-        },
-        take: limit,
-        include: {
-          user: {
-            select: {
-              name: true
-            }
-          }
-        }
-      })
-
-      return activities.map((activity) => ({
-        id: activity.id.toString(),
-        type: activity.type as ActivityType,
-        title: activity.title,
-        description: activity.description || '',
-        userId: activity.userId,
-        userName: activity.user.name,
-        metadata: activity.metadata as Record<string, unknown>,
-        createdAt: activity.createdAt
-      }))
-    } catch (err) {
-      console.error('ユーザ活動の取得に失敗しました:', err)
-      return []
-    }
-  }*/
-
   // ダッシュボードの統計情報を取得
   async getDashboardStats() {
     try {

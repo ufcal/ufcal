@@ -1,4 +1,4 @@
-import Alert from '@/components/Alert'
+import Alert from '@/components/base/Alert'
 import Button from '@/components/base/Button'
 import { MemberPasswordFetch } from '@/fetch/member'
 import { useStore } from '@nanostores/react'

@@ -1,4 +1,4 @@
-import Alert from '@/components/Alert'
+import Alert from '@/components/base/Alert'
 import Button from '@/components/base/Button'
 import DateRangePicker from '@/components/DateRangePicker'
 import ColorDropdown from '@/components/event/ColorDropdown'

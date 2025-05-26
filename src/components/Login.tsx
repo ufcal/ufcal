@@ -1,4 +1,4 @@
-import Alert from '@/components/Alert'
+import Alert from '@/components/base/Alert'
 import Button from '@/components/base/Button'
 import AuthFetch from '@/fetch/auth'
 import { type FormEventHandler, useState } from 'react'

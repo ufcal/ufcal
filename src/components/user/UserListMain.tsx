@@ -4,17 +4,6 @@ import { type IUser } from '@/types/user'
 import type { FC } from 'react'
 import { useState } from 'react'
 
-/*
-type User = {
-  id: number
-  email: string
-  name: string
-  role: string
-  isEnabled?: boolean
-  avatar?: string
-  createdAt: Date
-}*/
-
 type UserListProps = {
   users: IUser[]
   onEdit: (user: IUser) => void

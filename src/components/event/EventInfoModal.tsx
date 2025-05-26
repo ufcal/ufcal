@@ -1,4 +1,4 @@
-import Alert from '@/components/Alert'
+import Alert from '@/components/base/Alert'
 import Button from '@/components/base/Button'
 import config from '@/config/config.json'
 import { AdminEventFetch } from '@/fetch/admin'
