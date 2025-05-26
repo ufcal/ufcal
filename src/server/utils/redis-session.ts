@@ -83,7 +83,7 @@ class RedisSession {
 
   async clear() {
     const keys: string[] = await this.client.keys(this.prefix + '*')
-    if (!keys) return null
+    if (!keys) return
 
     keys.forEach(async (key) => {
       await this.client.del(key)

@@ -12,21 +12,10 @@ const redisSession = new RedisSession({ client: redis, ttl: config.SESSION_EXPIR
 // 保護されたルートへのアクセス制御を行う関数
 const isAuthorizedForProtectedRoute = (pathname: string, userRole: string): boolean => {
   // admin関連のパスに対する権限チェック
-  /*if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
-    return userRole === 'ADMIN' || userRole === 'MODERATOR'
-  }
-  return true*/
-
   if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
     if (userRole === 'ADMIN' || userRole === 'MODERATOR') {
       return true
     } else if (userRole === 'EDITOR') {
-      /*if (config.EDITOR_ENABLED_ROUTES.includes(pathname)) {
-        // EDITORロールがアクセスできるURLをチェック
-        return true
-      } else {
-        return false
-      }*/
       // EDITORロールがアクセスできるURLをチェック
       return config.EDITOR_ENABLED_ROUTES.some((route) => pathname.startsWith(route))
     } else {
@@ -55,8 +44,7 @@ export const auth = defineMiddleware(async (context, next) => {
           }
         })
       } else {
-        // 通常のページアクセスの場合は403ページまたはホームにリダイレクト
-        //return Response.redirect(new URL('/', context.url))// NG
+        // 通常のページアクセスの場合はホームにリダイレクト
         return new Response(null, {
           status: 302,
           headers: {
@@ -84,8 +72,7 @@ export const auth = defineMiddleware(async (context, next) => {
             }
           })
         } else {
-          // 通常のページアクセスの場合は403ページまたはホームにリダイレクト
-          //return Response.redirect(new URL('/', context.url)) // NG
+          // 通常のページアクセスの場合はホームにリダイレクト
           return new Response(null, {
             status: 302,
             headers: {
@@ -98,23 +85,6 @@ export const auth = defineMiddleware(async (context, next) => {
 
       return next()
     } else {
-      // ### サイトのアクセス制御のパターンによって公開型、非公開型を区別する ###
-      // 非公開型: 閲覧するにはログインが必要
-      /*
-      if (config.PUBLIC_ROUTES.includes(context.url.pathname)) {
-        // アクセス制限しないURLの場合
-        return next()
-      } else if (context.url.pathname.startsWith('/api/')) {
-        // APIはアクセス不可
-        return new Response(JSON.stringify({ message: 'アクセスできません' }), {
-          status: 401
-        })
-      } else {
-        // それ以外はルートにリダイレクト
-        return Response.redirect(new URL('/', context.url))
-      }*/
-      // 公開型: 一部にログインが必要なページがある
-      //if (config.PROTECTED_ROUTES.includes(context.url.pathname)) {
       const result = config.PROTECTED_ROUTES.some((path) => context.url.pathname.startsWith(path))
       if (result) {
         // 管理画面と管理用APIはアクセス不可
