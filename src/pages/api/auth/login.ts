@@ -97,7 +97,7 @@ export const POST: APIRoute = async (context) => {
       }
     )
   } catch (err) {
-    console.log(err)
+    console.error(err)
 
     return new Response(
       JSON.stringify({
