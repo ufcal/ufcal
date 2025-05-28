@@ -227,6 +227,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
         setNewComment('')
         setSuccess('コメントを投稿しました')
         fetchComments()
+        notifyEventUpdate()
       } else {
         const data = await response.json()
         setError(data.message || 'コメントの投稿に失敗しました')
@@ -246,6 +247,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
       if (response.ok) {
         setSuccess('コメントを削除しました')
         fetchComments()
+        notifyEventUpdate()
       } else {
         const data = await response.json()
         setError(data.message || 'コメントの削除に失敗しました')
