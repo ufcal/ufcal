@@ -23,7 +23,8 @@ export const DELETE: APIRoute = async ({ params }) => {
       }
     })
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    const errorMessage = error instanceof Error ? error.message : '予期せぬエラーが発生しました'
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json'
@@ -100,7 +101,8 @@ export const PUT: APIRoute = async ({ params, request }) => {
       }
     })
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    const errorMessage = error instanceof Error ? error.message : '予期せぬエラーが発生しました'
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json'
@@ -124,30 +126,21 @@ export const GET: APIRoute = async ({ params }) => {
       })
     }
 
-    const mappedEvent = {} as EventAdminResponse
-    mappedEvent.id = event.id
-    mappedEvent.title = event.title
-    mappedEvent.allDay = event.isAllDay
-    if (event.isAllDay) {
-      mappedEvent.start = new Date(event.start)
-        .toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' })
-        .split(' ')[0]!
-      mappedEvent.end = new Date(event.end)
-        .toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' })
-        .split(' ')[0]!
-    } else {
-      mappedEvent.start = new Date(event.start)
-        .toLocaleString('sv-SE', {
-          timeZone: 'Asia/Tokyo'
-        })
-        .replace(' ', 'T')
-      mappedEvent.end = new Date(event.end)
-        .toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' })
-        .replace(' ', 'T')
+    const formatDate = (date: Date, isAllDay: boolean) => {
+      const formatted = new Date(date).toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' })
+      return isAllDay ? formatted.split(' ')[0]! : formatted.replace(' ', 'T')
     }
-    mappedEvent.categoryId = event.categoryId
-    mappedEvent.description = event.description ?? ''
-    mappedEvent.url = event.url ?? ''
+
+    const mappedEvent: EventAdminResponse = {
+      id: event.id,
+      title: event.title,
+      allDay: event.isAllDay,
+      start: formatDate(event.start, event.isAllDay),
+      end: formatDate(event.end, event.isAllDay),
+      categoryId: event.categoryId,
+      description: event.description ?? '',
+      url: event.url ?? ''
+    }
 
     return new Response(JSON.stringify(mappedEvent), {
       status: 200,
@@ -156,7 +149,8 @@ export const GET: APIRoute = async ({ params }) => {
       }
     })
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    const errorMessage = error instanceof Error ? error.message : '予期せぬエラーが発生しました'
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json'

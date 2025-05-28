@@ -35,7 +35,8 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
       })
     }
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    const errorMessage = error instanceof Error ? error.message : '予期せぬエラーが発生しました'
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json'
@@ -141,7 +142,8 @@ export const GET: APIRoute = async ({ params }) => {
       }
     })
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    const errorMessage = error instanceof Error ? error.message : '予期せぬエラーが発生しました'
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json'
