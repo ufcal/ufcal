@@ -64,7 +64,7 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
     // 必須フィールドのバリデーション
     if (!body.name || !body.email || !body.role) {
       return new Response(JSON.stringify({ message: '必須項目が入力されていません' }), {
-        status: 400,
+        status: 422,
         statusText: 'Bad Request',
         headers: {
           'Content-Type': 'application/json'
