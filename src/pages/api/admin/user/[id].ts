@@ -72,6 +72,28 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
       })
     }
 
+    // メールアドレスの重複チェック
+    const existingUserByEmail = await UserDB.getUserByEmail(body.email)
+    if (existingUserByEmail && existingUserByEmail.id !== id) {
+      return new Response(JSON.stringify({ message: 'このメールアドレスは既に使用されています' }), {
+        status: 422,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+
+    // 名前の重複チェック
+    const existingUserByName = await UserDB.getUserByName(body.name)
+    if (existingUserByName && existingUserByName.id !== id) {
+      return new Response(JSON.stringify({ message: 'この名前は既に使用されています' }), {
+        status: 422,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+
     // パスワードが指定されている場合は更新
     if (body.password) {
       const hashedPassword = await hash(body.password)

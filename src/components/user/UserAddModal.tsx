@@ -5,7 +5,6 @@ import { type IUser, type UserRole } from '@/types/user'
 import { generate } from 'generate-password-ts'
 import type { FC } from 'react'
 import { useState } from 'react'
-//export type UserRole = 'ADMIN' | 'MODERATOR' | 'EDITOR' | 'MEMBER'
 
 interface UserAddModalProps {
   open: boolean
