@@ -37,6 +37,26 @@ export const POST: APIRoute = async ({ request, locals }) => {
       endDate = new Date(end + '+0900')
     }
 
+    // 開始日時の範囲チェック（1か月前から1年後まで）
+    const now = new Date()
+    const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+    const oneYearLater = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000)
+
+    if (startDate < oneMonthAgo || startDate > oneYearLater) {
+      return new Response(
+        JSON.stringify({
+          message: 'イベントの開始日時は1か月前から1年後までの範囲で設定してください'
+        }),
+        {
+          status: 422,
+          statusText: 'Unprocessable Entity',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+    }
+
     // 開始日時<終了日時のチェック
     // 通常イベントの場合は開始日時、終了日時が同じ場合を登録可能とする(開始日時終了日時が同じで、開始時間のみのパターン)
     if ((allDay && startDate >= endDate) || (!allDay && startDate > endDate)) {
