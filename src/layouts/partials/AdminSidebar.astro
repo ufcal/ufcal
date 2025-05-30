@@ -1,6 +1,10 @@
 ---
 import { Icon } from 'astro-icon/components'
 import items from '@/data/sidebar.json'
+import type { MenuItem, SubMenuItem } from '@/types/sidebar'
+
+const currentPath = Astro.url.pathname
+const menuItems = items as MenuItem[]
 ---
 
 <aside
@@ -13,12 +17,16 @@ import items from '@/data/sidebar.json'
       <div class="flex-1 space-y-1 divide-y divide-gray-200 bg-white px-3">
         <ul class="space-y-2 pb-2">
           {
-            items.map((item) =>
+            menuItems.map((item) =>
               item.subMenu ? (
                 <li>
                   <button
                     type="button"
-                    class="group flex w-full items-center rounded-lg p-2 text-base text-gray-900 transition duration-75 hover:bg-gray-100"
+                    class={`group flex w-full items-center rounded-lg p-2 text-base text-gray-900 transition duration-75 hover:bg-gray-100 ${
+                      item.subMenu.some((subItem: SubMenuItem) => subItem.href === currentPath)
+                        ? 'bg-gray-100'
+                        : ''
+                    }`}
                     aria-controls={item.subMenuId}
                     data-collapse-toggle={item.subMenuId}
                   >
@@ -41,11 +49,13 @@ import items from '@/data/sidebar.json'
                     </svg>
                   </button>
                   <ul id={item.subMenuId} class="hidden space-y-2 py-2">
-                    {item.subMenu.map((subItem) => (
+                    {item.subMenu.map((subItem: SubMenuItem) => (
                       <li>
                         <a
                           href={subItem.href}
-                          class="group flex items-center rounded-lg p-2 pl-11 text-base text-gray-900 transition duration-75 hover:bg-gray-100"
+                          class={`group flex items-center rounded-lg p-2 pl-11 text-base text-gray-900 transition duration-75 hover:bg-gray-100 ${
+                            subItem.href === currentPath ? 'bg-gray-100' : ''
+                          }`}
                         >
                           {subItem.title}
                         </a>
@@ -57,7 +67,9 @@ import items from '@/data/sidebar.json'
                 <li>
                   <a
                     href={item.href}
-                    class="group flex items-center rounded-lg p-2 text-base text-gray-900 hover:bg-gray-100"
+                    class={`group flex items-center rounded-lg p-2 text-base text-gray-900 hover:bg-gray-100 ${
+                      item.href === currentPath ? 'bg-gray-100' : ''
+                    }`}
                   >
                     <Icon
                       name={item.icon}
@@ -75,7 +87,9 @@ import items from '@/data/sidebar.json'
       <div class="mt-auto border-t border-gray-200 px-3 py-4">
         <a
           href="/"
-          class="group text-primary-700 hover:bg-primary-50 flex items-center rounded-lg p-2 text-base font-medium"
+          class={`group text-primary-700 hover:bg-primary-50 flex items-center rounded-lg p-2 text-base font-medium ${
+            currentPath === '/' ? 'bg-primary-50' : ''
+          }`}
           aria-label="フロント画面へ戻る"
         >
           <Icon

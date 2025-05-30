@@ -60,45 +60,6 @@ const UserListPanel: FC = () => {
       <div className="block items-center justify-between border-b border-gray-200 bg-white p-4 sm:flex">
         <div className="mb-1 w-full">
           <div className="mb-4">
-            <div className="mb-5 flex" aria-label="Breadcrumb">
-              <ol className="inline-flex items-center space-x-1 font-medium md:space-x-2">
-                <li className="inline-flex items-center">
-                  <a
-                    href="#"
-                    className="hover:text-primary-600 inline-flex items-center text-gray-700"
-                  >
-                    <svg
-                      className="mr-2.5 h-5 w-5"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
-                    </svg>
-                    ホーム
-                  </a>
-                </li>
-                <li>
-                  <div className="flex items-center">
-                    <svg
-                      className="h-6 w-6 text-gray-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                        clipRule="evenodd"
-                      ></path>
-                    </svg>
-                    <a href="#" className="hover:text-primary-600 ml-1 text-gray-700 md:ml-2">
-                      ユーザ管理
-                    </a>
-                  </div>
-                </li>
-              </ol>
-            </div>
             <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl">ユーザ一覧</h1>
           </div>
           <div className="sm:flex">

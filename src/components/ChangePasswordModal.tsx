@@ -289,7 +289,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ userId }) => 
                 キャンセル
               </Button>
               <Button type="submit" variant="primary">
-                変更
+                変更する
               </Button>
             </div>
           </form>

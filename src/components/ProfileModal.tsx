@@ -351,7 +351,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ userid }) => {
                 キャンセル
               </Button>
               <Button type="submit" variant="primary">
-                保存
+                更新する
               </Button>
             </div>
           </form>
