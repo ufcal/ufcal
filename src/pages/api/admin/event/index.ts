@@ -21,8 +21,52 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // - start: イベントの開始日時 (string, フォーマット「YYYY-MM-DDThh:mm」)
     // - end: イベントの終了日時 (string, フォーマット「YYYY-MM-DDThh:mm」)
     // - allDay: 終日イベントかどうかを示すフラグ (boolean)
+
     const body = await request.json()
+
+    // リクエストボディの型チェック
+    if (!body || typeof body !== 'object') {
+      return new Response(JSON.stringify({ message: '不正なリクエストです' }), {
+        status: 400,
+        statusText: 'Bad Request',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+
     const { title, start, end, allDay, category, description, url } = body as EventAdminRequest
+
+    // 必須フィールドのチェック
+    if (
+      typeof title !== 'string' ||
+      typeof start !== 'string' ||
+      typeof end !== 'string' ||
+      typeof allDay !== 'boolean' ||
+      typeof category !== 'string' ||
+      typeof description !== 'string' ||
+      typeof url !== 'string'
+    ) {
+      return new Response(JSON.stringify({ message: '必須フィールドが不足しています' }), {
+        status: 400,
+        statusText: 'Bad Request',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+
+    // 日付形式のチェック
+    if (isNaN(Date.parse(start)) || isNaN(Date.parse(end))) {
+      return new Response(JSON.stringify({ message: '日付の形式が不正です' }), {
+        status: 400,
+        statusText: 'Bad Request',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+
     let errMessage = ''
     let startDate, endDate
 

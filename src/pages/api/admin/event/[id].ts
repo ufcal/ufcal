@@ -42,9 +42,61 @@ export const PUT: APIRoute = async ({ params, request }) => {
     // - allDay: 終日イベントかどうかを示すフラグ (boolean)
     let errMessage = ''
     let startDate, endDate
+    //const { id } = params
+
+    const id = Number(params.id)
+    if (isNaN(id)) {
+      return new Response(JSON.stringify({ message: '有効なIDが指定されていません' }), {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+
     const body = await request.json()
+
+    // リクエストボディの型チェック
+    if (!body || typeof body !== 'object') {
+      return new Response(JSON.stringify({ message: '不正なリクエストです' }), {
+        status: 400,
+        statusText: 'Bad Request',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
     const { title, start, end, allDay, category, description, url } = body as EventAdminRequest
-    const { id } = params
+
+    // 必須フィールドのチェック
+    if (
+      typeof title !== 'string' ||
+      typeof start !== 'string' ||
+      typeof end !== 'string' ||
+      typeof allDay !== 'boolean' ||
+      typeof category !== 'string' ||
+      typeof description !== 'string' ||
+      typeof url !== 'string'
+    ) {
+      return new Response(JSON.stringify({ message: '必須フィールドが不足しています' }), {
+        status: 400,
+        statusText: 'Bad Request',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+
+    // 日付形式のチェック
+    if (isNaN(Date.parse(start)) || isNaN(Date.parse(end))) {
+      return new Response(JSON.stringify({ message: '日付の形式が不正です' }), {
+        status: 400,
+        statusText: 'Bad Request',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
 
     // JSTからUTCに変換してDateオブジェクトを生成
     if (allDay) {
@@ -113,8 +165,17 @@ export const PUT: APIRoute = async ({ params, request }) => {
 
 export const GET: APIRoute = async ({ params }) => {
   try {
-    const { id } = params
-    const event = await EventDB.getEventById(Number(id))
+    const id = Number(params.id)
+    if (isNaN(id)) {
+      return new Response(JSON.stringify({ message: '有効なIDが指定されていません' }), {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+
+    const event = await EventDB.getEventById(id)
 
     if (!event) {
       return new Response(JSON.stringify({ message: 'イベントが見つかりませんでした' }), {
