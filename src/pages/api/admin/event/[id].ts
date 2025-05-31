@@ -87,17 +87,6 @@ export const PUT: APIRoute = async ({ params, request }) => {
       })
     }
 
-    // 日付形式のチェック
-    if (isNaN(Date.parse(start)) || isNaN(Date.parse(end))) {
-      return new Response(JSON.stringify({ message: '日付の形式が不正です' }), {
-        status: 400,
-        statusText: 'Bad Request',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-    }
-
     // JSTからUTCに変換してDateオブジェクトを生成
     if (allDay) {
       // 終日イベントの場合は日付部分のみを使用
@@ -107,6 +96,17 @@ export const PUT: APIRoute = async ({ params, request }) => {
       // 通常のイベントの場合は時間部分も含めて生成
       startDate = new Date(start + '+0900')
       endDate = new Date(end + '+0900')
+    }
+
+    // 日付形式のチェック
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+      return new Response(JSON.stringify({ message: '日付の形式が不正です' }), {
+        status: 400,
+        statusText: 'Bad Request',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
     }
 
     // 開始日時<終了日時のチェック
