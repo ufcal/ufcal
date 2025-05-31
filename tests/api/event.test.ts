@@ -159,8 +159,10 @@ describe('API Routes', () => {
     })
 
     expect(response.status).toBe(200)
-    //const event = await response.json()
+    const event = await response.json()
     //expect(event).toMatchObject(testEvent)
+    //expect(event).toEqual(testEvent)
+    expect(event).toEqual(expect.objectContaining(testEvent)) // ID以外を比較
   })
 
   test('イベントを更新', async () => {

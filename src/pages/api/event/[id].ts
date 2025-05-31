@@ -5,8 +5,17 @@ import type { APIRoute } from 'astro'
 
 export const GET: APIRoute = async ({ params }) => {
   try {
-    const { id } = params
-    const event = await EventDB.getEventById(Number(id))
+    const id = Number(params.id)
+    if (isNaN(id)) {
+      return new Response(JSON.stringify({ message: '有効なIDが指定されていません' }), {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+
+    const event = await EventDB.getEventById(id)
 
     if (!event) {
       return new Response(JSON.stringify({ message: 'イベントが見つかりませんでした' }), {

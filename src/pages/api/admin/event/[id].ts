@@ -198,7 +198,7 @@ export const GET: APIRoute = async ({ params }) => {
       allDay: event.isAllDay,
       start: formatDate(event.start, event.isAllDay),
       end: formatDate(event.end, event.isAllDay),
-      categoryId: event.categoryId,
+      category: event.categoryId,
       description: event.description ?? '',
       url: event.url ?? ''
     }

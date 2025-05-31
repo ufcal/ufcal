@@ -22,7 +22,7 @@ export interface EventAdminResponse {
   start: string
   end: string
   allDay: boolean
-  categoryId: string
+  category: string
   description: string
   url: string
 }
