@@ -13,6 +13,8 @@ describe('API Routes', () => {
   let body: Array<{ [key: string]: unknown }>
   let cookies: string = ''
   let createdEventId: string
+  let createdEventId2: string
+  let createdEventId3: string
 
   const today = new Date()
   const tomorrow = new Date(today)
@@ -31,7 +33,52 @@ describe('API Routes', () => {
     start: formatDate(today),
     end: formatDate(tomorrow),
     allDay: true,
-    category: '1',
+    category: 'category1',
+    url: 'https://example.com'
+  }
+  const testEvent2: EventAdminRequest = {
+    title: 'テストイベント2',
+    description: 'これはテストイベントです',
+    start: formatDate(today) + 'T09:00',
+    end: formatDate(today) + 'T09:00',
+    allDay: false,
+    category: 'category1',
+    url: 'https://example.com'
+  }
+  const testEvent3: EventAdminRequest = {
+    title: 'テストイベント3',
+    description: 'これはテストイベントです',
+    start: formatDate(today) + 'T09:00',
+    end: formatDate(today) + 'T12:00',
+    allDay: false,
+    category: 'category1',
+    url: 'https://example.com'
+  }
+  const errorEvent: EventAdminRequest = {
+    title: 'テストイベント',
+    description: 'これはテストイベントです',
+    start: formatDate(today),
+    end: formatDate(today), // エラー値
+    allDay: true,
+    category: 'category1',
+    url: 'https://example.com'
+  }
+  const errorEvent2: EventAdminRequest = {
+    title: 'テストイベント2',
+    description: 'これはテストイベントです',
+    start: formatDate(today),
+    end: formatDate(tomorrow),
+    allDay: false, // エラー値
+    category: 'category1',
+    url: 'https://example.com'
+  }
+  const errorEvent3: EventAdminRequest = {
+    title: 'テストイベント3',
+    description: 'これはテストイベントです',
+    start: formatDate(today) + 'T12:00',
+    end: formatDate(today) + 'T09:00',
+    allDay: false,
+    category: 'category1',
     url: 'https://example.com'
   }
 
@@ -94,8 +141,72 @@ describe('API Routes', () => {
 
     expect(response.status).toBe(200)
     const createdEvent = await response.json()
-    //expect(createdEvent).toMatchObject(testEvent)
     createdEventId = createdEvent.id
+  })
+  test('イベントを作成2', async () => {
+    response = await fetch(EVENT_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: cookies
+      },
+      body: JSON.stringify(testEvent2)
+    })
+
+    expect(response.status).toBe(200)
+    const createdEvent2 = await response.json()
+    createdEventId2 = createdEvent2.id
+  })
+  test('イベントを作成3', async () => {
+    response = await fetch(EVENT_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: cookies
+      },
+      body: JSON.stringify(testEvent3)
+    })
+
+    expect(response.status).toBe(200)
+    const createdEvent3 = await response.json()
+    createdEventId3 = createdEvent3.id
+  })
+
+  test('無効なデータでイベントを作成1（バリデーションエラー）', async () => {
+    response = await fetch(EVENT_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: cookies
+      },
+      body: JSON.stringify(errorEvent)
+    })
+
+    expect(response.status).toBe(422)
+  })
+  test('無効なデータでイベントを作成2（バリデーションエラー）', async () => {
+    response = await fetch(EVENT_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: cookies
+      },
+      body: JSON.stringify(errorEvent2)
+    })
+
+    expect(response.status).toBe(400)
+  })
+  test('無効なデータでイベントを作成3（バリデーションエラー）', async () => {
+    response = await fetch(EVENT_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: cookies
+      },
+      body: JSON.stringify(errorEvent3)
+    })
+
+    expect(response.status).toBe(422)
   })
 
   test('1か月前より前の日付でイベントを作成（バリデーションエラー）', async () => {
@@ -169,7 +280,8 @@ describe('API Routes', () => {
     const updatedEvent = {
       ...testEvent,
       title: '更新されたテストイベント',
-      description: 'これは更新されたテストイベントです'
+      description: 'これは更新されたテストイベントです',
+      category: 'category2'
     }
 
     response = await fetch(`${EVENT_API_URL}/${createdEventId}`, {
@@ -226,7 +338,22 @@ describe('API Routes', () => {
         Cookie: cookies
       }
     })
+    expect(response.status).toBe(200)
 
+    response = await fetch(`${EVENT_API_URL}/${createdEventId2}`, {
+      method: 'DELETE',
+      headers: {
+        Cookie: cookies
+      }
+    })
+    expect(response.status).toBe(200)
+
+    response = await fetch(`${EVENT_API_URL}/${createdEventId3}`, {
+      method: 'DELETE',
+      headers: {
+        Cookie: cookies
+      }
+    })
     expect(response.status).toBe(200)
 
     // 削除されたイベントが取得できないことを確認
