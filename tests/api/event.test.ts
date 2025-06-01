@@ -6,7 +6,37 @@ const AUTH_API_URL = `${import.meta.env.PUBLIC_BASE_URL}${config.api.rootUrl}/au
 const EVENT_API_URL = `${import.meta.env.PUBLIC_BASE_URL}${config.api.adminUrl}/event`
 const BEFORE_ALL_TIMEOUT = 30000 // 30 sec
 const LOGIN_EMAIL = 'admin@example.com'
-const LOGIN_PASSWORD = 'password2'
+const LOGIN_PASSWORD = 'password'
+
+// カスタムマッチャーの型定義
+declare module 'vitest' {
+  interface Assertion {
+    toHaveStatus(expected: number, errorMessage?: string): void
+  }
+  interface AsymmetricMatchersContaining {
+    toHaveStatus(expected: number, errorMessage?: string): void
+  }
+}
+
+expect.extend({
+  toHaveStatus(received, expected, errorMessage) {
+    const { status } = received
+    const pass = status === expected
+
+    if (pass) {
+      return {
+        message: () => `期待通りステータスコード${expected}が返されました`,
+        pass: true
+      }
+    } else {
+      return {
+        message: () =>
+          `期待したステータスコード: ${expected}\n実際のステータスコード: ${status}\nエラーメッセージ: ${errorMessage}`,
+        pass: false
+      }
+    }
+  }
+})
 
 describe('API Routes', () => {
   let response: Response
@@ -139,6 +169,12 @@ describe('API Routes', () => {
       body: JSON.stringify(testEvent)
     })
 
+    // エラーが発生した場合はエラーメッセージを表示
+    if (response.status !== 200) {
+      const error = await response.json()
+      expect(response).toHaveStatus(200, error.message)
+    }
+
     expect(response.status).toBe(200)
     const createdEvent = await response.json()
     createdEventId = createdEvent.id
@@ -153,6 +189,12 @@ describe('API Routes', () => {
       body: JSON.stringify(testEvent2)
     })
 
+    // エラーが発生した場合はエラーメッセージを表示
+    if (response.status !== 200) {
+      const error = await response.json()
+      expect(response).toHaveStatus(200, error.message)
+    }
+
     expect(response.status).toBe(200)
     const createdEvent2 = await response.json()
     createdEventId2 = createdEvent2.id
@@ -166,6 +208,12 @@ describe('API Routes', () => {
       },
       body: JSON.stringify(testEvent3)
     })
+
+    // エラーが発生した場合はエラーメッセージを表示
+    if (response.status !== 200) {
+      const error = await response.json()
+      expect(response).toHaveStatus(200, error.message)
+    }
 
     expect(response.status).toBe(200)
     const createdEvent3 = await response.json()
