@@ -1,5 +1,6 @@
 import { colors } from '@/config/master/category'
 import { EventDB } from '@/server/db'
+import { formatDate } from '@/server/utils/date'
 import type { EventDetailResponse } from '@/types/event'
 import type { APIRoute } from 'astro'
 
@@ -25,11 +26,6 @@ export const GET: APIRoute = async ({ params }) => {
           'Content-Type': 'application/json'
         }
       })
-    }
-
-    const formatDate = (date: Date, isAllDay: boolean) => {
-      const formatted = new Date(date).toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' })
-      return isAllDay ? formatted.split(' ')[0]! : formatted.replace(' ', 'T')
     }
 
     const mappedEvent: EventDetailResponse = {

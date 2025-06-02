@@ -1,5 +1,6 @@
 import { colors } from '@/config/master/category'
 import { EventDB } from '@/server/db'
+import { formatDate } from '@/server/utils/date'
 import { type EventResponse } from '@/types/event'
 import type { APIRoute } from 'astro'
 
@@ -27,12 +28,6 @@ export const GET: APIRoute = async ({ request }) => {
     const events = await EventDB.getPublicEvents(startDate, endDate)
 
     // レスポンス用データ作成
-    // DB用フォーマット(UTC)からクライアントフォーマット(JST)に変換
-    const formatDate = (date: Date, isAllDay: boolean) => {
-      const formatted = new Date(date).toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' })
-      return isAllDay ? formatted.split(' ')[0]! : formatted.replace(' ', 'T')
-    }
-
     const mappedEvents = events.map((event) => {
       const categoryColor = colors.find((color) => color.value === event.categoryId)
 

@@ -78,8 +78,8 @@ describe('API Routes', () => {
   const testEvent3: EventAdminRequest = {
     title: 'テストイベント3',
     description: 'これはテストイベントです',
-    start: formatDate(today) + 'T09:00',
-    end: formatDate(today) + 'T12:00',
+    start: formatDate(today) + 'T09:12',
+    end: formatDate(today) + 'T12:12',
     allDay: false,
     category: 'category1',
     url: 'https://example.com'
@@ -319,9 +319,20 @@ describe('API Routes', () => {
 
     expect(response.status).toBe(200)
     const event = await response.json()
-    //expect(event).toMatchObject(testEvent)
-    //expect(event).toEqual(testEvent)
     expect(event).toEqual(expect.objectContaining(testEvent)) // ID以外を比較
+  })
+
+  test('作成したイベントを取得2', async () => {
+    response = await fetch(`${EVENT_API_URL}/${createdEventId3}`, {
+      method: 'GET',
+      headers: {
+        Cookie: cookies
+      }
+    })
+
+    expect(response.status).toBe(200)
+    const event = await response.json()
+    expect(event).toEqual(expect.objectContaining(testEvent3)) // ID以外を比較
   })
 
   test('イベントを更新', async () => {
