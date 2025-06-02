@@ -8,12 +8,17 @@ import tseslint from 'typescript-eslint'
 export default [
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
+  //...tseslint.configs.recommendedTypeChecked, // 厳格化
   ...eslintPluginAstro.configs['flat/recommended'],
   {
     languageOptions: {
       globals: {
         ...globals.browser,
         ...globals.node
+      },
+      parserOptions: {
+        //projectService: true,
+        tsconfigRootDir: import.meta.dirname
       }
     },
     rules: {
@@ -73,12 +78,14 @@ export default [
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/triple-slash-reference': 'off',
+      '@typescript-eslint/no-floating-promises': 'warn',
+      '@typescript-eslint/no-unsafe-argument': 'warn',
+      'consistent-return': 'off',
+      '@typescript-eslint/consistent-return': 'error'
 
       // TypeScriptの厳格化
       //'@typescript-eslint/explicit-function-return-type': 'warn',
       //'@typescript-eslint/strict-boolean-expressions': 'warn'
-      'consistent-return': 'off',
-      '@typescript-eslint/consistent-return': 'error'
     }
   },
   {
