@@ -14,6 +14,19 @@ export const GET: APIRoute = async ({ request }) => {
     // 終日イベントの場合は日付部分のみを使用
     const startDate = new Date(start + 'T00:00:00+09:00')
     const endDate = new Date(end + 'T00:00:00+09:00')
+
+    // 日付形式のチェック
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+      return new Response(JSON.stringify({ message: '日付の形式が不正です' }), {
+        status: 400,
+        statusText: 'Bad Request',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+
+    // 日付期間のチェック
     if (startDate >= endDate) {
       return new Response(JSON.stringify({ message: '開始日は終了日より前でなければなりません' }), {
         status: 400,
