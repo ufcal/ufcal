@@ -63,8 +63,8 @@ Astroフレームワークベースのカレンダーシステムです。ユー
 
 4. データベースのセットアップ
    ```bash
-   pnpm dlx prisma migrate dev --name init
-   pnpm dlx prisma migrate reset
+   pnpm dlx prisma migrate deploy
+   pnpm dlx prisma db seed
    ```
 
 ## 開発サーバーの起動
