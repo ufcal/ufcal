@@ -1,4 +1,4 @@
-import { colors } from '@/config/master/category'
+import colors from '@/config/master/event-category.json'
 import React, { useState } from 'react'
 
 interface ColorDropdownProps {

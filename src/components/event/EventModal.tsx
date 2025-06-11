@@ -183,7 +183,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
             isTimeSettingEnabled: !eventData.allDay, // 終日イベントかどうか
             eventTimeStart: eventTimeStart,
             eventTimeEnd: eventTimeEnd,
-            category: eventData.categoryId || '',
+            category: eventData.category || '', // categoryIdをcategoryに変更
             url: eventData.url
           })
         } catch (e) {
