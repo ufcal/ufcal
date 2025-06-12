@@ -1,4 +1,4 @@
-import colors from '@/config/master/event-category.json'
+import colors from '@/config/event-category.json'
 import { EventDB } from '@/server/db'
 import { formatDate } from '@/server/utils/date'
 import { type EventResponse } from '@/types/event'
