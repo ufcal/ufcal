@@ -2,6 +2,7 @@
   "site": {
     "title": "カレンダーデモ",
     "logo": "/images/logo.png",
+    "favicon": "/images/favicon.png",
     "comments": {
       "enabled": true
     }
