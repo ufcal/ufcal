@@ -159,6 +159,23 @@ const Calendar: React.FC = () => {
         eventClick={handleEventClick}
         datesSet={getCalendarInfo} // カレンダーが切り替わるときに呼び出される
         locale={jaLocale} // 日本語化
+        eventOrder={(a: any, b: any) => {
+          // 終日イベントを先に表示
+          if (a.allDay && !b.allDay) return -1
+          if (!a.allDay && b.allDay) return 1
+
+          // 終日イベント同士の場合、カテゴリーIDで比較
+          if (a.allDay && b.allDay) {
+            const categoryA = a.extendedProps?.categoryId || ''
+            const categoryB = b.extendedProps?.categoryId || ''
+            if (categoryA !== categoryB) {
+              return categoryA.localeCompare(categoryB)
+            }
+          }
+
+          // 同じ種類のイベントは開始時間で比較
+          return new Date(a.start).getTime() - new Date(b.start).getTime()
+        }}
         eventTimeFormat={{
           // 時刻フォーマット'14:30'
           hour: '2-digit',

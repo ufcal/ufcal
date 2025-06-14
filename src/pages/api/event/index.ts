@@ -51,7 +51,8 @@ export const GET: APIRoute = async ({ request }) => {
         start: formatDate(event.start, event.isAllDay),
         end: formatDate(event.end, event.isAllDay),
         color: categoryColor?.color || 'black',
-        commentCount: event.commentCount
+        commentCount: event.commentCount,
+        categoryId: event.categoryId
       } as EventResponse
     })
 
