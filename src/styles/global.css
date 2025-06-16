@@ -142,6 +142,7 @@ td.fc-day-sun .fc-daygrid-day-number {
 }
 .fc-popover {
   @apply shadow-lg rounded-md !border-2 !border-gray-400;
+  z-index: 10 !important;
 }
 .fc-popover-header {
   @apply !bg-primary-500 text-white font-semibold p-2 rounded-t-sm;
