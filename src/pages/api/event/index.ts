@@ -42,7 +42,8 @@ export const GET: APIRoute = async ({ request }) => {
 
     // レスポンス用データ作成
     const mappedEvents = events.map((event) => {
-      const categoryColor = colors.find((color) => color.value === event.categoryId)
+      const categoryIndex = colors.findIndex((color) => color.value === event.categoryId)
+      const categoryColor = colors[categoryIndex]
 
       return {
         id: event.id,
@@ -52,7 +53,7 @@ export const GET: APIRoute = async ({ request }) => {
         end: formatDate(event.end, event.isAllDay),
         color: categoryColor?.color || 'black',
         commentCount: event.commentCount,
-        categoryId: event.categoryId
+        categoryIndex: categoryIndex >= 0 ? categoryIndex : 0
       } as EventResponse
     })
 

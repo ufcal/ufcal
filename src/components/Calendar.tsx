@@ -164,16 +164,33 @@ const Calendar: React.FC = () => {
           if (a.allDay && !b.allDay) return -1
           if (!a.allDay && b.allDay) return 1
 
-          // 終日イベント同士の場合、カテゴリーIDで比較
+          // 終日イベント同士の場合、カテゴリーインデックスで比較
           if (a.allDay && b.allDay) {
-            const categoryA = a.extendedProps?.categoryId || ''
-            const categoryB = b.extendedProps?.categoryId || ''
-            if (categoryA !== categoryB) {
-              return categoryA.localeCompare(categoryB)
+            const categoryIndexA = a.extendedProps?.categoryIndex || 0
+            const categoryIndexB = b.extendedProps?.categoryIndex || 0
+            if (categoryIndexA !== categoryIndexB) {
+              return categoryIndexA - categoryIndexB
             }
           }
 
-          // 同じ種類のイベントは開始時間で比較
+          // 通常イベントの場合
+          if (!a.allDay && !b.allDay) {
+            // 開始時間を比較
+            const startTimeA = new Date(a.start).getTime()
+            const startTimeB = new Date(b.start).getTime()
+
+            // 開始時間が同じ場合はカテゴリーインデックスで比較
+            if (startTimeA === startTimeB) {
+              const categoryIndexA = a.extendedProps?.categoryIndex || 0
+              const categoryIndexB = b.extendedProps?.categoryIndex || 0
+              return categoryIndexA - categoryIndexB
+            }
+
+            // 開始時間が異なる場合は開始時間順
+            return startTimeA - startTimeB
+          }
+
+          // その他の場合は開始時間で比較
           return new Date(a.start).getTime() - new Date(b.start).getTime()
         }}
         eventTimeFormat={{

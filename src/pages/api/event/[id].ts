@@ -28,6 +28,9 @@ export const GET: APIRoute = async ({ params }) => {
       })
     }
 
+    const categoryIndex = colors.findIndex((color) => color.value === event.categoryId)
+    const categoryColor = colors[categoryIndex]
+
     const mappedEvent: EventDetailResponse = {
       id: event.id,
       title: event.title,
@@ -36,7 +39,8 @@ export const GET: APIRoute = async ({ params }) => {
       end: formatDate(event.end, event.isAllDay),
       description: event.description ?? '',
       url: event.url ?? '',
-      color: colors.find((color) => color.value === event.categoryId)?.color ?? 'black'
+      color: categoryColor?.color ?? 'black',
+      categoryIndex: categoryIndex >= 0 ? categoryIndex : 0
     }
 
     return new Response(JSON.stringify(mappedEvent), {
