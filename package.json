@@ -68,7 +68,7 @@
     "eslint": "^9.29.0",
     "eslint-plugin-astro": "^1.3.1",
     "globals": "^16.2.0",
-    "prettier": "^3.6.0",
+    "prettier": "^3.6.1",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.6.13",
     "prisma": "^6.10.1",
