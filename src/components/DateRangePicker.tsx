@@ -23,6 +23,7 @@ interface DateRangePickerProps {
   onChange?: (startDate: Date | null, endDate: Date | null) => void
   isRangeMode?: boolean // 日付範囲選択モードかどうかを指定するプロパティ
   placeholder?: string // プレースホルダーテキスト
+  showWeekday?: boolean // 曜日を表示するかどうかを指定するプロパティ
 }
 
 const DateRangePicker: React.FC<DateRangePickerProps> = ({
@@ -30,7 +31,8 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
   endDate: externalEndDate,
   onChange,
   isRangeMode = true, // デフォルトは日付範囲選択モード
-  placeholder = '日付を選択'
+  placeholder = '日付を選択',
+  showWeekday = false
 }) => {
   // 内部で状態を管理
   const [currentMonth, setCurrentMonth] = useState(new Date())
@@ -234,7 +236,16 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
   }
 
   const formatDateDisplay = (date: Date | null) => {
-    return date ? format(date, 'yyyy年M月d日', { locale: ja }) : '選択してください'
+    if (!date) return '選択してください'
+
+    const baseFormat = format(date, 'yyyy年M月d日', { locale: ja })
+
+    if (showWeekday) {
+      const weekday = format(date, 'E', { locale: ja })
+      return `${baseFormat}(${weekday})`
+    }
+
+    return baseFormat
   }
 
   return (
