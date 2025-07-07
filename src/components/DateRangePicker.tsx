@@ -234,7 +234,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
   }
 
   const formatDateDisplay = (date: Date | null) => {
-    return date ? format(date, 'yyyy/MM/dd') : '選択してください'
+    return date ? format(date, 'yyyy年M月d日', { locale: ja }) : '選択してください'
   }
 
   return (
