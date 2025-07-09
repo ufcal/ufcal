@@ -6,7 +6,7 @@ import { AdminEventFetch } from '@/fetch/admin'
 import { modalEventId, notifyEventUpdate, showEventModal } from '@/store/event'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useStore } from '@nanostores/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Controller, useForm, type FieldErrors } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -125,6 +125,9 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
       url: ''
     }
   })
+
+  // フォーカス制御用
+  const rangeRef = useRef<HTMLDivElement>(null)
 
   // 時間設定(オプション)を監視
   const isTimeSettingEnabled = watch('isTimeSettingEnabled')
@@ -365,10 +368,12 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
                     control={control}
                     render={({ field: { onChange, value } }) => (
                       <DateRangePicker
+                        ref={rangeRef}
                         startDate={value.startDate}
                         endDate={value.endDate}
                         onChange={(start, end) => onChange({ startDate: start, endDate: end })}
                         isRangeMode={true}
+                        showWeekday={true}
                         placeholder="日付を選択"
                       />
                     )}

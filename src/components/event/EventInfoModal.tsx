@@ -28,17 +28,28 @@ interface EventInfoModalProps {
 
 // 開催日時の文字列を生成する関数
 const formatEventDateTime = (event: { start: string; end: string; allDay: boolean }) => {
+  // 曜日を取得する関数
+  const getDayOfWeek = (date: Date) => {
+    const days = ['日', '月', '火', '水', '木', '金', '土']
+    return days[date.getDay()]
+  }
+
+  // 日付に曜日を付加する関数
+  const addDayOfWeek = (date: Date) => {
+    const formattedDate = new Intl.DateTimeFormat('ja-JP', {
+      dateStyle: 'long'
+    }).format(date)
+    const dayOfWeek = getDayOfWeek(date)
+    return `${formattedDate}(${dayOfWeek})`
+  }
+
   if (event.allDay) {
     const startDate = new Date(event.start)
     const adjustedEnd = new Date(event.end)
     adjustedEnd.setDate(adjustedEnd.getDate() - 1)
 
-    const formattedStart = new Intl.DateTimeFormat('ja-JP', {
-      dateStyle: 'long'
-    }).format(startDate)
-    const formattedEnd = new Intl.DateTimeFormat('ja-JP', {
-      dateStyle: 'long'
-    }).format(adjustedEnd)
+    const formattedStart = addDayOfWeek(startDate)
+    const formattedEnd = addDayOfWeek(adjustedEnd)
 
     if (startDate.toDateString() === adjustedEnd.toDateString()) {
       return formattedStart
@@ -51,7 +62,8 @@ const formatEventDateTime = (event: { start: string; end: string; allDay: boolea
           month: 'long',
           day: 'numeric'
         }).format(adjustedEnd)
-        return `${formattedStart} 〜 ${formattedEndDate}`
+        const dayOfWeek = getDayOfWeek(adjustedEnd)
+        return `${formattedStart} 〜 ${formattedEndDate}(${dayOfWeek})`
       } else {
         return `${formattedStart} 〜 ${formattedEnd}`
       }
@@ -60,20 +72,16 @@ const formatEventDateTime = (event: { start: string; end: string; allDay: boolea
     const startDate = new Date(event.start)
     const endDate = new Date(event.end)
 
-    const formattedStartDate = new Intl.DateTimeFormat('ja-JP', {
-      dateStyle: 'long'
-    }).format(startDate)
+    const formattedStartDate = addDayOfWeek(startDate)
     const formattedStartTime = new Intl.DateTimeFormat('ja-JP', {
       timeStyle: 'short'
     }).format(startDate)
-    const formattedEndDate = new Intl.DateTimeFormat('ja-JP', {
-      dateStyle: 'long'
-    }).format(endDate)
+    const formattedEndDate = addDayOfWeek(endDate)
     const formattedEndTime = new Intl.DateTimeFormat('ja-JP', {
       timeStyle: 'short'
     }).format(endDate)
 
-    if (formattedStartDate === formattedEndDate) {
+    if (startDate.toDateString() === endDate.toDateString()) {
       if (formattedStartTime === formattedEndTime) {
         return `${formattedStartDate} ${formattedStartTime}`
       } else {
@@ -88,7 +96,8 @@ const formatEventDateTime = (event: { start: string; end: string; allDay: boolea
           month: 'long',
           day: 'numeric'
         }).format(endDate)
-        return `${formattedStartDate} ${formattedStartTime} 〜 ${formattedEndDate} ${formattedEndTime}`
+        const dayOfWeek = getDayOfWeek(endDate)
+        return `${formattedStartDate} ${formattedStartTime} 〜 ${formattedEndDate}(${dayOfWeek}) ${formattedEndTime}`
       } else {
         return `${formattedStartDate} ${formattedStartTime} 〜 ${formattedEndDate} ${formattedEndTime}`
       }
