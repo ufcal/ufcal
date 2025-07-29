@@ -17,12 +17,14 @@ Astroフレームワークベースのカレンダーシステムです。ユー
 ## 技術スタック
 
 ### フロントエンド
-- Astro (SSR)
-- React
-- Tailwind CSS
+- Astro v5 (SSR)
+- React v19
+- Tailwind CSS v4
 - Flowbite
 - FullCalendar
 - Zod (バリデーション)
+- SWR (データフェッチング)
+- Nanostores (状態管理)
 
 ### バックエンド
 - Node.js
@@ -33,6 +35,7 @@ Astroフレームワークベースのカレンダーシステムです。ユー
 - TypeScript
 - ESLint
 - Prettier
+- Vitest (テスト)
 
 ## 環境要件
 
@@ -51,7 +54,7 @@ Astroフレームワークベースのカレンダーシステムです。ユー
 2. 依存関係のインストール
    ```bash
    pnpm install
-   pnpm dlx prisma generate
+   pnpm db:generate
    ```
 
 3. 環境変数の設定
@@ -63,8 +66,8 @@ Astroフレームワークベースのカレンダーシステムです。ユー
 
 4. データベースのセットアップ
    ```bash
-   pnpm dlx prisma migrate deploy
-   pnpm dlx prisma db seed
+   pnpm db:migrate
+   pnpm db:seed
    ```
 
 ## 開発サーバーの起動
