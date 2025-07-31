@@ -23,7 +23,7 @@
     "db:seed": "node prisma/seed.mjs"
   },
   "dependencies": {
-    "@astrojs/node": "^9.3.1",
+    "@astrojs/node": "^9.3.2",
     "@astrojs/react": "^4.3.0",
     "@fullcalendar/core": "^6.1.18",
     "@fullcalendar/daygrid": "^6.1.18",
@@ -33,14 +33,14 @@
     "@hookform/resolvers": "^5.2.1",
     "@nanostores/react": "^1.0.0",
     "@prisma/client": "^6.13.0",
-    "astro": "^5.12.5",
+    "astro": "^5.12.7",
     "astro-icon": "^1.1.5",
     "bcryptjs": "^3.0.2",
     "cookie-signature": "^1.2.2",
     "date-fns": "^4.1.0",
     "flowbite": "^3.1.2",
     "generate-password-ts": "^1.6.5",
-    "ioredis": "^5.6.1",
+    "ioredis": "^5.7.0",
     "nanostores": "^1.0.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
@@ -51,7 +51,7 @@
     "swr": "^2.3.4",
     "tailwind-merge": "^3.3.1",
     "uuid": "^11.1.0",
-    "zod": "^4.0.13"
+    "zod": "^4.0.14"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
@@ -78,7 +78,7 @@
     "sass-embedded": "^1.89.2",
     "sharp": "^0.34.3",
     "tailwindcss": "^4.1.11",
-    "typescript": "^5.8.3",
+    "typescript": "^5.9.2",
     "typescript-eslint": "^8.38.0",
     "vitest": "^3.2.4"
   }
