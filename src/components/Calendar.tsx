@@ -1,7 +1,6 @@
 import EventInfoModal from '@/components/event/EventInfoModal'
 import config from '@/config/config.json'
 import EventFetch from '@/fetch/event'
-import useWatch from '@/lib/watchState'
 import { isEventUpdated } from '@/store/event'
 import { userStore } from '@/store/user'
 import type { EventResponse } from '@/types/event'
@@ -10,7 +9,7 @@ import jaLocale from '@fullcalendar/core/locales/ja'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import FullCalendar from '@fullcalendar/react'
 import { useStore } from '@nanostores/react'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import useSWR from 'swr'
 
 interface DateRange {
@@ -23,7 +22,6 @@ const fetcher = (url: string): Promise<any> => fetch(url).then((res) => res.json
 const Calendar: React.FC = () => {
   const $userStore = useStore(userStore)
   const calendarRef = useRef<FullCalendar>(null)
-  const $isEventUpdated = useStore(isEventUpdated) // イベント情報の更新を監視
 
   // カレンダーの日付範囲を初期化
   const [dateRange, setDateRange] = useState<DateRange>({ startStr: '', endStr: '' })
@@ -48,10 +46,13 @@ const Calendar: React.FC = () => {
   /**
    * イベント情報の更新を監視
    */
-  useWatch($isEventUpdated, () => {
-    // イベント情報を再取得 => カレンダーの再描画
-    mutateEvents()
-  })
+  useEffect(() => {
+    const unsubscribe = isEventUpdated.subscribe(() => {
+      void mutateEvents()
+    })
+
+    return () => unsubscribe()
+  }, [mutateEvents])
 
   /**
    * イベント情報を取得
