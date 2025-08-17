@@ -141,8 +141,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
       reset()
     } else {
       // イベント情報を取得
-      // eslint-disable-next-line no-extra-semi
-      ;(async () => {
+      const fetchEventData = async () => {
         try {
           const response = await AdminEventFetch.getEvent(eventId)
           if (!response.ok) {
@@ -191,7 +190,9 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
           console.error(e)
           setError('通信エラーが発生しました')
         }
-      })()
+      }
+
+      void fetchEventData()
     }
   }, [eventId, reset])
 

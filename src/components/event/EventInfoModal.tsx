@@ -156,7 +156,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
       setSuccess('')
       setError('')
       setCompleted(false)
-      fetchComments()
+      void fetchComments()
     }
   }, [isOpen, event])
 
@@ -181,7 +181,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
               ? `${config.upload.avatar.url}/${comment.creator.avatar}`
               : undefined,
             userId: comment.creator.id
-          }))
+          })) as Comment[]
         )
       }
     } catch (err) {
@@ -235,7 +235,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
       if (response.ok) {
         setNewComment('')
         setSuccess('コメントを投稿しました')
-        fetchComments()
+        void fetchComments()
         notifyEventUpdate()
       } else {
         const data = await response.json()
@@ -255,7 +255,7 @@ const EventInfoModal: React.FC<EventInfoModalProps> = ({ isOpen, event, onClose,
       const response = await MemberCommentFetch.deleteComment(commentId)
       if (response.ok) {
         setSuccess('コメントを削除しました')
-        fetchComments()
+        void fetchComments()
         notifyEventUpdate()
       } else {
         const data = await response.json()
