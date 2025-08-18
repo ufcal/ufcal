@@ -31,5 +31,6 @@
   "files.associations": {
     "*.css": "tailwindcss",
     "*.scss": "tailwindcss"
-  }
+  },
+  "files.eol": "\n"
 }
