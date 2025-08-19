@@ -1,6 +1,5 @@
 import { UserDB } from '@/server/db'
 import { hash } from '@/server/utils/password'
-import type { UserAdminRequest } from '@/types/user'
 import type { APIRoute } from 'astro'
 
 export const DELETE: APIRoute = async ({ params, locals }) => {
@@ -48,7 +47,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
 export const PUT: APIRoute = async ({ params, request, locals }) => {
   try {
     const id = Number(params.id)
-    const body = (await request.json()) as UserAdminRequest
+    const body = await request.json()
 
     // 自分自身を無効にすることは不可
     const localUser = locals.user

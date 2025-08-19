@@ -8,7 +8,6 @@ export interface UserAuth {
   email: string
   name: string
   avatar: string
-  //role: string
   role: UserRole
 }
 
@@ -44,15 +43,6 @@ export const convertToUserSessionData = (user: User): UserSessionData => {
     role: exceptPassword.role as UserRole
   }
   return userSessinData
-}
-
-// 管理画面から登録するユーザ情報
-export interface UserAdminRequest {
-  email: string
-  name: string
-  password: string | null
-  role: UserRole
-  isEnabled: boolean
 }
 
 // 管理機能用ユーザ情報

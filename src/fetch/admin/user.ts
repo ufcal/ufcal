@@ -1,5 +1,13 @@
 import config from '@/config/config.json'
-import type { UserAdminRequest } from '@/types/user'
+import type { UserRole } from '@/types/user'
+
+export interface UserAdminRequest {
+  email: string
+  name: string
+  password: string | null
+  role: UserRole
+  isEnabled: boolean
+}
 
 class AdminUserFetch {
   async getUsers(): Promise<Response> {

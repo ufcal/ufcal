@@ -1,6 +1,5 @@
 import { UserDB } from '@/server/db'
 import { hash } from '@/server/utils/password'
-import type { UserAdminRequest } from '@/types/user'
 import type { APIRoute } from 'astro'
 
 // Event API
@@ -18,7 +17,7 @@ export const GET: APIRoute = async () => {
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const body = await request.json()
-    const { email, name, password, role } = body as UserAdminRequest
+    const { email, name, password, role } = body
 
     if (!name || !email || !password || !role) {
       const errMessage = '必要な情報が不足しています'

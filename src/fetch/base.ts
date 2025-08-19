@@ -14,7 +14,6 @@ export abstract class BaseApiFetch {
           return {
             success: false,
             message: validationData.message || getErrorMessage(response.status),
-            //errors: validationData.errors
             ...(validationData.errors && { errors: validationData.errors })
           }
         }
