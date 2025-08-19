@@ -74,7 +74,7 @@ export const PUT: APIRoute = async (context) => {
           return new Response(
             JSON.stringify({
               success: false,
-              message: 'Validation failed',
+              message: '入力内容に問題があります',
               errors: { avatar: 'ファイルサイズは500KB以下にしてください' }
             }),
             {
@@ -90,7 +90,7 @@ export const PUT: APIRoute = async (context) => {
           return new Response(
             JSON.stringify({
               success: false,
-              message: 'Validation failed',
+              message: '入力内容に問題があります',
               errors: { avatar: 'JPG、PNG、GIF、WebP形式のファイルのみアップロード可能です' }
             }),
             {
@@ -173,7 +173,7 @@ export const PUT: APIRoute = async (context) => {
         return new Response(
           JSON.stringify({
             success: false,
-            message: 'Database update failed'
+            message: 'プロフィールの更新に失敗しました'
           }),
           {
             status: 500,
@@ -228,7 +228,7 @@ export const PUT: APIRoute = async (context) => {
     return new Response(
       JSON.stringify({
         success: false,
-        message: 'Internal server error'
+        message: 'プロフィールの更新中にエラーが発生しました'
       }),
       {
         status: 500,
