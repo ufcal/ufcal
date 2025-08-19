@@ -143,13 +143,12 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
       // イベント情報を取得
       const fetchEventData = async () => {
         try {
-          const response = await AdminEventFetch.getEvent(eventId)
-          if (!response.ok) {
-            const errorData = await response.json()
-            setError(`データの取得に失敗しました: ${errorData.message}`)
+          const result = await AdminEventFetch.getEvent(eventId)
+          if (!result.success) {
+            setError(`データの取得に失敗しました: ${result.message}`)
             return
           }
-          const eventData = await response.json()
+          const eventData = result.data
 
           // 開始日と終了日を取得
           const startDate = new Date(eventData.start.split('T')[0])
@@ -198,7 +197,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
 
   const onSubmit = async (values: FormValues) => {
     let start, end
-    let response
+    let result
 
     // メッセージリセット
     setSuccess('')
@@ -221,7 +220,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
     try {
       if (eventId === 0) {
         // 新規イベントの追加の場合
-        response = await AdminEventFetch.addEvent({
+        result = await AdminEventFetch.addEvent({
           title: values.title,
           allDay: !values.isTimeSettingEnabled, // 終日イベントかどうか
           start: start!,
@@ -232,7 +231,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
         })
       } else {
         // イベントの更新の場合
-        response = await AdminEventFetch.updateEvent(eventId, {
+        result = await AdminEventFetch.updateEvent(eventId, {
           title: values.title,
           allDay: !values.isTimeSettingEnabled, // 終日イベントかどうか
           start: start!,
@@ -242,7 +241,7 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
           url: values.url ?? ''
         })
       }
-      if (response.ok) {
+      if (result.success) {
         if (eventId === 0) {
           setSuccess('イベントを追加しました')
         } else {
@@ -254,23 +253,8 @@ const EventModal: React.FC<EventModalProps> = ({ onClose }) => {
 
         // イベントの更新をカレンダーに通知
         notifyEventUpdate()
-      } else if (response.status === 422) {
-        // バリデーションエラー
-        const resBody = await response.json()
-        if (resBody && resBody.message) {
-          setError(resBody.message)
-        } else {
-          setError('入力データが無効です。再度確認してください。')
-        }
-      } else if (response.status === 401) {
-        setError('アクセス権がありません。再度ログインしてください。')
       } else {
-        const resBody = await response.json()
-        if (resBody && resBody.message) {
-          setError(resBody.message)
-        } else {
-          setError('サーバでエラーが発生しました')
-        }
+        setError(result.message || 'サーバでエラーが発生しました')
       }
     } catch (e) {
       setError('通信エラーが発生しました')

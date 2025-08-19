@@ -15,17 +15,16 @@ const Login: React.FC = () => {
     event.preventDefault()
 
     // ログイン処理
-    const response = await AuthFetch.login(email, password, rememberMe)
-    if (response) {
-      if (response.status === 200) {
+    try {
+      const result = await AuthFetch.login(email, password, rememberMe)
+      if (result.success) {
         // ログイン成功の場合
         window.location.href = '/'
       } else {
-        console.log(response)
-        setError('ログインに失敗しました')
+        setError(result.message || 'ログインに失敗しました')
       }
-    } else {
-      alert('エラーが発生しました')
+    } catch (error) {
+      setError('ログインに失敗しました')
     }
   }
 

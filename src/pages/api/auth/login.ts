@@ -13,10 +13,14 @@ export const POST: APIRoute = async (context) => {
   if (request.headers.get('Content-Type') !== 'application/json') {
     return new Response(
       JSON.stringify({
+        success: false,
         message: 'Request format error'
       }),
       {
-        status: 400
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
     )
   }
@@ -30,10 +34,14 @@ export const POST: APIRoute = async (context) => {
     if (!email || !password) {
       return new Response(
         JSON.stringify({
+          success: false,
           message: 'Email address and password are required'
         }),
         {
-          status: 400
+          status: 400,
+          headers: {
+            'Content-Type': 'application/json'
+          }
         }
       )
     }
@@ -43,10 +51,14 @@ export const POST: APIRoute = async (context) => {
     if (!userWithPassword) {
       return new Response(
         JSON.stringify({
+          success: false,
           message: 'Bad credentials'
         }),
         {
-          status: 401
+          status: 401,
+          headers: {
+            'Content-Type': 'application/json'
+          }
         }
       )
     }
@@ -55,10 +67,14 @@ export const POST: APIRoute = async (context) => {
     if (!userWithPassword.isEnabled) {
       return new Response(
         JSON.stringify({
+          success: false,
           message: 'このアカウントは無効化されています'
         }),
         {
-          status: 403
+          status: 403,
+          headers: {
+            'Content-Type': 'application/json'
+          }
         }
       )
     }
@@ -68,10 +84,14 @@ export const POST: APIRoute = async (context) => {
     if (!verified) {
       return new Response(
         JSON.stringify({
+          success: false,
           message: 'Bad credentials'
         }),
         {
-          status: 401
+          status: 401,
+          headers: {
+            'Content-Type': 'application/json'
+          }
         }
       )
     }
@@ -90,10 +110,14 @@ export const POST: APIRoute = async (context) => {
 
     return new Response(
       JSON.stringify({
-        message: 'Login succeeded'
+        success: true,
+        data: { message: 'Login succeeded' }
       }),
       {
-        status: 200
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
     )
   } catch (err) {
@@ -101,10 +125,14 @@ export const POST: APIRoute = async (context) => {
 
     return new Response(
       JSON.stringify({
+        success: false,
         message: 'Login failed'
       }),
       {
-        status: 500
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
     )
   }
