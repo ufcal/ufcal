@@ -21,7 +21,8 @@ const Login: React.FC = () => {
         // ログイン成功の場合
         window.location.href = '/'
       } else {
-        setError(result.message || 'ログインに失敗しました')
+        //setError(result.message || 'ログインに失敗しました')
+        setError('ログインに失敗しました')
       }
     } catch (error) {
       setError('ログインに失敗しました')

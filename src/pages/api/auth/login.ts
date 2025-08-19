@@ -14,7 +14,7 @@ export const POST: APIRoute = async (context) => {
     return new Response(
       JSON.stringify({
         success: false,
-        message: 'Request format error'
+        message: 'リクエストのフォーマットが不正です'
       }),
       {
         status: 400,
@@ -35,7 +35,7 @@ export const POST: APIRoute = async (context) => {
       return new Response(
         JSON.stringify({
           success: false,
-          message: 'Email address and password are required'
+          message: 'Eメールとパスワードが必要です'
         }),
         {
           status: 400,
@@ -52,7 +52,7 @@ export const POST: APIRoute = async (context) => {
       return new Response(
         JSON.stringify({
           success: false,
-          message: 'Bad credentials'
+          message: 'Eメールまたはパスワードが不正です'
         }),
         {
           status: 401,
@@ -85,7 +85,7 @@ export const POST: APIRoute = async (context) => {
       return new Response(
         JSON.stringify({
           success: false,
-          message: 'Bad credentials'
+          message: 'Eメールまたはパスワードが不正です'
         }),
         {
           status: 401,
@@ -111,7 +111,7 @@ export const POST: APIRoute = async (context) => {
     return new Response(
       JSON.stringify({
         success: true,
-        data: { message: 'Login succeeded' }
+        message: 'ログインしました'
       }),
       {
         status: 200,
@@ -126,7 +126,7 @@ export const POST: APIRoute = async (context) => {
     return new Response(
       JSON.stringify({
         success: false,
-        message: 'Login failed'
+        message: 'ログインに失敗しました'
       }),
       {
         status: 500,
