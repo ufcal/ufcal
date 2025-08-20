@@ -208,7 +208,18 @@ export const PUT: APIRoute = async (context) => {
     } catch (err) {
       // バリデーションエラーを返す
       if (err instanceof z.ZodError) {
-        const errors = Object.fromEntries(err.errors.map((error) => [error.path[0], error.message]))
+        // 各フィールドごとにエラーメッセージを配列でまとめる
+        const errors = err.issues.reduce(
+          (acc, error) => {
+            const key = error.path[0]
+            if (typeof key === 'string') {
+              if (!acc[key]) acc[key] = []
+              acc[key].push(error.message)
+            }
+            return acc
+          },
+          {} as Record<string, string[]>
+        )
         return new Response(
           JSON.stringify({
             success: false,
