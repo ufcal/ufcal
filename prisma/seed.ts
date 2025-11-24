@@ -24,7 +24,7 @@ async function main() {
     ],
     skipDuplicates: true
   })
-  console.log('✅ ユーザーを作成しました')
+  console.log('✅ ユーザーを作成しました', users)
 }
 
 main()
