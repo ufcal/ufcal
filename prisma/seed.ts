@@ -1,8 +1,13 @@
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import { PrismaMariaDb } from '@prisma/adapter-mariadb'
+import 'dotenv/config'
+import { PrismaClient } from '../src/generated/prisma/client'
+
+const adapter = new PrismaMariaDb(process.env.DATABASE_URL!)
+const prisma = new PrismaClient({ adapter })
 
 async function main() {
-  await prisma.user.createMany({
+  console.log('🌱 初期データの挿入を開始します...')
+  const users = await prisma.user.createMany({
     data: [
       {
         email: 'admin@example.com',
@@ -19,6 +24,7 @@ async function main() {
     ],
     skipDuplicates: true
   })
+  console.log('✅ ユーザーを作成しました')
 }
 
 main()
